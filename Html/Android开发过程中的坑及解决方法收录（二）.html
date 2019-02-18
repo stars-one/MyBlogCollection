@@ -1,0 +1,29 @@
+原文链接：http://www.cnblogs.com/kexing/archive/2017/10/11/7652322.html
+<h2>bug 1：　　</h2>
+<h3>　　bug描述：</h3>
+<p><span style="font-size: 16px;">　　　　<span style="color: #ff0000;">无法成功地将edittext中的内容传入数据库中</span></span></p>
+<h3><span style="font-size: 16px;"><span style="color: #ff0000;"><span style="color: #000000;">　　bug动图：</span><br /></span></span></h3>
+<p><span style="font-size: 16px;"><span style="color: #ff0000;"><span style="color: #000000;">　　<span style="font-size: 16px;"><span style="color: #ff0000;"><span style="color: #000000;"><img src="http://images2017.cnblogs.com/blog/1210268/201710/1210268-20171011183946355-1217892557.gif" alt="" width="437" height="770" /></span></span></span></span></span></span></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h3>　　经过:</h3>
+<p>　<span style="font-size: 16px;">　　　最近写了个项目，项目要使用到SQL数据库，由于没有相关知识，便是找到了各种资料开始了自学之旅，在demo测试可以，但是，移植到实际项目就是失败，弹出应用已经停止的错误提示，花了两个星期，对比资料，一次一次的尝试，一直在寻找bug。</span></p>
+<p><span style="font-size: 16px;">　　　　终于，功夫不负有心人，终于是被我找到了，原来是edittext中有留空了，我的项目就是要得到edittext中所输入的内容，并将得到的内容转入指定的数据库中，由于测试，当时的我并没有<strong><span style="color: #ff0000;">填完全部的edittext，于是获取到了空的内容传入数据库中，便是出现了错误</span></strong></span></p>
+<h3>　　解决思路：</h3>
+<p>　　<span style="font-size: 16px;">　　设置edittext的默认值，当用户不需要输入的时候，就可以跳过不需要输入的edittext，此时，<span style="color: #ff0000;">获取到的用户没有输入的editext中的内容就是我们设置的默认值</span>，这样，传入数据库就不是空的，就避免了之前出现的错误</span></p>
+<p><span style="font-size: 16px;">&nbsp;</span></p>
+<h2>bug 1：　　</h2>
+<h3>　　bug描述：</h3>
+<p><span style="font-size: 16px;">　　　　<span style="color: #ff0000;">Drawlayout滑出卡顿</span></span></p>
+<p>&nbsp;</p>
+<h3><span style="font-size: 16px;"><span style="color: #ff0000;"><span style="color: #000000;">　　bug动图：</span></span></span></h3>
+<p><span style="font-size: 16px;"><span style="color: #ff0000;"><span style="color: #000000;">　　</span></span></span></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px;"><span style="color: #ff0000;"><span style="color: #000000;">　　<img src="http://images2017.cnblogs.com/blog/1210268/201710/1210268-20171011183525480-1544938529.gif" alt="" width="373" height="659" /></span></span></span></p>
+<p>&nbsp;</p>
+<h3>　　经过:</h3>
+<p>　<span style="font-size: 16px;">　　　做项目的时候，使用了android官方的侧滑界面Drawlayout，但是，却发现很卡顿，细细地研究了一番，发现了问题所在，原来是我设置<strong><span style="color: #ff0000;">头部的那一张图片太大了，1920x1080的图片，加载耗了太多的时间，所以看起来就是动图那般的卡顿</span></strong><br /></span></p>
+<h3>　　解决思路：</h3>
+<p>　　<span style="font-size: 16px;">　　既然是图片大，自然就是将图片大小修改就好，看到这里，你是不是有个想法&mdash;&mdash;将图片压缩</span></p>
+<p><span style="font-size: 16px;">但是，将<span style="color: #ff0000;">图片压缩并不能解决问题，因为你没有改变图片本身的分辨率</span>。</span></p>
+<p><span style="font-size: 16px;">我直接用Photoshop新建了一个580*340的图片，之后把原来的那一张图片复制进去，之后导出，设置，测试，OK，行了，当然，其他分辨率估计也行，只要不是太大，有兴趣的读者可以直接去研究研究！！</span></p>

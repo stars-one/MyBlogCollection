@@ -1,0 +1,51 @@
+原文链接：http://www.cnblogs.com/kexing/archive/2018/04/17/8865660.html
+<h2>支付宝破解三种方式：</h2>
+<p>想学一下支付宝内购的相关知识，但是搜索了论坛，发现但是没有相关的帖子，于是便是打算自己来写一篇总结<br />
+<strong>一、9000的十六进制代码修改</strong><br />
+<span style="color: red;">搜索9000的十六进制，也就是搜索</span><span style="font-size: 16px;"><span style="color: red;">0x2328</span></span><span style="font-size: 16px;"><br />
+可以找到一个smali，里面含有着switch_0这代码</span><br />
+<img id="aimg_pdfaz" class="zoom" style="max-width: 100%;" src="http://images2017.cnblogs.com/blog/1210268/201801/1210268-20180104215049471-80503241.png" alt="" width="720" height="277" border="0" /><br />
+<span style="font-size: 16px;">之后，我们进去就会看到一个switch结构的分支语句，将<span style="color: red;">6001（对应着支付取消）的十六进制0x1771后面的switch修改为switch_0</span>即可</span><br />
+<span style="font-size: 16px;"><img id="aimg_Ua959" class="zoom" style="max-width: 100%;" src="http://images2017.cnblogs.com/blog/1210268/201801/1210268-20180104215251518-705364007.png" alt="" width="609" height="238" border="0" /></span><br />
+<span style="font-size: 16px;">相信大家也不用我多解释什么了吧<br />
+<br />
+但是，经过我的测试，<span style="color: red;">这方法只适用于在手机不安装支付宝的情况下</span>，如果有支付宝的话，唤起支付宝<a class="relatedlink" href="https://www.52pojie.cn" target="_blank">破解</a>就是不成功的，如何解决呢，请往下看<br />
+<br />
+<strong>二、</strong></span><span style="font-size: 16px;"><span style="font-size: 16px;"><strong>在手机安装有支付宝的情况下，让其不唤起支付宝，而是跳转到支付宝的网页界面</strong><br />
+这种方法我尝试了很久，但是都是不成功，如果有路过的大神，希望能够补充一下，感激不尽！！<br />
+<strong>三、搜索&ldquo;9000&rdquo;，修改对应的逻辑<br />
+</strong>一般来说，各个APP中都会有一个方法来验证支付宝返回的状态码是否为9000（就是是否成功支付），所以我们可以找到这个方法，修改它的判断条件，从而实现破解<br />
+在搜索出来的结果中，一般会有多个，可以看下面的图片<br />
+
+
+
+<img id="aimg_1109242" class="zoom" src="https://attach.52pojie.cn/forum/201804/17/104516zeikmk45vkbezkbi.png" alt="" width="720" />
+
+
+
+
+<br />
+可以从搜索到的那个地方往下看看，<span style="color: red;">看看是否有paysuccess的方法调用</span>，如果有我们就能确定这个文件就是我们要修改的<br />
+
+
+
+<img id="aimg_1109244" class="zoom" src="https://attach.52pojie.cn/forum/201804/17/104929ce6rrbkekk66dcko.png" alt="" width="720" />
+
+
+
+
+<br />
+上上一张图片，我选中了一条代码，这一条代码就是实现支付成功跳转的重要判断，我们可以看一下cond_2的代码<br />
+
+
+
+<img id="aimg_1109246" class="zoom" src="https://attach.52pojie.cn/forum/201804/17/105124f77jidsnbri0yqmb.png" alt="" width="720" />
+
+
+
+
+<br />
+可以发现，<span style="color: red;">如果跳转到cond_2的话，就说明是跳过了支付成功执行的相关代码</span>，那么我们将这一行判断删除就行了，它就会执行支付成功的代码了<br />
+<br />
+这里需要提一下，每个的APP的判断机制会有所不同<span style="color: red;">，上面这一个就是判断是否不等于9000，是的话则跳转到支付失败，还有一些就是判断是否等于9000，是的话跳转到支付成功，</span>请注意这两个的区别，具体情况需要具体分析<br />
+</span></span></p>

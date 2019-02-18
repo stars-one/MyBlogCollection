@@ -1,0 +1,36 @@
+原文链接：http://www.cnblogs.com/kexing/archive/2017/10/15/7673752.html
+<p><span style="font-size: 16px;">大家好，今天带来双击退出程序实现方法，我知道，网上也是有许多关于双击退出程序实现的方法，所以，听见当然是给大家带来不一样的双击退出的实现方法。</span></p>
+<p><span style="font-size: 16px;">&nbsp;</span></p>
+<p><span style="font-size: 16px;">首先带来的便是关于onKeyDown和onKeyPress这两个方法的说明，下面内容是转载过来，我就直接截个图给大家看看，网址http://blog.csdn.net/mingxunzh/article/details/5497948</span></p>
+<p><img src="http://images2017.cnblogs.com/blog/1210268/201710/1210268-20171015185110762-185282035.png" alt="" width="1069" height="622" /></p>
+<p><span style="font-size: 16px;">到现在，Android4.0+系统的占了市场的百分之九十九了吧，所以，现在还用onKeyDown()方法实现双击返回功能简直out得不能再out了</span></p>
+<p><span style="font-size: 16px;">&nbsp;</span></p>
+<p><span style="font-size: 16px;">现在我们可以<span style="color: #ff0000;">通过onBackPressd()方法实现上述所说的双击返回功能</span></span></p>
+<p><span style="font-size: 16px;">&nbsp;</span></p>
+<p><span style="font-size: 16px;">我使用的Android Studio创建的项目正是使用的drawlayout，也就是Android Studio提供的侧滑界面，</span></p>
+<p><img src="http://images2017.cnblogs.com/blog/1210268/201710/1210268-20171015185824340-132851110.png" alt="" /></p>
+<p><span style="font-size: 16px;">项目的主界面代码中就复写了这个onBackPressed()方法，这里的大概意思就是，<span style="color: #ff0000;">检测drawerlayout是否处于开启状态，是的执行closeXX方法，否的话就是重新调用onBackPressed方法（也就是说，drawerlayout关闭，程序就什么都不做）。</span></span></p>
+<p><span style="font-size: 16px;">&nbsp;</span></p>
+<p><span style="font-size: 16px;">我们要实现的双击返回功能自然是要在drawerlayout处于关闭状态下才调用的，所以<span style="color: #ff0000;">直接修改else后的语句</span>即可。</span></p>
+<p><img src="http://images2017.cnblogs.com/blog/1210268/201710/1210268-20171015190304762-586887850.png" alt="" /></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>exit()方法代码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre> <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> exit() {
+        </span><span style="color: #0000ff;">if</span> ((System.currentTimeMillis() - exitTime) &gt; 2000<span style="color: #000000;">) {
+            Toast.makeText(getApplicationContext(), </span>"再按一次退出程序"<span style="color: #000000;">,
+                    Toast.LENGTH_SHORT).show();
+            exitTime </span>=<span style="color: #000000;"> System.currentTimeMillis();
+        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            onDestroy();
+        }
+    }</span></pre>
+</div>
+<p><img src="http://images2017.cnblogs.com/blog/1210268/201710/1210268-20171015190415715-1422354210.png" alt="" /></p>
+<p><span style="font-size: 16px;">System.exit(0);为完全退出程序</span></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px;">PS：这里顺便提一下，我的项目中有个开场动画activity，刚加入双击退出程序的这个功能的时候，并不能实现完全退出，双击退出之后而是回到了开场动画activity，反复查看代码之后，发现是<span style="color: #ff0000;">开场动画在跳转activity的时候没有finish()方法</span>，加了这个方法便是可以了</span></p>
+<p>&nbsp;<img src="http://images2017.cnblogs.com/blog/1210268/201710/1210268-20171015191857871-962712359.jpg" alt="" width="926" height="648" /></p>
+<p>&nbsp;</p>

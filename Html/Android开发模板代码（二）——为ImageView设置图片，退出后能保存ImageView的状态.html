@@ -1,0 +1,31 @@
+原文链接：http://www.cnblogs.com/kexing/archive/2018/02/05/8414218.html
+<p>接着之前的那个从图库选择图片，设置到ImageView中去，但是，我发现了一个问题，就是再次进入的时候ImageView是恢复到了默认状态，搜索了资料许久之后，终于是发现了解决方法，使用SharePreference储存数据即可</p>
+<h3>贴上代码</h3>
+<div class="cnblogs_code">
+<pre><span style="font-size: 16px;">  <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> save(String imagePath){
+        SharedPreferences.Editor editor </span>= getSharedPreferences("data",MODE_PRIVATE).edit();<span style="color: #008000;">//</span><span style="color: #008000;">获得SHaredPreferences.Editor对象</span>
+        editor.putBoolean("imageChange",<span style="color: #0000ff;">true</span>);<span style="color: #008000;">//</span><span style="color: #008000;">添加一个名为imageChange的boolean值，数值为true</span>
+        editor.putString("imagePath",imagePath);<span style="color: #008000;">//</span><span style="color: #008000;">保存imagePath图片路径</span>
+        editor.apply();<span style="color: #008000;">//</span><span style="color: #008000;">提交</span>
+<span style="color: #000000;">    }
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> load(){
+        SharedPreferences preferences </span>= getSharedPreferences("data",MODE_PRIVATE);<span style="color: #008000;">//</span><span style="color: #008000;">获得SharedPreferences的对象
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">括号里的判断是去找imageChange这个对应的数值，若是找不到，则是返回false，找到了的话就是我们上面定义的true，就会执行其中的语句</span>
+        <span style="color: #0000ff;">if</span>(preferences.getBoolean("imageChange",<span style="color: #0000ff;">false</span><span style="color: #000000;">)){
+            String imagePath </span>= preferences.getString("imagePath","");<span style="color: #008000;">//</span><span style="color: #008000;">取出保存的imagePath，若是找不到，则是返回一个空</span>
+            displayImage(imagePath);<span style="color: #008000;">//</span><span style="color: #008000;">调用显示图片方法，为ImageView设置图片</span>
+<span style="color: #000000;">        }
+
+    }</span></span></pre>
+</div>
+<h3>使用</h3>
+<p><span style="font-size: 16px;">在准备为ImageView设置图片之前，将图片路径给保存</span></p>
+<p><img src="http://images2017.cnblogs.com/blog/1210268/201802/1210268-20180204200648201-575530535.png" alt="" /></p>
+<p><span style="font-size: 16px;">load()则是放在onCreateed方法中，在初始化完之后</span></p>
+<p>&nbsp;</p>
+<h3><span style="font-size: 16px;">测试：</span></h3>
+<p><span style="font-size: 16px;"><img src="http://images2017.cnblogs.com/blog/1210268/201802/1210268-20180204201849857-1237943897.gif" alt="" /></span></p>
+<h3>&nbsp;逻辑分析</h3>
+<p><img src="http://images2017.cnblogs.com/blog/1210268/201802/1210268-20180204203335420-1034018905.png" alt="" /></p>
+<p><a href="https://github.com/Stars-One/ChangePictureFromAlbum" target="_blank">Demo下载</a></p>
+<p>&nbsp;</p>

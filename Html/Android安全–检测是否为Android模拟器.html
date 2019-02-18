@@ -1,0 +1,203 @@
+原文链接：http://www.cnblogs.com/kexing/archive/2018/04/20/8890219.html
+<p>有时候需要检测是否在模拟器上运行还是在真机运行，话不多说。检测代码如下：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> com.monkey.antiemulator;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.io.File;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.io.FileInputStream;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.io.InputStream;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> android.content.Context;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> android.telephony.TelephonyManager;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> android.util.Log;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> AntiEmulator {
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> String[] known_pipes=<span style="color: #000000;">{
+            </span>"/dev/socket/qemud"<span style="color: #000000;">,
+            </span>"/dev/qemu_pipe"<span style="color: #000000;">
+    };
+   
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> String[] known_qemu_drivers =<span style="color: #000000;"> {
+            </span>"goldfish"<span style="color: #000000;">
+    };
+   
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> String[] known_files =<span style="color: #000000;"> {
+            </span>"/system/lib/libc_malloc_debug_qemu.so"<span style="color: #000000;">,
+            </span>"/sys/qemu_trace"<span style="color: #000000;">,
+            </span>"/system/bin/qemu-props"<span style="color: #000000;">
+    };
+   
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> String[] known_numbers = { "15555215554", "15555215556"<span style="color: #000000;">,
+            </span>"15555215558", "15555215560", "15555215562", "15555215564"<span style="color: #000000;">,
+            </span>"15555215566", "15555215568", "15555215570", "15555215572"<span style="color: #000000;">,
+            </span>"15555215574", "15555215576", "15555215578", "15555215580"<span style="color: #000000;">,
+            </span>"15555215582", "15555215584"<span style="color: #000000;">, };
+   
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> String[] known_device_ids =<span style="color: #000000;"> {
+            </span>"000000000000000" <span style="color: #008000;">//</span><span style="color: #008000;"> 默认ID</span>
+<span style="color: #000000;">    };
+   
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> String[] known_imsi_ids =<span style="color: #000000;"> {
+            </span>"310260000000000" <span style="color: #008000;">//</span><span style="color: #008000;"> 默认的 imsi id</span>
+<span style="color: #000000;">    };
+   
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">检测&ldquo;/dev/socket/qemud&rdquo;，&ldquo;/dev/qemu_pipe&rdquo;这两个通道</span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">boolean</span><span style="color: #000000;"> checkPipes(){
+        </span><span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">int</span> i = 0; i &lt; known_pipes.length; i++<span style="color: #000000;">){
+            String pipes </span>=<span style="color: #000000;"> known_pipes[i];
+            File qemu_socket </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> File(pipes);
+            </span><span style="color: #0000ff;">if</span><span style="color: #000000;">(qemu_socket.exists()){
+                Log.v(</span>"Result:", "Find pipes!"<span style="color: #000000;">);
+                </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+            }
+        }
+        Log.i(</span>"Result:", "Not Find pipes!"<span style="color: #000000;">);
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    }
+   
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 检测驱动文件内容
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 读取文件内容，然后检查已知QEmu的驱动程序的列表</span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span><span style="color: #000000;"> Boolean checkQEmuDriverFile(){
+        File driver_file </span>= <span style="color: #0000ff;">new</span> File("/proc/tty/drivers"<span style="color: #000000;">);
+        </span><span style="color: #0000ff;">if</span>(driver_file.exists() &amp;&amp;<span style="color: #000000;"> driver_file.canRead()){
+            </span><span style="color: #0000ff;">byte</span>[] data = <span style="color: #0000ff;">new</span> <span style="color: #0000ff;">byte</span>[1024];  <span style="color: #008000;">//</span><span style="color: #008000;">(int)driver_file.length()</span>
+            <span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+                InputStream inStream </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> FileInputStream(driver_file);
+                inStream.read(data);
+                inStream.close();      
+            } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (Exception e) {
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> TODO: handle exception</span>
+<span style="color: #000000;">                e.printStackTrace();
+            }
+            String driver_data </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> String(data);
+            </span><span style="color: #0000ff;">for</span><span style="color: #000000;">(String known_qemu_driver : AntiEmulator.known_qemu_drivers){
+                </span><span style="color: #0000ff;">if</span>(driver_data.indexOf(known_qemu_driver) != -1<span style="color: #000000;">){
+                    Log.i(</span>"Result:", "Find know_qemu_drivers!"<span style="color: #000000;">);
+                    </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+                }
+            }
+        }
+        Log.i(</span>"Result:", "Not Find known_qemu_drivers!"<span style="color: #000000;">);
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    }
+   
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">检测模拟器上特有的几个文件</span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span><span style="color: #000000;"> Boolean CheckEmulatorFiles(){
+        </span><span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">int</span> i = 0; i &lt; known_files.length; i++<span style="color: #000000;">){
+            String file_name </span>=<span style="color: #000000;"> known_files[i];
+            File qemu_file </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> File(file_name);
+            </span><span style="color: #0000ff;">if</span><span style="color: #000000;">(qemu_file.exists()){
+                Log.v(</span>"Result:", "Find Emulator Files!"<span style="color: #000000;">);
+                </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+            }
+        }
+        Log.v(</span>"Result:", "Not Find Emulator Files!"<span style="color: #000000;">);
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    }
+   
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 检测模拟器默认的电话号码</span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span><span style="color: #000000;"> Boolean CheckPhoneNumber(Context context) {
+        TelephonyManager telephonyManager </span>=<span style="color: #000000;"> (TelephonyManager) context
+                .getSystemService(Context.TELEPHONY_SERVICE);
+     
+        String phonenumber </span>=<span style="color: #000000;"> telephonyManager.getLine1Number();
+     
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (String number : known_numbers) {
+            </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (number.equalsIgnoreCase(phonenumber)) {
+                Log.v(</span>"Result:", "Find PhoneNumber!"<span style="color: #000000;">);
+                </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+            }
+        }
+        Log.v(</span>"Result:", "Not Find PhoneNumber!"<span style="color: #000000;">);
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    }
+   
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">检测设备IDS 是不是 &ldquo;000000000000000&rdquo;</span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span><span style="color: #000000;"> Boolean CheckDeviceIDS(Context context) {
+        TelephonyManager telephonyManager </span>=<span style="color: #000000;"> (TelephonyManager) context
+                .getSystemService(Context.TELEPHONY_SERVICE);
+     
+        String device_ids </span>=<span style="color: #000000;"> telephonyManager.getDeviceId();
+     
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (String know_deviceid : known_device_ids) {
+            </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (know_deviceid.equalsIgnoreCase(device_ids)) {
+                Log.v(</span>"Result:", "Find ids: 000000000000000!"<span style="color: #000000;">);
+                </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+            }
+        }
+        Log.v(</span>"Result:", "Not Find ids: 000000000000000!"<span style="color: #000000;">);
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    }
+   
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 检测imsi id是不是&ldquo;310260000000000&rdquo;</span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span><span style="color: #000000;"> Boolean CheckImsiIDS(Context context){
+        TelephonyManager telephonyManager </span>=<span style="color: #000000;"> (TelephonyManager)
+                context.getSystemService(Context.TELEPHONY_SERVICE);
+     
+        String imsi_ids </span>=<span style="color: #000000;"> telephonyManager.getSubscriberId();
+     
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (String know_imsi : known_imsi_ids) {
+            </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (know_imsi.equalsIgnoreCase(imsi_ids)) {
+                Log.v(</span>"Result:", "Find imsi ids: 310260000000000!"<span style="color: #000000;">);
+                </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+            }
+        }
+        Log.v(</span>"Result:", "Not Find imsi ids: 310260000000000!"<span style="color: #000000;">);
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    }
+   
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">检测手机上的一些硬件信息</span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span><span style="color: #000000;"> Boolean CheckEmulatorBuild(Context context){
+        String BOARD </span>=<span style="color: #000000;"> android.os.Build.BOARD;
+        String BOOTLOADER </span>=<span style="color: #000000;"> android.os.Build.BOOTLOADER;
+        String BRAND </span>=<span style="color: #000000;"> android.os.Build.BRAND;
+        String DEVICE </span>=<span style="color: #000000;"> android.os.Build.DEVICE;
+        String HARDWARE </span>=<span style="color: #000000;"> android.os.Build.HARDWARE;
+        String MODEL </span>=<span style="color: #000000;"> android.os.Build.MODEL;
+        String PRODUCT </span>=<span style="color: #000000;"> android.os.Build.PRODUCT;
+        </span><span style="color: #0000ff;">if</span> (BOARD == "unknown" || BOOTLOADER == "unknown"
+                || BRAND == "generic" || DEVICE == "generic"
+                || MODEL == "sdk" || PRODUCT == "sdk"
+                || HARDWARE == "goldfish"<span style="color: #000000;">)
+        {
+            Log.v(</span>"Result:", "Find Emulator by EmulatorBuild!"<span style="color: #000000;">);
+            </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        }
+        Log.v(</span>"Result:", "Not Find Emulator by EmulatorBuild!"<span style="color: #000000;">);
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    }
+   
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">检测手机运营商家</span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">boolean</span><span style="color: #000000;"> CheckOperatorNameAndroid(Context context) {
+        String szOperatorName </span>=<span style="color: #000000;"> ((TelephonyManager)
+                context.getSystemService(</span>"phone"<span style="color: #000000;">)).getNetworkOperatorName();
+     
+        </span><span style="color: #0000ff;">if</span> (szOperatorName.toLowerCase().equals("android") == <span style="color: #0000ff;">true</span><span style="color: #000000;">) {
+            Log.v(</span>"Result:", "Find Emulator by OperatorName!"<span style="color: #000000;">);
+            </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        }
+        Log.v(</span>"Result:", "Not Find Emulator by OperatorName!"<span style="color: #000000;">);
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<div class="codecolorer-container java default" style="overflow: auto; white-space: nowrap;">
+<table cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td class="line-numbers">&nbsp;</td>
+<td>&nbsp;</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+<p>模拟器运行结果：</p>
+<p><a class="img-hyperlink" href="http://www.blogfshare.com/wp-content/uploads/Android--_1013C/image.png"><img style="background-image: none; float: none; padding-top: 0px; padding-left: 0px; margin-left: auto; display: block; padding-right: 0px; margin-right: auto; border: 0px;" title="image" src="http://www.blogfshare.com/wp-content/uploads/Android--_1013C/image_thumb.png" alt="image" width="338" height="261" border="0" /></a></p>
+<p>真机运行结果：</p>
+<p><a class="img-hyperlink" href="http://www.blogfshare.com/wp-content/uploads/Android--_1013C/image_3.png"><img style="background-image: none; float: none; padding-top: 0px; padding-left: 0px; margin-left: auto; display: block; padding-right: 0px; margin-right: auto; border: 0px;" title="image" src="http://www.blogfshare.com/wp-content/uploads/Android--_1013C/image_thumb_3.png" alt="image" width="336" height="203" border="0" /></a></p>
+<p>&nbsp;</p>

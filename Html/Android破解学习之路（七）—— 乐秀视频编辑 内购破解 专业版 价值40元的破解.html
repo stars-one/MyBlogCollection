@@ -1,0 +1,48 @@
+原文链接：http://www.cnblogs.com/kexing/archive/2018/03/31/8681440.html
+<h3>前言：</h3>
+<p><span style="font-size: 16px;">这一期带来的乐秀视频编辑价值40元的破解，希望大家能学到破解的不同思路</span></p>
+<h3><span style="font-size: 16px;">破解之前：</span></h3>
+<p><span style="font-size: 16px;">原版：链接: https://pan.baidu.com/s/1Tb3kBqWHToN60Cp-O_ucww 密码: gruq</span></p>
+<p><span style="font-size: 16px;">破解版：链接: https://pan.baidu.com/s/1Lq7XfGLaQQ7EYi2ZMN1VCg 密码: 76ce</span></p>
+<h2>破解步骤：</h2>
+<h3>1.支付宝套路破解（失败）</h3>
+<p><span style="font-size: 16px;">这里我们可以从图片中看到，有微信支付和支付宝支付，看到了支付宝支付，我们就有破解的套路了，如果你不知道，请看我之前的破解系列</span></p>
+<p><img src="https://images2018.cnblogs.com/blog/1210268/201803/1210268-20180331102408401-489923573.png" alt="" width="346" height="615" /></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px;">可以看到有支付宝付款升级专业版，所以我们可以按照之前的支付宝破解，搜索9000的十六进制，之后。。。</span></p>
+<h3>2.关键字搜索破解（失败）</h3>
+<p><span style="font-size: 16px;">但是，这样的破解在测试的时候是没有成功</span></p>
+<p><span style="font-size: 16px;">不过支付失败时候出现了一个Toast提示，我们从这里入手看看吧</span></p>
+<p><span style="font-size: 16px;"><img src="https://images2018.cnblogs.com/blog/1210268/201803/1210268-20180331103547743-227884250.png" alt="" width="483" height="856" /></span></p>
+<p><span style="font-size: 16px;">我们搜索操作已经取消这几个关键字，但是无论是直接搜索还是搜索对应的Unicode，都是无结果，这个方法也以失败告终</span></p>
+<h3>3.查看当前activity的smali文件，找关键（成功）</h3>
+<p><span style="font-size: 16px;">这里我猜测有二次验证，于是继续研究</span></p>
+<p><span style="font-size: 16px;">我们之前有个APP可以查看当前的activity名字，我们可以来试一下这个办法，发现当前的activity为BuyViPActivity，名字简单通俗哈哈</span></p>
+<p><img src="https://images2018.cnblogs.com/blog/1210268/201803/1210268-20180331104603784-2081918311.png" alt="" width="444" height="808" /></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px;">我们来到Androidkiller中依次展开目录来看一下这个activity对应的smali文件中有什么可用的消息，嗯，这里可以看见，有许多个含有BuyVipActivity的smali文件</span></p>
+<p><span style="font-size: 16px;"><img src="https://images2018.cnblogs.com/blog/1210268/201803/1210268-20180331104751201-1424577181.png" alt="" /></span></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px;">第一个，没有什么有用的消息，看第二个，嗯，这代码有点长，有个 Toast提示 请安装微信</span></p>
+<p><span style="font-size: 16px;"><img src="https://images2018.cnblogs.com/blog/1210268/201803/1210268-20180331104923402-324008406.png" alt="" /></span></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px;">这个我们可以大胆的猜测，是在要<span style="color: #ff0000;">微信支付时候就会检查是否安装有微信，没有的话就会出现这个提示</span></span></p>
+<p><span style="font-size: 16px;">往下看，豁然开朗了，这个就是关键的smali，不信的话我们可以继续往下看，有成功解锁的Unicode和支付成功的Unicode，下面有几个pswitch 就是分别代表着几种情况 <br /></span></p>
+<p><span style="font-size: 16px;">看完代码之后，我们可以知道pswitch_5这个跳转是支付成功的跳转</span></p>
+<p><span style="font-size: 16px;"><img src="https://images2018.cnblogs.com/blog/1210268/201803/1210268-20180331105350379-1526424379.png" alt="" /></span></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px;">发现里面有个switch跳转语句，观察可以知道pswitch_5是支付成功的代码，那么破解思路就来了，在进入到switch语句前，我们直接跳转到pswitch_5中，这样便是成功了</span></p>
+<p><span style="font-size: 16px;"><img src="https://images2018.cnblogs.com/blog/1210268/201803/1210268-20180331105505859-1984535961.png" alt="" /></span></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px;">这里我们知道，pswitch_data_0是一个分支语句，正常来说，APP肯定会进入到这个分支，之后进行各种条件判断来决定指定是pswitch_1还是pswitch_2等等的某个分支</span></p>
+<p><span style="font-size: 16px;">所以我们找到进入到pswitch_data_0的语句，在这之前直接goto语句跳转到pswitch_5</span></p>
+<p><img src="https://images2018.cnblogs.com/blog/1210268/201803/1210268-20180331105614853-1641704979.png" alt="" /></p>
+<p>&nbsp;</p>
+<h3>测试结果：</h3>
+<p>&nbsp;</p>
+<p>&nbsp;<img src="https://images2018.cnblogs.com/blog/1210268/201803/1210268-20180331110200918-1746196077.gif" alt="" width="420" height="729" /></p>
+<p><img src="https://images2018.cnblogs.com/blog/1210268/201803/1210268-20180331110321885-668494651.gif" alt="" width="423" height="732" /></p>
+<p><span style="font-size: 16px;">这里可以看到，当我使用微信支付的时候，也是可以破解成功的，原因是因为它的判断应该是和支付宝一起的，判断的时候我们直接跳转到了pswitch_5的分支中，当然是成功了</span></p>
+<p>&nbsp;我尝试了一下不修改支付宝的那个，发现也是能成功的，不过，显示的支付金额却是变成了25元，不明白这操作。。</p>
+<p><img src="https://images2018.cnblogs.com/blog/1210268/201803/1210268-20180331112030609-1968310253.png" alt="" /></p>
+<p>&nbsp;</p>

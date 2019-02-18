@@ -1,0 +1,96 @@
+原文链接：http://www.cnblogs.com/kexing/archive/2018/04/20/8890256.html
+<p>首先我们找一个已经签名的apk文件，修改后缀名为zip，然后解压。可以看到里面有一个META-INF文件夹，里面就是签名验证的文件。有三个文件MANIFEST.MF、CERT.SF、CERT.RSA分别保存着不同的签名信息，下面一个一个来分析：</p>
+<p>首先是MANIFEST.MF文件，打开MANIFEST.MF文件如下：</p>
+<p>Manifest-Version: 1.0<br />
+Created-By: 1.0 (Android)</p>
+<p>Name: res/layout/main.xml<br />
+SHA1-Digest: TKJzyMwELyakLZYM83o10LERyPQ=</p>
+<p>Name: AndroidManifest.xml<br />
+SHA1-Digest: vf51A+/qPTUhmRyQmU6GS83eO9Y=</p>
+<p>Name: res/drawable/keys.png<br />
+SHA1-Digest: 3nPhCCVKGHdAha70YYcNvESbv5g=</p>
+<p>Name: resources.arsc<br />
+SHA1-Digest: uh4vliR9xNyjDpU3d+WmfzTIumE=</p>
+<p>Name: classes.dex<br />
+SHA1-Digest: S83QHv3CvsRo3e4gWNpZpvifWzg=</p>
+<p>可以看到每一个对应的文件下面都有一个SHA1-Digest的值。这个值为该文件SHA-1值进行base64编码后的结果。</p>
+<p>来验证一下：</p>
+<p>首先获取文件的SHA-1值如下为：4CA273C8CC042F26A42D960CF37A35D0B111C8F4</p>
+<p><a class="img-hyperlink" href="http://www.blogfshare.com/wp-content/uploads/Android-APK-_11766/image.png"><img style="background-image: none; float: none; padding-top: 0px; padding-left: 0px; margin-left: auto; display: block; padding-right: 0px; margin-right: auto; border-width: 0px;" title="image" src="http://www.blogfshare.com/wp-content/uploads/Android-APK-_11766/image_thumb.png" alt="image" width="439" height="383" border="0" /></a></p>
+<p>复制该值到winhex中，如下：</p>
+<p><a class="img-hyperlink" href="http://www.blogfshare.com/wp-content/uploads/Android-APK-_11766/image_3.png"><img style="background-image: none; float: none; padding-top: 0px; padding-left: 0px; margin-left: auto; display: block; padding-right: 0px; margin-right: auto; border-width: 0px;" title="image" src="http://www.blogfshare.com/wp-content/uploads/Android-APK-_11766/image_thumb_3.png" alt="image" width="653" height="96" border="0" /></a></p>
+<p>另存为文件sha1，然后使用base64工具对该文件进行base64编码：</p>
+<p><a class="img-hyperlink" href="http://www.blogfshare.com/wp-content/uploads/Android-APK-_11766/image_4.png"><img style="background-image: none; float: none; padding-top: 0px; padding-left: 0px; margin-left: auto; display: block; padding-right: 0px; margin-right: auto; border-width: 0px;" title="image" src="http://www.blogfshare.com/wp-content/uploads/Android-APK-_11766/image_thumb_4.png" alt="image" width="488" height="286" border="0" /></a></p>
+<p>查看base64文件的内容为：TKJzyMwELyakLZYM83o10LERyPQ=</p>
+<p>和上面值完全吻合。</p>
+<p>还可以通过查看源码进行验证：<a title="http://androidxref.com/4.4_r1/xref/build/tools/signapk/SignApk.java" href="http://androidxref.com/4.4_r1/xref/build/tools/signapk/SignApk.java">http://androidxref.com/4.4_r1/xref/build/tools/signapk/SignApk.java</a></p>
+<p><a class="img-hyperlink" href="http://www.blogfshare.com/wp-content/uploads/Android-APK-_11766/image_5.png"><img style="background-image: none; float: none; padding-top: 0px; padding-left: 0px; margin-left: auto; display: block; padding-right: 0px; margin-right: auto; border-width: 0px;" title="image" src="http://www.blogfshare.com/wp-content/uploads/Android-APK-_11766/image_thumb_5.png" alt="image" width="463" height="555" border="0" /></a></p>
+<p>也可以看出MANIFEST.MF中保存了所有其他文件的SHA-1并base64编码后的值。</p>
+<p>MANIFEST.MF文件分析完了，我们继续来分析CERT.SF这个文件，查看文件内容如下：</p>
+<p>Signature-Version: 1.0<br />
+Created-By: 1.0 (Android)<br />
+SHA1-Digest-Manifest: Uin+pH/oQLOt1Esnw9TTJpf8URc=</p>
+<p>Name: res/layout/main.xml<br />
+SHA1-Digest: +zm+W/d5nXnQRHhQq1BeXsj4sWU=</p>
+<p>Name: res/drawable/keys.png<br />
+SHA1-Digest: 9CMNr6u3Zg/XymrpDC4NH/Qb+GE=</p>
+<p>Name: AndroidManifest.xml<br />
+SHA1-Digest: q4qz8AP4LsfMh0TWEgTcSif6eqg=</p>
+<p>Name: resources.arsc<br />
+SHA1-Digest: U1T+Km9u0pHDYncmJTz+Fae35iU=</p>
+<p>Name: classes.dex<br />
+SHA1-Digest: iOqu/znF0ISqd6UtTmA4d5isoQs=</p>
+<p>从上面可以看到多了一项SHA1-Digest-Manifest的值，这个值就是MANIFEST.MF文件的SHA-1并base64编码后的值。</p>
+<p>源码中也可以看出：</p>
+<p><a class="img-hyperlink" href="http://www.blogfshare.com/wp-content/uploads/Android-APK-_11766/image_6.png"><img style="background-image: none; float: none; padding-top: 0px; padding-left: 0px; margin-left: auto; display: block; padding-right: 0px; margin-right: auto; border-width: 0px;" title="image" src="http://www.blogfshare.com/wp-content/uploads/Android-APK-_11766/image_thumb_6.png" alt="image" width="428" height="521" border="0" /></a></p>
+<p>而后面几项的值是对MANIFEST.MF文件中的每项再次SHA1并base64编码后的值。</p>
+<p>把MANIFEST.MF文件的第一项拿出来，加两个\r\n：</p>
+<p>Name: res/layout/main.xml<br />
+SHA1-Digest: +zm+W/d5nXnQRHhQq1BeXsj4sWU=</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>保存为文件，查看文件的SHA1值为：FB39BE5BF7799D79D0447850AB505E5EC8F8B165</p>
+<p>复制到windex，然后使用base64进行编码，结果为：+zm+W/d5nXnQRHhQq1BeXsj4sWU=</p>
+<p>也就是上面CERT.SF文件中的第一项。</p>
+<p>&nbsp;</p>
+<p>最后一个文件CERT.RSA包含了公钥信息和发布机构信息。</p>
+<p>首先我们使用自己的公钥对apk进行签名然后再来查看该文件的信息。</p>
+<p>下载openssl：<a href="http://openssl-for-windows.googlecode.com/files/openssl-0.9.8k_WIN32.zip">http://openssl-for-windows.googlecode.com/files/openssl-0.9.8k_WIN32.zip</a></p>
+<p>解压进入bin目录，执行：</p>
+<p>openssl genrsa -3 -out testkey.pem 2048</p>
+<p>成功生成：testkey.pem</p>
+<pre>openssl req -new -x509 -key testkey.pem -out testkey.x509.pem -days 10000</pre>
+<p>如有错误：Unable to load config info from <a href="http://www.blogfshare.com/wp-content/uploads/Android-APK-_11766/openssl.cnf">c:/openssl/ssl/openssl.cnf</a>，把文件复制到这个目录即可。</p>
+<p><a class="img-hyperlink" href="http://www.blogfshare.com/wp-content/uploads/Android-APK-_11766/image_7.png"><img style="background-image: none; float: none; padding-top: 0px; padding-left: 0px; margin-left: auto; display: block; padding-right: 0px; margin-right: auto; border-width: 0px;" title="image" src="http://www.blogfshare.com/wp-content/uploads/Android-APK-_11766/image_thumb_7.png" alt="image" width="875" height="479" border="0" /></a></p>
+<p>最后得到新签名的new.apk文件，找到里面的CERT.RSA文件，使用下面的程序得到里面的信息：</p>
+<p>package getCerFromCERTRSA;</p>
+<p>import java.io.FileInputStream;<br />
+import java.security.cert.X509Certificate;</p>
+<p>import sun.security.pkcs.PKCS7;</p>
+<p>public class Test {<br />
+public static void main(String[] args) throws Exception {<br />
+FileInputStream fis = new FileInputStream(&ldquo;F:\\CERT.RSA&rdquo;);<br />
+PKCS7 pkcs7 = new PKCS7(fis);<br />
+X509Certificate publicKey = pkcs7.getCertificates()[0];</p>
+<p>System.out.println(&ldquo;issuer1:&rdquo; + publicKey.getIssuerDN());<br />
+System.out.println(&ldquo;subject2:&rdquo; + publicKey.getSubjectDN());<br />
+System.out.println(publicKey.getPublicKey());<br />
+}<br />
+}</p>
+<p>输出结果如下：</p>
+<p>issuer1:EMAILADDRESS=AloneMonkey@163.com, CN=AloneMonkey, OU=Coder, O=Coder, L=changsha, ST=hunan, C=cn<br />
+subject2:EMAILADDRESS=AloneMonkey@163.com, CN=AloneMonkey, OU=Coder, O=Coder, L=changsha, ST=hunan, C=cn<br />
+Sun RSA public key, 2048 bits<br />
+modulus: 
+27930608814223381116057921387749214219559488459834487651049472010943787998241917988099072185267085555323069515811092018497891216669481600034343393035843203267770583265755751519703070241992378137769943338514083146152811868483298881047691082051273026613334389423463323096799738980315739301150294781233689740925257750884810644704745529309986744250843593240651888438182488344317720617399108875832748401930758903852667930580643990438517537220738513412902358548274823884382164690517621920930706694824579819829817712366306758824210255361732602763101633753447049235308644785379979711318126409377911209205177369163520192093063<br />
+public exponent: 3</p>
+<p>&nbsp;</p>
+<p>就是刚刚我们输入的信息。</p>
+<p>&nbsp;</p>
+<p>PS：如果代码出现找不到sun.security.pkcs.PKCS7时，解决方法是：右键工程属性。</p>
+<p><a class="img-hyperlink" href="http://www.blogfshare.com/wp-content/uploads/Android-APK-_11766/image_8.png"><img style="background-image: none; float: none; padding-top: 0px; padding-left: 0px; margin-left: auto; display: block; padding-right: 0px; margin-right: auto; border-width: 0px;" title="image" src="http://www.blogfshare.com/wp-content/uploads/Android-APK-_11766/image_thumb_8.png" alt="image" width="653" height="437" border="0" /></a>然后点击Add：</p>
+<p><a class="img-hyperlink" href="http://www.blogfshare.com/wp-content/uploads/Android-APK-_11766/image_9.png"><img style="background-image: none; float: none; padding-top: 0px; padding-left: 0px; margin-left: auto; display: block; padding-right: 0px; margin-right: auto; border-width: 0px;" title="image" src="http://www.blogfshare.com/wp-content/uploads/Android-APK-_11766/image_thumb_9.png" alt="image" width="436" height="333" border="0" /></a></p>
+<p>总结：不同的程序公钥不同。</p>
+<p>签名校验：</p>
+<p>1.程序自校验，可以把原本的公钥信息（或者.RSA文件）存放到某一文件处，运行时计算当前的公钥信息（或者.RSA文件）与存放的信息是否一致。</p>
+<p>2.联网校验，运行时的公钥信息和服务器端存储的公钥信息进行比对。</p>

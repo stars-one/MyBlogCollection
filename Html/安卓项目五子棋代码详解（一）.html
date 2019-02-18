@@ -1,0 +1,118 @@
+原文链接：http://www.cnblogs.com/kexing/archive/2017/07/31/7265755.html
+<p>&nbsp;</p>
+<p>暑假一时心血来潮，就是做了一个五子棋的安卓开发项目，个人感觉从中学到了许多，也是把开发的经验写出来，方便以后自己复习，也方便他人学习~~<br />
+
+&nbsp;</p>
+<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+废话不多说，先来张已经完成的图片&mdash;&mdash;<br />
+</div>
+<div><img src="http://images2017.cnblogs.com/blog/1210268/201801/1210268-20180109110927988-377607878.jpg" alt="" width="461" height="818" />
+<p>&nbsp;</p>
+
+<br />
+<br />
+我设计了一个更换背景的功能，以下是更换背景之后的图片&mdash;&mdash;<br />
+<br />
+</div>
+<div><img src="http://images2017.cnblogs.com/blog/1210268/201801/1210268-20180109111000644-164698144.jpg" alt="" width="363" height="616" />
+<p>&nbsp;</p>
+
+好啦，那接下来就是进入正题&mdash;&mdash;<br />
+<br />
+<br />
+界面的这些先放到一边，五子棋主要核心是实现能够下棋，能够判断输赢，我的这个项目还是简单的单人游戏，适合自己一个人玩耍<img title="五子棋安卓开发详细解析（一）" src="http://www.sinaimg.cn/uc/myshow/blog/misc/gif/E___6725EN00SIGG.gif" alt="五子棋安卓开发详细解析（一）" /><img title="五子棋安卓开发详细解析（一）" src="http://www.sinaimg.cn/uc/myshow/blog/misc/gif/E___6725EN00SIGG.gif" alt="五子棋安卓开发详细解析（一）" />，我就先说明核心的部分，其他的功能之后一步步的讲解。<br />
+
+<br />
+首先就是要实现一个自定义View，新建一个Pannel类，让其继承View，并一个生成带参数的构造方法<br />
+<br />
+<br />
+之后，在构造方法中调用一个init()方法</div>
+<div><br />
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">public</span><span style="color: #000000;"> Panel(Context context, AttributeSet attrs) {
+        </span><span style="color: #0000ff;">super</span><span style="color: #000000;">(context, attrs);
+        init();<span style="color: #008000;">//<span style="color: #008000;">调用init()方法</span></span>
+    }</span></pre>
+</div>
+<p>接下来我们定义一个init()方法，这个方法<span style="color: #ff0000;">主要用来设置画笔的一些相关属性和初始化棋子图片资源并改其大小</span>，init()方法定义如下</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> init() {
+        paint.setColor(Color.BLACK);</span><span style="color: #008000;">//</span><span style="color: #008000;">设置画笔颜色为黑色</span>
+        paint.setAntiAlias(<span style="color: #0000ff;">true</span>);<span style="color: #008000;">//</span><span style="color: #008000;">开启抗锯齿功能</span>
+        paint.setDither(<span style="color: #0000ff;">true</span>);<span style="color: #008000;">//</span><span style="color: #008000;">使用图像抖动处理</span>
+        paint.setStyle(Paint.Style.STROKE);<span style="color: #008000;">//</span><span style="color: #008000;">只绘制图形轮廓（描边）</span>
+<span style="color: #000000;">        
+        Whitepiece </span>= BitmapFactory.decodeResource(getResources(), R.drawable.stone_w2);<span style="color: #008000;">//</span><span style="color: #008000;">初始化白色棋子图片</span>
+        Blackpiece = BitmapFactory.decodeResource(getResources(), R.drawable.stone_b1);<span style="color: #008000;">//</span><span style="color: #008000;">初始化黑色棋子图片</span>
+    }</pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="color: #ff0000;">补充：</span></p>
+<p><span style="color: #ff0000;">　　<span style="color: #0000ff;">paint.setStyle中可选择有三种选择：</span></span></p>
+<ol>
+<li><span style="color: #ff0000;"> Paint.Style.STROKE 只绘制图形轮廓（描边）</span></li>
+<li><span style="color: #ff0000;">Paint.Style.FILL 只绘制图形内容</span></li>
+<li><span style="color: #ff0000;"> Paint.Style.FILL_AND_STROKE 既绘制轮廓也绘制内容</span></li>
+</ol>
+<p>　　<span style="color: #0000ff;">paint.setDither()方法的意义：</span></p>
+<p>　　<span style="color: #008000;"><span style="color: #ff0000;">设定是否使用图像抖动处理，会使绘制出来的图片颜色更加平滑和饱满，图像更加清晰</span> </span></p>
+</div>
+<div>　　<span style="color: #0000ff;">paint.setAntiAlias的意义：</span></div>
+<div>　　<span style="color: #ff0000;">设置是否使用抗锯齿功能，会消耗较大资源，绘制图形速度会变慢</span><br />　　<br />
+<br />
+之后，重写ondraw方法，这个方法就是五子棋核心的方法，<span style="color: #ff0000;">是用来画棋盘和棋子</span><br />
+<br />
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">@Override
+    </span><span style="color: #0000ff;">protected</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> onDraw(Canvas canvas) {
+        </span><span style="color: #0000ff;">super</span><span style="color: #000000;">.onDraw(canvas);
+        
+        drawBoard(canvas);</span><span style="color: #008000;">//</span><span style="color: #008000;">画棋盘</span>
+        drawPiece(canvas);<span style="color: #008000;">//</span><span style="color: #008000;">画棋子</span>
+        checkGameover();<span style="color: #008000;">//</span><span style="color: #008000;">检查游戏是否结束</span>
+<span style="color: #000000;">        
+    }</span></pre>
+</div>
+<p>可以看到，我在onDraw()方法里面中调用了一个checkGameOver()方法，这个方法就是字面意思，<span style="color: #ff0000;">用来检查游戏是否结束，结束了就可以停止onDraw方法，也就是用户触摸后，paint不会再绘制棋子来</span>，游戏结束了还能绘制棋子，这个想想就有些不科学，是吧？这也就是这个checkGameOver()方法存在的意义</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+除此之外，还需要重写一个onTouchEvent()方法，这个方法<span style="color: #ff0000;">用来判断当前用户手指触摸状态并实现下棋（也就是在棋盘中绘制棋子）的功能，有了这个办法，便能与onDraw()方法联系起来。</span></div>
+<div><br /><span style="color: #ff0000;">详细地解释为，判断用户的手指交互状态，并获取用户手指触摸处的坐标，将坐标放置到一个数组（也可以说是点集合）中，之后由onDraw()方法中的drawPiece()方法获取数组中的坐标，在坐标出将棋子绘制出来</span></div>
+<div><br />onTouchEvent()方法代码如下：</div>
+<div><br />
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">@Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">boolean</span><span style="color: #000000;"> onTouchEvent(MotionEvent event) {
+        </span><span style="color: #0000ff;">if</span><span style="color: #000000;">(IsGameOver){
+            </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">int</span> action =<span style="color: #000000;"> event.getAction();
+        </span><span style="color: #0000ff;">if</span>(action == MotionEvent.ACTION_UP){<span style="color: #008000;">//</span><span style="color: #008000;">状态为单点触摸离开时获取当前触摸坐标</span>
+            <span style="color: #0000ff;">int</span> x= (<span style="color: #0000ff;">int</span><span style="color: #000000;">)(event.getX());
+            </span><span style="color: #0000ff;">int</span> y= (<span style="color: #0000ff;">int</span><span style="color: #000000;">)(event.getY());
+            Point p </span>=<span style="color: #000000;"> getValidPoint(x,y);
+            </span><span style="color: #0000ff;">if</span>(Whitearray.contains(p)||<span style="color: #000000;"> Blackarray.contains(p)){
+                </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+            }
+            </span><span style="color: #0000ff;">if</span><span style="color: #000000;">(IsWhite){
+                Whitearray.add(p);
+                
+            }</span><span style="color: #0000ff;">else</span><span style="color: #000000;">{
+                Blackarray.add(p);
+            }
+            invalidate(); </span><span style="color: #008000;">//</span><span style="color: #008000;">invalidate()是用来刷新View的，必须在UI线程中</span>
+            IsWhite = !<span style="color: #000000;">IsWhite;
+        }
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    }</span></pre>
+</div>
+<p>&nbsp;</p>
+<span style="color: #3366ff;">MotionEvent后可以选择的状态有很多，有单点触摸向下（ACTION_DOWN），单点触摸向上（ACTION_UP）等等，这里选择了单点触摸向上的状态，原因为有着更高的交互性和逻辑性，我们可以做一个假设，如果用户下到的时候，忽然发觉自己下错地方了，但是他的手指还是在屏幕上的，如果我们选择了单点触摸向下的这个状态，用户的手指一触摸到屏幕，棋子就已经落下（绘制）了，这样子的话不就会让用户体验变差了吗？但是，如果我们选择了单点触摸向上，也就是在用户手指松开的时候才绘制棋子，那么上面的情景就是得以很好的解决，用户只需要在屏幕上移动手指，到了合适位置松开手指便是可以落子。</span><br />
+</div>
+<div>呃&hellip;&hellip;是不是说太多口水话了？？好吧，反正也就是我自己看，没事。</div>
+<div>看了一下下面的代码，感觉没有什么好说的了，就这样了<br /><br /><span style="color: #ff0000;">&nbsp;第一期我解释的主要是五子棋项目的主要方法，理清它们之间的关系，之后都是好理解了。</span></div>
+<div><span style="color: #ff0000;">我自己感觉这样方法的话有助于加深理解，不然你直接去看一个项目，N多方法看了半天都是理不清其中的关系，看得心又累，眼又累&hellip;&hellip;</span></div>
+<div><br /><br /><span style="color: #ff0000;">这一期便是到这里了，下一期再继续详细解析，感谢观看！！（如果有人看的话&hellip;&hellip;&lt;(￣ˇ￣)/）</span><br />
+</div>
+<p>&nbsp;</p>

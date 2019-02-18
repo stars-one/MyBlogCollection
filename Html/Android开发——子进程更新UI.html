@@ -1,0 +1,97 @@
+原文链接：http://www.cnblogs.com/kexing/archive/2018/05/20/9026960.html
+<h3><strong>方式一：Handler和Message</strong></h3>
+<p><strong>① 实例化一个Handler并重写handlerMessage()方法</strong></p>
+<div class="cnblogs_code">
+<pre><span style="font-size: 14px;"><span style="color: #0000ff;">private</span> Handler handler =<span style="color: #000000;"> newHandler() {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> handleMessage(Message msg) {
+          </span><span style="color: #008000;">//</span><span style="color: #008000;"> 处理消息</span>
+    <span style="color: #0000ff;">super</span><span style="color: #000000;">.handleMessage(msg);
+    </span><span style="color: #0000ff;">switch</span><span style="color: #000000;"> (msg.what) {
+    </span><span style="color: #0000ff;">case</span> 1<span style="color: #000000;">:
+      button1.setText(</span>"点击安装"<span style="color: #000000;">);
+      </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">case</span> 2<span style="color: #000000;">:
+      button1.setText(</span>"打开"<span style="color: #000000;">);
+      </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+    }
+    };
+ };</span></span></pre>
+</div>
+<p>&nbsp;</p>
+<p><strong>② 在子线程中获取或创建消息，并使用handler对象发送</strong></p>
+<div class="container">
+<div class="cnblogs_code">
+<pre><span style="font-size: 14px;">Message msg =<span style="color: #000000;"> handler.obtainMessage();
+msg.what </span>= 1<span style="color: #000000;">;
+handler.sendMessage(msg);</span></span></pre>
+</div>
+<h3><strong>方式二：在子线程中直接调用Activity.runOnUiThread(Runnable action)方法</strong></h3>
+<div class="container">
+<div class="cnblogs_code">
+<pre><span style="font-size: 14px;">runOnUiThread(<span style="color: #0000ff;">new</span><span style="color: #000000;"> Runnable() {
+  @Override
+  </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> run() {
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 更新UI的操作</span>
+<span style="color: #000000;">  }
+});</span></span></pre>
+</div>
+<h3><strong>方式三：在子线程中调用View的post()方法</strong></h3>
+<div class="cnblogs_code">
+<pre><span style="font-size: 14px;">myTextView.post(<span style="color: #0000ff;">new</span><span style="color: #000000;"> Runnable() {          
+  @Override
+  </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> run() {
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 更新UI</span>
+<span style="color: #000000;">    myView.setText(&ldquo;更新UI&rdquo;);
+  }});</span></span></pre>
+</div>
+<h3><strong>方式四：在子线程中调用View.PostDelayed(Runnabe,long)</strong></h3>
+<h3><strong><strong>方式五：Handler的post()方法</strong></strong></h3>
+<p><strong><strong>① 创建一个Handler成员变量</strong></strong></p>
+<div class="cnblogs_code">
+<pre><span style="font-size: 14px;"><span style="color: #0000ff;">private</span> Handler handler = <span style="color: #0000ff;">new</span> Handler();</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><strong><strong>② 在子线程中调动post()方法</strong></strong></p>
+<div class="cnblogs_code">
+<pre><span style="font-size: 14px;">handler.post(<span style="color: #0000ff;">new</span><span style="color: #000000;"> Runnable() {           
+  @Override
+  </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> run() {
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 更新UI</span>
+<span style="color: #000000;">   myView.setText(&ldquo;更新UI&rdquo;);
+  }});</span></span></pre>
+</div>
+<h3><strong>方式六：AsyncTask</strong></h3>
+<div class="cnblogs_code">
+<pre><span style="font-size: 14px;"><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">class</span> DownloadFilesTask <span style="color: #0000ff;">extends</span> AsyncTask&lt;URL, Integer, Long&gt; 
+ <span style="color: #008000;">//</span><span style="color: #008000;">在这里声明了Params、Progress、Result参数的类型</span>
+<span style="color: #000000;"> {
+   </span><span style="color: #008000;">//</span><span style="color: #008000;">因为这里不需要使用onPreExecute回调方法，所以就没有加入该方法
+    
+   </span><span style="color: #008000;">//</span><span style="color: #008000;">后台线程的目的是更具URL下载数据</span>
+    <span style="color: #0000ff;">protected</span><span style="color: #000000;"> Long doInBackground(URL... urls) {
+      </span><span style="color: #0000ff;">int</span> count = urls.length;<span style="color: #008000;">//</span><span style="color: #008000;">urls是数组，不止一个下载链接</span>
+      <span style="color: #0000ff;">long</span> totalSize = 0;<span style="color: #008000;">//</span><span style="color: #008000;">下载的数据</span>
+     <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = 0; i &lt; count; i++<span style="color: #000000;">) {
+       </span><span style="color: #008000;">//</span><span style="color: #008000;">Download是用于下载的一个类，和AsyncTask无关，大家可以忽略他的实现</span>
+       totalSize +=<span style="color: #000000;"> Downloader.downloadFile(urls[i]);
+       publishProgress((</span><span style="color: #0000ff;">int</span>) ((i / (<span style="color: #0000ff;">float</span>) count) * ));<span style="color: #008000;">//</span><span style="color: #008000;">更新下载的进度
+       </span><span style="color: #008000;">//</span><span style="color: #008000;"> Escape early if cancel() is called</span>
+       <span style="color: #0000ff;">if</span> (isCancelled()) <span style="color: #0000ff;">break</span><span style="color: #000000;">;
+     }
+     </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> totalSize;
+   }
+  
+   </span><span style="color: #008000;">//</span><span style="color: #008000;">更新下载进度</span>
+   <span style="color: #0000ff;">protected</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> onProgressUpdate(Integer... progress) {
+     setProgressPercent(progress[</span>0<span style="color: #000000;">]);
+   }
+  
+   </span><span style="color: #008000;">//</span><span style="color: #008000;">将下载的数据更新到UI线程</span>
+   <span style="color: #0000ff;">protected</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> onPostExecute(Long result) {
+     showDialog(</span>"Downloaded " + result + " bytes"<span style="color: #000000;">);
+   }
+ }</span></span></pre>
+</div>
+<p>&nbsp;</p>
+</div>
+</div>

@@ -1,0 +1,108 @@
+原文链接：http://www.cnblogs.com/kexing/archive/2017/08/19/7397869.html
+<p>&nbsp;</p>
+<p>呼，忙了两天了这个，找了各种资料，勉勉强强实现我的功能，这个还得改进一下，线程方面的知识没有学到多少，弄了线程画UI有着各种bug，无奈。。就这样跳过先了，哪一天有时间在回来搞一下。</p>
+<p>&nbsp;</p>
+<p>正文&mdash;&mdash;&mdash;&mdash;</p>
+<p>　　</p>
+<p>要实现开头动画，有两种方法，一种是用xml文件定义，第二种则是用java实现。</p>
+<p>xml动画中，有着四种基本的动画，如下图片说明</p>
+<p>&nbsp;</p>
+<p><img title="" src="http://img.blog.csdn.net/20160801095637398" alt="这里写图片描述" /></p>
+<p>可以使用这四种组合出更加高级的xml动画</p>
+<p>&nbsp;</p>
+<p><a href="http://www.jb51.net/article/39678.htm" target="_blank">具体请点击这个：XML做动画UI</a></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 18px;"><strong>使用xml动画的方法过程：</strong></span></p>
+<p>第一步，首先要在res新建一个anim的文件夹，之后，在里面写xml动画文件，如图</p>
+<p>&nbsp;</p>
+<p><img src="data:image/png;base64,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" alt="" /></p>
+<p>&nbsp;</p>
+<p>第二步，加载资源文件</p>
+<p>示范代码如下，改一下后面的R.anin.xxx</p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:java;gutter:true;">Animation animation=AnimationUtils.loadAnimation(this, R.anim.fade_in);
+</pre>
+</div>
+<p>&nbsp;第三步，为某个控件指定动画</p>
+<p>&nbsp;</p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:java;gutter:true;">first.startAnimation(animation);
+</pre>
+</div>
+<p>&nbsp;PS：</p>
+<ol>
+<li>first是一个ImageView</li>
+<li>这个方法放在线程run()方法里会报错，我对线程不太懂，所以还找不到解决办法</li>
+</ol>
+<p>&nbsp;</p>
+<p>除此之外，一般我们都是要给animation添加监听器，定义动画开始前的行为，动画循坏的行为，和动画结束的行为</p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:java;gutter:true;">				AnimationListener animationlistener = new AnimationListener() {//设置动画监听事件
+					
+					@Override
+					public void onAnimationStart(Animation arg0) {//动画开始前
+						// TODO Auto-generated method stub
+						
+					}
+					
+					@Override
+					public void onAnimationRepeat(Animation arg0) {//动画循坏时
+						// TODO Auto-generated method stub
+						
+					}
+					
+					@Override
+					public void onAnimationEnd(Animation arg0) {//动画结束后
+						Intent intent = new Intent();
+						intent.setClass(StartActivity.this, MainActivity.class);
+						StartActivity.this.startActivity(intent);
+							
+						
+					}
+				}; 	
+</pre>
+</div>
+<p>&nbsp;开头动画一般结束之后都是跳转到app主界面的activity，用Intent意图跳转activity</p>
+<p>不要忘了在AndroidMainfest里面声明一个activity</p>
+<p>&nbsp;</p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:java;gutter:true;">animation.setAnimationListener(animationlistener);
+</pre>
+</div>
+<p>&nbsp;之后设置监听器方法，这个不要忘</p>
+<p>&nbsp;</p>
+<p><strong><span style="font-size: 16px;">使用java方法实现动画效果：</span></strong></p>
+<p><strong><span style="font-size: 16px;"><br /></span></strong><span style="font-size: 16px;">第一步，new一个动画对象</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:java;gutter:true;">AlphaAnimation alphaanimation = new AlphaAnimation(0.0f, 1.0f);
+				//透明度从0.0（完全透明）到1.0（完全不透明）
+</pre>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px;">上述代码就是实现淡入效果的，举一反三，其他的这里便不多说<br /></span></p>
+<p><span style="font-size: 16px;">&nbsp;</span></p>
+<p><span style="font-size: 16px;">第二步，为对象设置相关属性，</span></p>
+<p>&nbsp;</p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:java;gutter:true;">　　　　　alphaanimation.setDuration(3000);//设置动画持续时间为3s
+	alphaanimation.setFillAfter(true);//设置动画结束后保留当前状态
+</pre>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;当然不止这两种属性，不过常用的就这两种了，其他的话，百度吧</p>
+<p><span style="font-size: 16px;">&nbsp;第三步，为控件指定动画<br /></span></p>
+<p><span style="font-size: 16px;">&nbsp;</span></p>
+<p>&nbsp;</p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:java;gutter:true;">first.startAnimation(alphaanimation);
+</pre>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;PS：参数就是上述的对象名</p>
+<p>&nbsp;个人使用中遇到的问题：</p>
+<p>如果控件的visibility属性为gone的话，动画效果无法显示出来，要将visibility属性改为invisible，这样就行了</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><a href="http://blog.csdn.net/harvic880925/article/details/50995268" target="_blank">最后，附上参考：自定义控件三部曲</a></p>
+<p>&nbsp;</p>

@@ -1,0 +1,83 @@
+原文链接：http://www.cnblogs.com/kexing/archive/2017/08/02/7273580.html
+<p>hello，大家好，这里是第二期的代码详解。</p>
+<p>上一期的说明个人重新看了一下发现还有逻辑没有理清，这里便补充说明一下，实现自定义view要重写三种方法，分别是<span style="color: #0000ff;">onMeasure()，onLayout()，onDraw()，</span></p>
+<p><span style="color: #ff0000;">　　1.View本身大小多少，这由onMeasure()决定；</span></p>
+<p><span style="color: #ff0000;">　　2.View在ViewGroup中的位置如何，这由onLayout()决定；</span></p>
+<p><span style="color: #ff0000;">　　3.绘制View，onDraw()定义了如何绘制这个View。<br /></span></p>
+<p>
+<span style="color: #ff0000;"><span style="color: #000000;">在这个五子棋项目中，onLayout是采取默认的，并没有重写。</span></span></p>
+<p>&nbsp;</p>
+<p>话不多说，进入正题&mdash;&mdash;</p>
+<p>&nbsp;</p>
+<p><span style="color: #ff0000;"><span style="color: #000000;">onMeasure()方法上一期没有说明，这一期来说明一下，代码如下：<br /></span></span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">@Override
+    </span><span style="color: #0000ff;">protected</span> <span style="color: #0000ff;">void</span> onMeasure(<span style="color: #0000ff;">int</span> widthMeasureSpec, <span style="color: #0000ff;">int</span><span style="color: #000000;"> heightMeasureSpec) {
+        </span><span style="color: #0000ff;">int</span> WidthSize =<span style="color: #000000;"> MeasureSpec.getSize(widthMeasureSpec);
+        </span><span style="color: #0000ff;">int</span> WidthMode =<span style="color: #000000;"> MeasureSpec.getMode(widthMeasureSpec);
+        
+        </span><span style="color: #0000ff;">int</span> heightSize =<span style="color: #000000;"> MeasureSpec.getSize(heightMeasureSpec);
+        </span><span style="color: #0000ff;">int</span> heightMode =<span style="color: #000000;"> MeasureSpec.getMode(heightMeasureSpec);
+        
+        </span><span style="color: #0000ff;">int</span> width = Math.min(WidthSize, heightSize); <span style="color: #008000;">//</span><span style="color: #008000;">因为棋盘是正方形，所以取最小值，</span>
+        
+        <span style="color: #0000ff;">if</span>(WidthMode == MeasureSpec.UNSPECIFIED){<span style="color: #008000;">//</span><span style="color: #008000;">MeasureSpec.UNSPECIFIED表示未知大小</span>
+            width =<span style="color: #000000;"> heightSize;
+        }</span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span>(heightMode ==<span style="color: #000000;"> MeasureSpec.UNSPECIFIED){
+            width </span>=<span style="color: #000000;"> WidthSize;
+        }
+        setMeasuredDimension(width, width);</span><span style="color: #008000;">//</span><span style="color: #008000;">设置实际大小，两个width分别为长和宽，相同即是正方形</span>
+    }</pre>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p style="font-family: Helvetica, Tahoma, Arial, sans-serif; line-height: 25px; text-align: left; padding: 0px; margin: 0px;"><span style="color: #3366ff;">protected void&nbsp;<span style="margin-right: 2px;">onMeasure&nbsp;(int widthMeasureSpec, int heightMeasureSpec)</span></span></p>
+<p style="font-family: Helvetica, Tahoma, Arial, sans-serif; line-height: 25px; text-align: left; padding: 0px; margin: 0px;"><span style="color: #3366ff;">onMeasure传入的两个参数是由上一层控件传入的大小，有多种情况，重写该方法时需要对计算控件的实际大小，然后调用<span style="line-height: 13px;">setMeasuredDimension(int, int)设置实际大小。</span></span></p>
+<p><span style="color: #3366ff;"> onMeasure传入的widthMeasureSpec和heightMeasureSpec不是一般的尺寸数值，而是将模式和尺寸组合在一起的数值。</span></p>
+<p><span style="color: #3366ff;">我们需要通过int mode = MeasureSpec.getMode(widthMeasureSpec)得到模式，用int size =&nbsp;MeasureSpec.getSize(widthMeasureSpec)得到尺寸</span></p>
+<p><span style="color: #3a3a3a;"><span style="color: #3a3a3a;"><span style="color: #ff0000;">这个方法代码其实就是用来设置棋盘的大小的。</span><br /></span></span></p>
+<p>&nbsp;</p>
+<p>除此之外，还要重写一个onSizeChange()方法，代码如下：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">@Override
+    </span><span style="color: #0000ff;">protected</span> <span style="color: #0000ff;">void</span> onSizeChanged(<span style="color: #0000ff;">int</span> w, <span style="color: #0000ff;">int</span> h, <span style="color: #0000ff;">int</span> oldw, <span style="color: #0000ff;">int</span> oldh) {<span style="color: #008000;">//</span><span style="color: #008000;">当View大小发生改变（比如分辨率变化）的时候会被系统自动回调。</span>
+        <span style="color: #0000ff;">super</span><span style="color: #000000;">.onSizeChanged(w, h, oldw, oldh);
+        
+        PanelWidth </span>=<span style="color: #000000;">w;
+        mLineHeight </span>= PanelWidth * 1.0f/<span style="color: #000000;">Max_LINE;
+        
+        </span><span style="color: #0000ff;">int</span> pieceWidth = (<span style="color: #0000ff;">int</span>)(mLineHeight*ratioPieceOfLineheight);<span style="color: #008000;">//</span><span style="color: #008000;">棋子大小占行宽的3/4</span>
+        Whitepiece = Bitmap.createScaledBitmap(Whitepiece, pieceWidth, pieceWidth, <span style="color: #0000ff;">false</span>); <span style="color: #008000;">//</span><span style="color: #008000;">以src为原图，创建新的图像，指定新图像的高宽以及是否可变</span>
+        Blackpiece = Bitmap.createScaledBitmap(Blackpiece, pieceWidth, pieceWidth, <span style="color: #0000ff;">false</span><span style="color: #000000;">);
+    }
+    </span></pre>
+</div>
+<p>解释标记出来了，这里也就不啰嗦什么了。</p>
+<p>接下来解释的是onDraw()方法里面的drawBoard()方法。代码如下：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> drawBoard(Canvas canvas) {
+        </span><span style="color: #0000ff;">int</span> w =<span style="color: #000000;"> PanelWidth;
+        </span><span style="color: #0000ff;">float</span> LineHeight =<span style="color: #000000;"> mLineHeight;
+        </span><span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">int</span> i=0;i&lt;Max_LINE;i++){    <span style="color: #008000;">//</span><span style="color: #008000;">画十条线</span>
+            <span style="color: #0000ff;">int</span> startX = (<span style="color: #0000ff;">int</span>)(LineHeight/2);<span style="color: #008000;">//</span><span style="color: #008000;">设置起点横坐标为半个棋盘空格的宽度</span>
+            <span style="color: #0000ff;">int</span> endX = (<span style="color: #0000ff;">int</span>)(w-LineHeight/2);<span style="color: #008000;">//</span><span style="color: #008000;">设置终点X横坐标为宽度减去半个lineHeight(棋盘空格宽度)</span>
+            <span style="color: #0000ff;">int</span> y =(<span style="color: #0000ff;">int</span>)((0.5+i)*<span style="color: #000000;">LineHeight);
+            canvas.drawLine(startX, y, endX, y, paint);</span><span style="color: #008000;">//</span><span style="color: #008000;">画横线</span>
+            canvas.drawLine(y, startX, y, endX, paint);<span style="color: #008000;">//</span><span style="color: #008000;">画纵线，坐标反过来</span>
+<span style="color: #000000;">        }
+    }</span></pre>
+</div>
+<p>正如其名，drawBoard()就是用来画棋盘的，通过for循环画出横线，这里的注释需要仔细地思索一下，想清楚画笔起始坐标是如何计算得出的</p>
+<p>&nbsp;</p>
+<p>这一期就到这里了，下面附上参考资料：</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><a href="http://blog.csdn.net/pi9nc/article/details/18764863" target="_blank">深入自定义View的知识</a></p>
+<p><a href="http://www.blogjava.net/liuyanbo/archive/2012/03/15/371969.html" target="_blank">onMeasure简单见解</a></p>
+<h1>&nbsp;</h1>
+<p>&nbsp;</p>
+<p><span style="color: #ff0000;"><span style="color: #000000;">&nbsp;</span></span></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><span style="color: #ff0000;"><span style="color: #000000;">&nbsp;</span></span></p>
+<p>&nbsp;</p>

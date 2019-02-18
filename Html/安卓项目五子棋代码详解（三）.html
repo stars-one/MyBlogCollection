@@ -1,0 +1,34 @@
+原文链接：http://www.cnblogs.com/kexing/archive/2017/08/22/7413254.html
+<p>&nbsp;</p>
+<p>上一期讲到了drawBoard()方法，这一期便是讲解drawPiece()方法，这一期逻辑需要结合第一期所讲的获取棋子坐标一起理解，看多几遍理清思路便好。</p>
+<p>&nbsp;</p>
+<p>正文开始&mdash;&mdash;</p>
+<p>棋子的个数有很多，而且每一个都是有着对应的坐标，这就需要我们给棋子弄一个<span style="color: #ff0000;">坐标集合</span>，按照颜色分为两种，<span style="color: #ff0000;">一种是白色棋子坐标集合，另外一种则是黑色棋子坐标</span>，这样可以方便之后判断输赢</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">private</span> ArrayList&lt;Point&gt; Whitearray = <span style="color: #0000ff;">new</span> ArrayList&lt;Point&gt;(); <span style="color: #008000;">//</span><span style="color: #008000;">白棋坐标集合</span>
+<span style="color: #0000ff;">private</span> ArrayList&lt;Point&gt; Blackarray = <span style="color: #0000ff;">new</span> ArrayList&lt;Point&gt;(); <span style="color: #008000;">//</span><span style="color: #008000;">黑紫坐标集合<br /><br /><br /></span></pre>
+</div>
+<p>之后便是drawPiece()方法</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> drawPiece(Canvas canvas) {
+        </span><span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">int</span> i=0;i&lt;Whitearray.size();i++<span style="color: #000000;">){
+            Point whitePoint </span>=<span style="color: #000000;"> Whitearray.get(i);
+            
+            canvas.drawBitmap(Whitepiece,(whitePoint.x</span>+(1-ratioPieceOfLineheight)/2)*mLineHeight,(whitePoint.y+(1-ratioPieceOfLineheight)/2)*mLineHeight,<span style="color: #0000ff;">null</span><span style="color: #000000;">);
+        }
+        </span><span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">int</span> i=0;i&lt;Blackarray.size();i++<span style="color: #000000;">){
+            Point blackPoint </span>=<span style="color: #000000;"> Blackarray.get(i);
+            
+            canvas.drawBitmap(Blackpiece,(blackPoint.x</span>+(1-ratioPieceOfLineheight)/2)*mLineHeight,(blackPoint.y+(1-ratioPieceOfLineheight)/2)*mLineHeight,<span style="color: #0000ff;">null</span><span style="color: #000000;">);
+        }
+    }</span></pre>
+</div>
+<p>这个方法中，<span style="color: #ff0000;">利用for循环，调用数组的get()方法获得棋子的坐标，之后再是调用canvas的drawBitmap()方法将棋子画出</span></p>
+<p>&nbsp;</p>
+<p>&nbsp; 这里所用的方法参数为</p>
+<p>&nbsp;</p>
+<p>drawBitmap(Bitmap bitmap, float left, float top, Paint paint)</p>
+<p><span style="color: #ff0000;">bitmap就是图片，left就是偏移左边的位置，top就是偏移右边的位置</span></p>
+<p>&nbsp;</p>

@@ -1,0 +1,36 @@
+原文链接：http://www.cnblogs.com/kexing/archive/2018/07/22/9350092.html
+<p><span style="font-size: 16px;">大内存只有在PS、视频处理上才会有明显的效果，主要是因为Windows要照顾没有配备超大容量内存的电脑，保证使用体验。</span></p>
+<p><span style="font-size: 16px;"><span style="font-size: 14px;">So，恰巧你的Win7有超过8GB的内存、Win10又刚好了16GB内存，而且刚刚好看到了这儿，那就别犹豫，一起动手，充分灵活的利用起这份硬件投资吧！</span></span></p>
+<p>&nbsp;</p>
+<p style="margin-top: 10px; margin-bottom: 10px; line-height: 1.75em;"><span style="font-size: 14px;">走着，Win+R之后输入regedit进入注册表编辑器，定位到</span></p>
+<p>&nbsp;</p>
+<p style="margin-top: 10px; margin-bottom: 10px; line-height: 1.75em;"><span style="font-size: 14px;">HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management</span></p>
+<p style="margin-top: 10px; margin-bottom: 10px; line-height: 1.75em;">&nbsp;</p>
+<p style="margin-top: 10px; margin-bottom: 10px; line-height: 1.75em; text-align: center;"><img style="border-width: 0px; border-style: initial; border-color: initial; width: auto !important; height: auto !important; visibility: visible !important; float: left;" src="https://mmbiz.qpic.cn/mmbiz_png/oCsHZVhxhwfibyBO1Q2MSIHu85ojGFd5MOZpWVE3cVdSiarHQrUK6apqRW20hJuVXdBHRkO06rCfsXsiabcbr2Tqg/640?wx_fmt=png&amp;wxfrom=5&amp;wx_lazy=1" alt="" border="0" data-ratio="0.7372262773722628" data-src="https://mmbiz.qpic.cn/mmbiz_png/oCsHZVhxhwfibyBO1Q2MSIHu85ojGFd5MOZpWVE3cVdSiarHQrUK6apqRW20hJuVXdBHRkO06rCfsXsiabcbr2Tqg/640?wx_fmt=png" data-type="png" data-w="685" data-fail="0" /></p>
+<p style="margin-top: 10px; margin-bottom: 10px; line-height: 1.75em;">&nbsp;</p>
+<p style="margin-top: 10px; margin-bottom: 10px; line-height: 1.75em;">&nbsp;</p>
+<p style="margin-top: 10px; margin-bottom: 10px; line-height: 1.75em;">&nbsp;</p>
+<p style="margin-top: 10px; margin-bottom: 10px; line-height: 1.75em;">&nbsp;</p>
+<p style="margin-top: 10px; margin-bottom: 10px; line-height: 1.75em;">&nbsp;</p>
+<p style="margin-top: 10px; margin-bottom: 10px; line-height: 1.75em;">&nbsp;</p>
+<p style="margin-top: 10px; margin-bottom: 10px; line-height: 1.75em;">&nbsp;</p>
+<p style="margin-top: 10px; margin-bottom: 10px; line-height: 1.75em;">&nbsp;</p>
+<p style="margin-top: 10px; margin-bottom: 10px; line-height: 1.75em;">&nbsp;</p>
+<p style="margin-top: 10px; margin-bottom: 10px; line-height: 1.75em;">&nbsp;</p>
+<p style="margin-top: 10px; margin-bottom: 10px; line-height: 1.75em;">&nbsp;</p>
+<p style="margin-top: 10px; margin-bottom: 10px; line-height: 1.75em;">&nbsp;</p>
+<p style="margin-top: 10px; margin-bottom: 10px; line-height: 1.75em;">&nbsp;</p>
+<p style="margin-top: 10px; margin-bottom: 10px; line-height: 1.75em;">&nbsp;</p>
+<p style="margin-top: 10px; margin-bottom: 10px; line-height: 1.75em;">&nbsp;</p>
+<p style="margin-top: 10px; margin-bottom: 10px; line-height: 1.75em;">&nbsp;</p>
+<p style="margin-top: 10px; margin-bottom: 10px; line-height: 1.75em;"><span style="font-size: 14px;">找到DisablePagingExecutive、LargeSystemCache、SecondLevelDataCache这三个选项。然后逐一进行设置，请听小编一一道来：</span></p>
+<p style="margin-top: 10px; margin-bottom: 10px; line-height: 1.75em;">&nbsp;</p>
+<p style="margin-top: 10px; margin-bottom: 10px; line-height: 1.5em;"><span style="font-size: 14px;">把<strong>DisablePagingExecutive的数值数据改成&ldquo;1&rdquo;</strong>是禁用页面文件，不再让Windows使用低速的硬盘进行数据交换，而全部在内存中完成，这项酌情使用，毕竟某些程序/游戏跑起来，32GB内存都是塞牙缝的；</span></p>
+<p style="margin-top: 10px; margin-bottom: 10px; line-height: 1.75em;">&nbsp;</p>
+<p style="margin-top: 10px; margin-bottom: 10px; line-height: 1.5em;"><span style="font-size: 14px;">将<strong>LargeSystemCache的数值数据修改为&ldquo;1&rdquo;</strong>，是启动大容量系统缓存，在内存中开辟出一些空间用于磁盘文件的预读取操作，修改这项，能有效提高系统的启动速度，但占用的内存空间也是蹭蹭的涨，实测Win10用16GB在可接受范围内，启动速度也增加了不少；</span></p>
+<p style="margin-top: 10px; margin-bottom: 10px; line-height: 1.75em;">&nbsp;</p>
+<p style="margin-top: 10px; margin-bottom: 10px; line-height: 1.5em;"><span style="font-size: 14px;">至于<strong>SecondLevelDataCache</strong>，就不能填写0或者1那么简单了，涉及到配合处理器二级缓存增加数据读取命中率，<strong>按照物理内存大小的1/8设置就好</strong>，4GB内存就把数值数据改成512、8GB内存就换成1024，以此类推。</span></p>
+<p style="margin-top: 10px; margin-bottom: 10px; line-height: 1.75em;">&nbsp;</p>
+<p style="margin-top: 10px; margin-bottom: 10px; line-height: 1.75em;"><span style="font-size: 16px;">只有经过详细的设置，Windows才会有效的利用大内存带来的好处，而不是停留在平庸的运行性能上。</span></p>
+<p style="margin-top: 10px; margin-bottom: 10px; line-height: 1.75em;">&nbsp;</p>
+<p>&nbsp;</p>

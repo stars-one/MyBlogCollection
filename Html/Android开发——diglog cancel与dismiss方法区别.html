@@ -1,0 +1,85 @@
+原文链接：http://www.cnblogs.com/kexing/archive/2017/09/14/7523539.html
+<div class="blog_title" style="margin-bottom: 15px;">
+<h3 style="font-size: 16px; line-height: 1.5em; margin-top: 0px; margin-right: 0px; margin-bottom: 0.5em; margin-left: 0px; padding-top: 10px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; color: black;"><a style="color: #108ac6; text-decoration: underline;" href="http://luren85.iteye.com/blog/975131" target="_blank">AlertDialog dismiss 和 cancel方法的区别</a></h3>
+<div class="news_tag" style="clear: both; display: block; margin-top: 10px; margin-right: 0px; margin-bottom: 5px; margin-left: 0px; line-height: 20px;">&nbsp;</div>
+</div>
+<p style="padding: 0px; margin: 0px;"><span style="font-size: 16px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; AlertDialog使用很方便，但是有一个问题就是：dismiss方法和cancel方法到底有什么不同？</span></p>
+<p style="padding: 0px; margin: 0px;">&nbsp;</p>
+<p style="padding: 0px; margin: 0px;"><span style="font-size: 16px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 今天有时间，看了看源码(其实源码并不是全都那么深奥的！~~)。</span></p>
+<p style="padding: 0px; margin: 0px;">&nbsp;</p>
+<p style="padding: 0px; margin: 0px;"><span style="font-size: 16px;"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; AlertDialog继承与Dialog，现在各位看看结构图：</span><br />
+</p>
+<p style="text-align: center; padding: 0px; margin: 0px;">
+<img style="border-style: initial; border-color: initial; border-width: 0px;" src="http://dl.iteye.com/upload/attachment/446658/6ca7c3a6-b0a7-3005-8af9-bc3e5740804f.jpg" alt="" width="458" height="227" /></p>
+<p style="text-align: left; padding: 0px; margin: 0px;"><span style="font-size: 16px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 然后在Dialog类中找到了dismiss和cancel方法的实现。重要看dismiss的源码：</span></p>
+<div id="" class="dp-highlighter" style="font-family: Monaco,'DejaVu Sans Mono','Bitstream Vera Sans Mono',Consolas,'Courier New',monospace; font-size: 12px; width: 694px; overflow-x: auto; overflow-y: auto; margin-left: 9px; word-break: break-all; word-wrap: break-word; padding: 1px;">
+<div class="bar">
+<div class="tools" style="text-align: left; color: black; font-weight: bold; padding: 3px; margin: 0px;">
+Java代码&nbsp;&nbsp;<a style="color: #108ac6; text-decoration: underline;" title="收藏这段代码" href="http://luren85.iteye.com/blog/975131" target="_blank"><img class="star" style="border-style: initial; border-color: initial; border-width: 0px;" src="http://luren85.iteye.com/images/icon_star.png" alt="收藏代码" /></a></div>
+
+
+</div>
+<ol class="dp-j" style="font-size: 1em; line-height: 1.4em; margin-top: 0px; margin-right: 0px; margin-bottom: 1px; margin-left: 0px; padding-top: 2px; padding-right: 0px; padding-bottom: 2px; padding-left: 0px; list-style-type: decimal; list-style-position: initial; color: #2b91af; border-width: 1px; border-color: #d1d7dc; border-style: solid;" start="1">
+<li style="font-size: 1em; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 38px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 10px; border-left-width: 1px; border-left-style: solid; border-left-color: #d1d7dc; line-height: 18px;">
+<span style="color: black;"><span class="keyword" style="color: #7f0055; font-weight: bold;">public<span style="color: black;">&nbsp;<span class="keyword" style="color: #7f0055; font-weight: bold;">void<span style="color: black;">&nbsp;cancel()&nbsp;{&nbsp;&nbsp;</span></span></span></span></span></li>
+<li style="font-size: 1em; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 38px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 10px; border-left-width: 1px; border-left-style: solid; border-left-color: #d1d7dc; line-height: 18px;">
+<span style="color: black;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword" style="color: #7f0055; font-weight: bold;">if<span style="color: black;">&nbsp;(mCancelMessage&nbsp;!=&nbsp;<span class="keyword" style="color: #7f0055; font-weight: bold;">null<span style="color: black;">)&nbsp;{&nbsp;&nbsp;</span></span></span></span></span></li>
+<li style="font-size: 1em; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 38px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 10px; border-left-width: 1px; border-left-style: solid; border-left-color: #d1d7dc; line-height: 18px;">
+<span style="color: black;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></li>
+<li style="font-size: 1em; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 38px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 10px; border-left-width: 1px; border-left-style: solid; border-left-color: #d1d7dc; line-height: 18px;">
+<span style="color: black;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment" style="color: #008200;">//&nbsp;Obtain&nbsp;a&nbsp;new&nbsp;message&nbsp;so&nbsp;this&nbsp;dialog&nbsp;can&nbsp;be&nbsp;re-used<span style="color: black;">&nbsp;&nbsp;</span></span></span></li>
+<li style="font-size: 1em; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 38px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 10px; border-left-width: 1px; border-left-style: solid; border-left-color: #d1d7dc; line-height: 18px;">
+<span style="color: black;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Message.obtain(mCancelMessage).sendToTarget();&nbsp;&nbsp;</span></li>
+<li style="font-size: 1em; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 38px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 10px; border-left-width: 1px; border-left-style: solid; border-left-color: #d1d7dc; line-height: 18px;">
+<span style="color: black;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li>
+<li style="font-size: 1em; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 38px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 10px; border-left-width: 1px; border-left-style: solid; border-left-color: #d1d7dc; line-height: 18px;">
+<span style="color: black;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dismiss();&nbsp;&nbsp;</span></li>
+<li style="font-size: 1em; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 38px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 10px; border-left-width: 1px; border-left-style: solid; border-left-color: #d1d7dc; line-height: 18px;">
+<span style="color: black;">&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li>
+
+</ol>
+</div>
+<p style="padding: 0px; margin: 0px;"><span style="font-size: 16px;">
+&nbsp;&nbsp;&nbsp; 看明白了吧！ 在cancel方法中调用了dismiss方法。 但是现在还有一个问题就是：mCancelMessage是什么？</span></p>
+<p style="padding: 0px; margin: 0px;"><span style="font-size: 16px;">
+&nbsp;&nbsp;&nbsp; private Message mCancelMessage; // 这是源码中的声明</span></p>
+<p style="padding: 0px; margin: 0px;"><span style="font-size: 16px;">
+&nbsp;&nbsp;&nbsp; 然后再来看源码：</span></p>
+<div id="" class="dp-highlighter" style="font-family: Monaco,'DejaVu Sans Mono','Bitstream Vera Sans Mono',Consolas,'Courier New',monospace; font-size: 12px; width: 694px; overflow-x: auto; overflow-y: auto; margin-left: 9px; word-break: break-all; word-wrap: break-word; padding: 1px;">
+<div class="bar">
+<div class="tools" style="text-align: left; color: black; font-weight: bold; padding: 3px; margin: 0px;">
+Java代码&nbsp;&nbsp;<a style="color: #108ac6; text-decoration: underline;" title="收藏这段代码" href="http://luren85.iteye.com/blog/975131" target="_blank"><img class="star" style="border-style: initial; border-color: initial; border-width: 0px;" src="http://luren85.iteye.com/images/icon_star.png" alt="收藏代码" /></a></div>
+
+
+</div>
+<ol class="dp-j" style="font-size: 1em; line-height: 1.4em; margin-top: 0px; margin-right: 0px; margin-bottom: 1px; margin-left: 0px; padding-top: 2px; padding-right: 0px; padding-bottom: 2px; padding-left: 0px; list-style-type: decimal; list-style-position: initial; color: #2b91af; border-width: 1px; border-color: #d1d7dc; border-style: solid;" start="1">
+<li style="font-size: 1em; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 38px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 10px; border-left-width: 1px; border-left-style: solid; border-left-color: #d1d7dc; line-height: 18px;">
+<span style="color: black;"><span class="keyword" style="color: #7f0055; font-weight: bold;">public<span style="color: black;">&nbsp;<span class="keyword" style="color: #7f0055; font-weight: bold;">void<span style="color: black;">&nbsp;setOnCancelListener(<span class="keyword" style="color: #7f0055; font-weight: bold;">final<span style="color: black;">&nbsp;OnCancelListener&nbsp;listener)&nbsp;{&nbsp;&nbsp;</span></span></span></span></span></span></span></li>
+<li style="font-size: 1em; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 38px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 10px; border-left-width: 1px; border-left-style: solid; border-left-color: #d1d7dc; line-height: 18px;">
+<span style="color: black;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword" style="color: #7f0055; font-weight: bold;">if<span style="color: black;">&nbsp;(listener&nbsp;!=&nbsp;<span class="keyword" style="color: #7f0055; font-weight: bold;">null<span style="color: black;">)&nbsp;{&nbsp;&nbsp;</span></span></span></span></span></li>
+<li style="font-size: 1em; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 38px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 10px; border-left-width: 1px; border-left-style: solid; border-left-color: #d1d7dc; line-height: 18px;">
+<span style="color: black;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mCancelMessage&nbsp;=&nbsp;mListenersHandler.obtainMessage(CANCEL,&nbsp;listener);&nbsp;&nbsp;</span></li>
+<li style="font-size: 1em; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 38px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 10px; border-left-width: 1px; border-left-style: solid; border-left-color: #d1d7dc; line-height: 18px;">
+<span style="color: black;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;<span class="keyword" style="color: #7f0055; font-weight: bold;">else<span style="color: black;">&nbsp;{&nbsp;&nbsp;</span></span></span></li>
+<li style="font-size: 1em; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 38px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 10px; border-left-width: 1px; border-left-style: solid; border-left-color: #d1d7dc; line-height: 18px;">
+<span style="color: black;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mCancelMessage&nbsp;=&nbsp;<span class="keyword" style="color: #7f0055; font-weight: bold;">null<span style="color: black;">;&nbsp;&nbsp;</span></span></span></li>
+<li style="font-size: 1em; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 38px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 10px; border-left-width: 1px; border-left-style: solid; border-left-color: #d1d7dc; line-height: 18px;">
+<span style="color: black;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li>
+<li style="font-size: 1em; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 38px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 10px; border-left-width: 1px; border-left-style: solid; border-left-color: #d1d7dc; line-height: 18px;">
+<span style="color: black;">&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li>
+<li style="font-size: 1em; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 38px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 10px; border-left-width: 1px; border-left-style: solid; border-left-color: #d1d7dc; line-height: 18px;">
+<span style="color: black;">&nbsp;&nbsp;</span></li>
+<li style="font-size: 1em; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 38px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 10px; border-left-width: 1px; border-left-style: solid; border-left-color: #d1d7dc; line-height: 18px;">
+<span style="color: black;">ublic&nbsp;<span class="keyword" style="color: #7f0055; font-weight: bold;">void<span style="color: black;">&nbsp;setCancelMessage(<span class="keyword" style="color: #7f0055; font-weight: bold;">final<span style="color: black;">&nbsp;Message&nbsp;msg)&nbsp;{&nbsp;&nbsp;</span></span></span></span></span></li>
+<li style="font-size: 1em; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 38px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 10px; border-left-width: 1px; border-left-style: solid; border-left-color: #d1d7dc; line-height: 18px;">
+<span style="color: black;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mCancelMessage&nbsp;=&nbsp;msg;&nbsp;&nbsp;</span></li>
+<li style="font-size: 1em; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 38px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 10px; border-left-width: 1px; border-left-style: solid; border-left-color: #d1d7dc; line-height: 18px;">
+<span style="color: black;">&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li>
+
+</ol>
+</div>
+<p><span style="font-size: 16px;">
+
+
+&nbsp;&nbsp; 现在问题清楚了，<span style="color: #ff0000;">就是如果你在创建AlertDialog的时候调用了setOnCancelListener 这个mCancelMessage变量有作用，否则dismiss和cancel等同。</span></span></p>

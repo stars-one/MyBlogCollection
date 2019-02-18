@@ -1,0 +1,100 @@
+原文链接：http://www.cnblogs.com/kexing/archive/2018/04/20/8890292.html
+<p>有的时候我们需要注入smali调用Log输出，打印字符串的值。</p>
+<p>比如说：</p>
+<p>如果我们要打印下面v1的值。</p>
+<p>new-instance v1, Ljava/lang/String;</p>
+<p>const-string v7, &ldquo;this is my string&rdquo;</p>
+<p>invoke-direct {v1, v7}, Ljava/lang/String;-&gt;&lt;init&gt;(Ljava/lang/String;)V</p>
+<p>那可能要先修改使用的寄存器数，然后添加打印：</p>
+<p><a class="img-hyperlink" href="http://www.blogfshare.com/wp-content/uploads/Android--_146BC/1.png"><img style="background-image: none; float: none; padding-top: 0px; padding-left: 0px; margin-left: auto; display: block; padding-right: 0px; margin-right: auto; border-width: 0px;" title="1" src="http://www.blogfshare.com/wp-content/uploads/Android--_146BC/1_thumb.png" alt="1" width="560" height="375" border="0" /></a></p>
+<p>这样注入是比较麻烦的，可以自己建一个crack.smali文件，并定义自己的Log信息输出函数，如下：</p>
+<div class="codecolorer-container java default" style="overflow: auto; white-space: nowrap;">
+<table cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td class="line-numbers">
+<div>1<br />2<br />3<br />4<br />5<br />6<br />7<br />8<br />9<br />10<br />11<br />12<br />13<br />14<br />15<br />16<br />17<br />18<br />19<br />20<br />21<br />22<br />23<br />24<br />25<br />26<br />27<br />28<br />29<br />30<br />31<br />32<br />33<br />34<br />35<br />36<br />37<br />38<br />39<br />40<br />41<br />42<br />43<br />44<br />45<br />46<br />47<br />48<br />49<br />50<br />51<br />52<br />53<br />54<br />55<br />56<br />57<br />58<br />59<br />60<br />61<br />62</div>
+
+</td>
+<td>
+<div class="java codecolorer">.<span class="kw1">class <span class="kw1">public Lcrack<span class="sy0">;<br />
+.<span class="kw1">super Ljava<span class="sy0">/lang<span class="sy0">/<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Aobject+java.sun.com&amp;btnI=I%27m%20Feeling%20Lucky"><span class="kw3">Object</span></a><span class="sy0">;<br />
+.<span class="me1">source <span class="st0">"crack.java"<br />
+&nbsp;<br />
+.<span class="me1">method <span class="kw1">public <span class="kw1">static log1<span class="br0">(Ljava<span class="sy0">/lang<span class="sy0">/<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Astring+java.sun.com&amp;btnI=I%27m%20Feeling%20Lucky"><span class="kw3">String</span></a><span class="sy0">;<span class="br0">)V #打印出info <span class="nu0">1字符串<br />
+&nbsp; &nbsp; .<span class="me1">locals <span class="nu0">1<br />
+&nbsp; &nbsp; .<span class="me1">prologue<br />
+&nbsp;<br />
+&nbsp; &nbsp; const<span class="sy0">-string v0, <span class="st0">"info 1"<br />
+&nbsp; &nbsp; invoke<span class="sy0">-<span class="kw1">static <span class="br0">{v0, p0<span class="br0">}, Landroid<span class="sy0">/util<span class="sy0">/Log<span class="sy0">;-&gt;d<span class="br0">(Ljava<span class="sy0">/lang<span class="sy0">/<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Astring+java.sun.com&amp;btnI=I%27m%20Feeling%20Lucky"><span class="kw3">String</span></a><span class="sy0">;Ljava<span class="sy0">/lang<span class="sy0">/<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Astring+java.sun.com&amp;btnI=I%27m%20Feeling%20Lucky"><span class="kw3">String</span></a><span class="sy0">;<span class="br0">)I<br />
+&nbsp; &nbsp; return<span class="sy0">-<span class="kw4">void<br />
+.<span class="me1">end method<br />
+&nbsp;<br />
+.<span class="me1">method <span class="kw1">public <span class="kw1">static log2<span class="br0">(Ljava<span class="sy0">/lang<span class="sy0">/<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Astring+java.sun.com&amp;btnI=I%27m%20Feeling%20Lucky"><span class="kw3">String</span></a><span class="sy0">;<span class="br0">)V #打印出info <span class="nu0">2字符串<br />
+&nbsp; &nbsp; .<span class="me1">locals <span class="nu0">1<br />
+&nbsp; &nbsp; .<span class="me1">prologue<br />
+&nbsp;<br />
+&nbsp; &nbsp; const<span class="sy0">-string v0, <span class="st0">"info 2"<br />
+&nbsp; &nbsp; invoke<span class="sy0">-<span class="kw1">static <span class="br0">{v0, p0<span class="br0">}, Landroid<span class="sy0">/util<span class="sy0">/Log<span class="sy0">;-&gt;d<span class="br0">(Ljava<span class="sy0">/lang<span class="sy0">/<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Astring+java.sun.com&amp;btnI=I%27m%20Feeling%20Lucky"><span class="kw3">String</span></a><span class="sy0">;Ljava<span class="sy0">/lang<span class="sy0">/<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Astring+java.sun.com&amp;btnI=I%27m%20Feeling%20Lucky"><span class="kw3">String</span></a><span class="sy0">;<span class="br0">)I<br />
+&nbsp; &nbsp; return<span class="sy0">-<span class="kw4">void<br />
+.<span class="me1">end method<br />
+&nbsp;<br />
+.<span class="me1">method <span class="kw1">public <span class="kw1">static log3<span class="br0">(Ljava<span class="sy0">/lang<span class="sy0">/<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Astring+java.sun.com&amp;btnI=I%27m%20Feeling%20Lucky"><span class="kw3">String</span></a><span class="sy0">;<span class="br0">)V #打印出info <span class="nu0">3字符串<br />
+&nbsp; &nbsp; .<span class="me1">locals <span class="nu0">1<br />
+&nbsp; &nbsp; .<span class="me1">prologue<br />
+&nbsp;<br />
+&nbsp; &nbsp; const<span class="sy0">-string v0, <span class="st0">"info 3"<br />
+&nbsp; &nbsp; invoke<span class="sy0">-<span class="kw1">static <span class="br0">{v0, p0<span class="br0">}, Landroid<span class="sy0">/util<span class="sy0">/Log<span class="sy0">;-&gt;d<span class="br0">(Ljava<span class="sy0">/lang<span class="sy0">/<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Astring+java.sun.com&amp;btnI=I%27m%20Feeling%20Lucky"><span class="kw3">String</span></a><span class="sy0">;Ljava<span class="sy0">/lang<span class="sy0">/<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Astring+java.sun.com&amp;btnI=I%27m%20Feeling%20Lucky"><span class="kw3">String</span></a><span class="sy0">;<span class="br0">)I<br />
+&nbsp; &nbsp; return<span class="sy0">-<span class="kw4">void<br />
+.<span class="me1">end method<br />
+&nbsp;<br />
+.<span class="me1">method <span class="kw1">public <span class="kw1">static I<span class="br0">(I<span class="br0">)V &nbsp; #打印出<span class="kw4">int型值<br />
+&nbsp; &nbsp; .<span class="me1">locals <span class="nu0">2<br />
+&nbsp;<br />
+&nbsp; &nbsp; .<span class="me1">prologue<br />
+&nbsp;<br />
+&nbsp; &nbsp; const<span class="sy0">-string v0, <span class="st0">"info_int"<br />
+&nbsp;<br />
+&nbsp; &nbsp; invoke<span class="sy0">-<span class="kw1">static <span class="br0">{p0<span class="br0">}, Ljava<span class="sy0">/lang<span class="sy0">/<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Astring+java.sun.com&amp;btnI=I%27m%20Feeling%20Lucky"><span class="kw3">String</span></a><span class="sy0">;-&gt;valueOf<span class="br0">(I<span class="br0">)Ljava<span class="sy0">/lang<span class="sy0">/<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Astring+java.sun.com&amp;btnI=I%27m%20Feeling%20Lucky"><span class="kw3">String</span></a><span class="sy0">;<br />
+&nbsp;<br />
+&nbsp; &nbsp; move<span class="sy0">-result<span class="sy0">-object v1<br />
+&nbsp;<br />
+&nbsp; &nbsp; invoke<span class="sy0">-<span class="kw1">static <span class="br0">{v0, v1<span class="br0">}, Landroid<span class="sy0">/util<span class="sy0">/Log<span class="sy0">;-&gt;d<span class="br0">(Ljava<span class="sy0">/lang<span class="sy0">/<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Astring+java.sun.com&amp;btnI=I%27m%20Feeling%20Lucky"><span class="kw3">String</span></a><span class="sy0">;Ljava<span class="sy0">/lang<span class="sy0">/<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Astring+java.sun.com&amp;btnI=I%27m%20Feeling%20Lucky"><span class="kw3">String</span></a><span class="sy0">;<span class="br0">)I<br />
+&nbsp;<br />
+&nbsp; &nbsp; return<span class="sy0">-<span class="kw4">void<br />
+.<span class="me1">end method<br />
+&nbsp;<br />
+.<span class="me1">method <span class="kw1">public <span class="kw1">static J<span class="br0">(J<span class="br0">)V #打印出<span class="kw4">long类型的值<br />
+.<span class="me1">locals <span class="nu0">2<br />
+&nbsp;<br />
+.<span class="me1">prologue<br />
+&nbsp;<br />
+const<span class="sy0">-string v0, <span class="st0">"info_long"<br />
+&nbsp;<br />
+invoke<span class="sy0">-<span class="kw1">static <span class="br0">{p0, p1<span class="br0">}, Ljava<span class="sy0">/lang<span class="sy0">/<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Astring+java.sun.com&amp;btnI=I%27m%20Feeling%20Lucky"><span class="kw3">String</span></a><span class="sy0">;-&gt;valueOf<span class="br0">(J<span class="br0">)Ljava<span class="sy0">/lang<span class="sy0">/<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Astring+java.sun.com&amp;btnI=I%27m%20Feeling%20Lucky"><span class="kw3">String</span></a><span class="sy0">;<br />
+&nbsp;<br />
+move<span class="sy0">-result<span class="sy0">-object v1<br />
+&nbsp;<br />
+invoke<span class="sy0">-<span class="kw1">static <span class="br0">{v0, v1<span class="br0">}, Landroid<span class="sy0">/util<span class="sy0">/Log<span class="sy0">;-&gt;d<span class="br0">(Ljava<span class="sy0">/lang<span class="sy0">/<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Astring+java.sun.com&amp;btnI=I%27m%20Feeling%20Lucky"><span class="kw3">String</span></a><span class="sy0">;Ljava<span class="sy0">/lang<span class="sy0">/<a href="http://www.google.com/search?hl=en&amp;q=allinurl%3Astring+java.sun.com&amp;btnI=I%27m%20Feeling%20Lucky"><span class="kw3">String</span></a><span class="sy0">;<span class="br0">)I<br />
+&nbsp;<br />
+return<span class="sy0">-<span class="kw4">void<br />
+.<span class="me1">end method</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></div>
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+<p>这个时候就只需要添加一行代码就行了：</p>
+<p><span style="color: #ff0000;">invoke-static {v1}, Lcrack;-&gt;log1(Ljava/lang/String;)V</span></p>
+<p>就能打印出：</p>
+<p><a class="img-hyperlink" href="http://www.blogfshare.com/wp-content/uploads/Android--_146BC/3.png"><img style="background-image: none; float: none; padding-top: 0px; padding-left: 0px; margin-left: auto; display: block; padding-right: 0px; margin-right: auto; border-width: 0px;" title="3" src="http://www.blogfshare.com/wp-content/uploads/Android--_146BC/3_thumb.png" alt="3" width="939" height="51" border="0" /></a></p>
+<p>如果是int或者long类型的话，如下调用即可：</p>
+<p><a class="img-hyperlink" href="http://www.blogfshare.com/wp-content/uploads/Android--_146BC/image.png"><img style="background-image: none; float: none; padding-top: 0px; padding-left: 0px; margin-left: auto; display: block; padding-right: 0px; margin-right: auto; border-width: 0px;" title="image" src="http://www.blogfshare.com/wp-content/uploads/Android--_146BC/image_thumb.png" alt="image" width="530" height="208" border="0" /></a>获得Log输出：</p>
+<p><a class="img-hyperlink" href="http://www.blogfshare.com/wp-content/uploads/Android--_146BC/4.png"><img style="background-image: none; float: none; padding-top: 0px; padding-left: 0px; margin-left: auto; display: block; padding-right: 0px; margin-right: auto; border-width: 0px;" title="4" src="http://www.blogfshare.com/wp-content/uploads/Android--_146BC/4_thumb.png" alt="4" width="964" height="128" border="0" /></a></p>
+<p>当然你还可以定义自己的Log输出加入到crack.smali里面。</p>
+<p>但是记得把crack.smali这个文件拷贝到目录下去。</p>

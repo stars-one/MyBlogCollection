@@ -1,0 +1,73 @@
+原文链接：http://www.cnblogs.com/kexing/archive/2018/01/29/8371357.html
+<p><span style="font-size: 16px;">本来是想与之前讲解使用Notification通知使用一起写的，查看了资料，觉得有必要将这Style部分单独拿出来讲解</span></p>
+<p><span style="font-size: 16px;"><span style="font-size: 16px;"><span style="font-size: 16px;"><a id="post_title_link_8368244" href="http://www.cnblogs.com/kexing/p/8368244.html">前篇：Android开发&mdash;&mdash;Notification通知的使用及NotificationCopat.Builder常用设置API</a></span></span></span></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px;">上一篇中也是介绍了两种常用的Style，这一篇算是扩展之前的内容</span></p>
+<p><img src="http://images2017.cnblogs.com/blog/1210268/201801/1210268-20180128151449412-1701984112.png" alt="" /></p>
+<h3>&nbsp;</h3>
+<h3>BigTextStyle</h3>
+<p><span style="font-size: 16px;">看了网上的资料，好像这个在之前的版本是点击通知栏的消息才会显示出在bigText中设置的文字，不过，我试的时候发现是直接显示出来了，它会将原来的setContentTitle和setContentText都替代，bigText替代contentText，bigcontentTitle替代ContentTitle</span></p>
+<div class="cnblogs_code">
+<pre>　　　　　　　　　<span style="font-size: 16px;">　　　android.support.v4.app.NotificationCompat.BigTextStyle style = <span style="color: #0000ff;">new</span><span style="color: #000000;"> android.support.v4.app.NotificationCompat.BigTextStyle();
+                style.bigText(</span>"这里是点击通知后要显示的正文，可以换行可以显示很长很长很长很长很长很长很长很长很长很长很长很长很长</span><br /><span style="font-size: 16px;">　　　　　　　　　　很长很长很长长很长很长很长很长长很长很长很长很长长很长很长很长很长很长很长"<span style="color: #000000;">);
+                style.setBigContentTitle(</span>"点击后的标题"<span style="color: #000000;">);
+                </span><span style="color: #008000;">//</span><span style="color: #008000;">SummaryText没什么用 可以不设置</span>
+                style.setSummaryText("末尾只一行的文字内容");</span></pre>
+</div>
+<p><span style="font-size: 16px;">之后直接调用setStyle，将style作为参数传入</span></p>
+<p><span style="font-size: 16px;"><img src="http://images2017.cnblogs.com/blog/1210268/201801/1210268-20180129173737812-454062014.png" alt="" width="407" height="707" /></span></p>
+<p>&nbsp;</p>
+<h3>BigPictureStyle</h3>
+<p><span style="font-size: 16px;">主要的还是bigPicture这个方法，其他两个类似之前的BigText，将原来的给替代掉了，不过不设置的话不会替代</span></p>
+<div>
+<div class="cnblogs_code">
+<pre><span style="font-size: 16px;">android.support.v4.app.NotificationCompat.BigPictureStyle style = <span style="color: #0000ff;">new</span><span style="color: #000000;"> android.support.v4.app.NotificationCompat.BigPictureStyle();
+style.setBigContentTitle(</span>"BigContentTitle"<span style="color: #000000;">);
+style.setSummaryText(</span>"SummaryText"<span style="color: #000000;">);
+style.bigPicture(BitmapFactory.decodeResource(getResources(),R.drawable.small));</span></span></pre>
+</div>
+<p>&nbsp;<img src="http://images2017.cnblogs.com/blog/1210268/201801/1210268-20180129173932562-8026895.png" alt="" width="386" height="671" /></p>
+</div>
+<h3>InboxStyle</h3>
+<p><span style="font-size: 16px;">&nbsp;<code class="css">每行内容过长时并不会自动换行，与BigText类似，设置有就会替代原来的ContentText和Title</code></span></p>
+<div class="cnblogs_code">
+<pre><span style="font-size: 16px;">android.support.v4.app.NotificationCompat.InboxStyle style = <span style="color: #0000ff;">new</span><span style="color: #000000;"> android.support.v4.app.NotificationCompat.InboxStyle();
+style.setBigContentTitle(</span>"BigContentTitle"<span style="color: #000000;">)
+.addLine(</span>"第一行，第一行，第一行，第一行，第一行，第一行，第一行"<span style="color: #000000;">)
+.addLine(</span>"第二行"<span style="color: #000000;">)
+.addLine(</span>"第三行"<span style="color: #000000;">)
+.addLine(</span>"第四行"<span style="color: #000000;">)
+.addLine(</span>"第五行"<span style="color: #000000;">)
+.setSummaryText(</span>"SummaryText");</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><img src="http://images2017.cnblogs.com/blog/1210268/201801/1210268-20180129174123296-33960050.png" alt="" width="403" height="702" /></p>
+<h3>MessageingStyle</h3>
+<p><span style="font-size: 16px;">消息通知，可快速回复message的通知。好像在Android N以上才能使用。目前手上的测试机是低版本的，没有快速回复的操作项。</span></p>
+<p>&nbsp;</p>
+<h3>DecoratedCustonViewStyle</h3>
+<h3>DecoratedMediaCustonViewStyle</h3>
+<h3>MediaStyle</h3>
+<p><span style="font-size: 16px;">多媒体播放通知，快捷的多媒体操作控件。可以自定义需要显示的操作控件内容。</span></p>
+<ul>
+<li>
+<p><span style="font-size: 16px;">setShowActionsInCompactView</span></p>
+</li>
+<li>
+<p><span style="font-size: 16px;">setMediaSession</span></p>
+</li>
+<li>
+<p><span style="font-size: 16px;">setShowCancelButton</span></p>
+</li>
+<li>
+<p><span style="font-size: 16px;">setCancelButtonInten</span></p>
+</li>
+</ul>
+<p>&nbsp;</p>
+<pre class="hljs haxe"><span style="font-size: 16px;"><code> builder.addAction(android.R.drawable.ic_media_rew,<span class="hljs-string">"",<span class="hljs-literal">null);
+ builder.addAction(android.R.drawable.ic_media_play,<span class="hljs-string">"",<span class="hljs-literal">null);
+ builder.addAction(android.R.drawable.ic_media_ff,<span class="hljs-string">"",<span class="hljs-literal">null);
+ NotificationCompat.MediaStyle mediaStyle = <span class="hljs-keyword">new <span class="hljs-type">NotificationCompat.MediaStyle();
+ mediaStyle.setShowActionsInCompactView(<span class="hljs-number">0,<span class="hljs-number">1,<span class="hljs-number">2);
+ mediaStyle.setShowCancelButton(<span class="hljs-literal">true);
+ builder.setStyle(mediaStyle);<br /><br /><span style="color: #ff0000;">呃，感觉我好像偏离主题了，Notification深入太深了，就先写到这里了，这些功能都是没有用到，我感觉学了好像没有多大意义，就先暂时放弃了！</span><br /></span></span></span></span></span></span></span></span></span></span></span></span></code></span></pre>

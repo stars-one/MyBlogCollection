@@ -1,0 +1,124 @@
+原文链接：http://www.cnblogs.com/kexing/archive/2017/12/16/8045007.html
+<p><span style="font-size: 16px;">ListView，就如其名，是用来显示列表的一种View，而RecycleView，是其的加强版，今天带来的是这两个几乎具有相同的功能的对比使用</span></p>
+<p><span style="font-size: 16px;">先从ListView说起吧<br /></span></p>
+<h3><span style="font-size: 16px;">ListView：</span></h3>
+<p><span style="font-size: 16px;">1.在布局文件中使用ListView，并为其定义一个id，方便我们之后的调用，宽高与父控件相同<br /></span></p>
+<p><span style="font-size: 16px;">2.准备数据，将数据添加到ArrayAdapter适配器当中</span></p>
+<p><span style="font-size: 16px;">3.在Activity的java文件中使用findviewbyid找到ListView实例，为其设置Adapter</span></p>
+<p><span style="font-size: 16px;">4.实现ListView的item项点击事件,直接使用Listview定义的setitemonClick方法就行了<br /></span></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px;">这里最为重要的一步其实是第二步，我们可以看到下面的代码，定义了一组String类型的数组，之后创建ArrayAdapter适配器,注意String，是一个泛型，后面的构造函数里的参数分别为上下文<span style="color: #0000ff;"><strong>android.R.Layout.simple_list_item 1</strong></span>是安卓系统给的一个item布局，最后一项是String数组，也就是数据，之后寻找ListView的实例，调用setAdapter方法设置适配器</span></p>
+<div>
+<div class="cnblogs_code">
+<pre>  <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> MainActivity <span style="color: #0000ff;">extends</span><span style="color: #000000;"> AppCompatActivity {
+        </span><span style="color: #0000ff;">private</span> String[] data = {"Apple" ，"Banana","Orange","WatermeLon"
+                "Pear","Grape","Pineapple","Strawberry","Cherry","Mango"<span style="color: #000000;">,
+                </span>"Apple","Banana","Orange" ，"Watermelon" ，"Pear" ，"Grape"<span style="color: #000000;">,
+                </span>"Pineapple","Strawberry","Cherry","Mango"<span style="color: #000000;">};
+    
+    @Override
+    </span><span style="color: #0000ff;">protected</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> onCreate(Bundle savedInstanceState) {
+        </span><span style="color: #0000ff;">super</span><span style="color: #000000;">.onCreate(savedInstanceState);
+        setContentView(R.layout.activity.main);
+        <span style="color: #0000ff;"><strong>ArrayAdapter</strong></span></span><span style="color: #0000ff;"><strong>&lt;<span style="color: #ff0000;">String</span>&gt; adapter = new ArrayAdapter&lt;String(MainActivity.this, android.R.Layout.simple_list_item 1</strong></span><span style="color: #000000;"><span style="color: #0000ff;"><strong>, data);</strong></span>
+        ListView listView </span>=<span style="color: #000000;"> (ListView) findViewById(R.id.list _view);
+        listView.setAdapter(adapter);
+    }
+}</span></pre>
+</div>
+<p><span style="font-size: 16px;">这是一个简单的例子，但是，我们知道第二个参数是安卓提供的一个item布局，这个布局过于简单，我们想要实现一个自定义布局怎么办？我们需要改造一下ArrayAdapter这个适配器</span></p>
+<p><span style="font-size: 16px;">下面便是自定义布局并使用的步骤：</span></p>
+<p><span style="font-size: 16px;">1.创建一个item的布局，也就是我们的自定义布局<br /></span></p>
+<p><span style="font-size: 16px;"><img src="http://images2017.cnblogs.com/blog/1210268/201712/1210268-20171215210755730-1523691446.png" alt="" /></span></p>
+<p><span style="font-size: 16px;">我定义了两个各占一半的textview，<span style="color: #ff0000;">记得根标签的高使用wrap_content</span></span></p>
+<p><span style="font-size: 16px;">&nbsp;</span></p>
+<p><span style="font-size: 16px;">2.定义一个T类，作为适配器的泛型，（类似之前的String），里面需要一个构造方法，成员变量和get方法<br /></span></p>
+<p><span style="font-size: 16px;"><img src="http://images2017.cnblogs.com/blog/1210268/201712/1210268-20171215210532355-1343863358.png" alt="" /></span></p>
+<p><span style="font-size: 16px;">不知道为什么会有警告，用的public，可以正常使用，若是改为其他，另外那边调用就会出错了</span></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px;">3.创建一个适配器类，使其继承ArrayAdapter&lt;T&gt;（T就是第二步定义的类），里面需要一个构造方法，还需要复写getView方法<br /></span></p>
+<p><span style="font-size: 16px;">&nbsp;<img src="http://images2017.cnblogs.com/blog/1210268/201712/1210268-20171215211013574-1442579347.png" alt="" /></span></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px;">4.准备数据，将数据添加到第三步的适配器类中，之后与上面所说的步骤一样，找到Listview的实例，设置适配器</span></p>
+<p>&nbsp;<img src="http://images2017.cnblogs.com/blog/1210268/201712/1210268-20171215211525121-981121824.png" alt="" /></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px;">&nbsp;效果</span></p>
+<p><span style="font-size: 16px;"><img src="http://images2017.cnblogs.com/blog/1210268/201712/1210268-20171215211552371-115769801.png" alt="" width="365" height="532" /></span></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h2><span style="font-size: 16px;">&nbsp;RecycleView：</span></h2>
+<p><span style="font-size: 16px;">由于这个是Android团队新推出的，需要我们添加依赖才可以使用，记得点击sync now<br /></span></p>
+<p><span style="font-size: 16px;"><img src="http://images2017.cnblogs.com/blog/1210268/201712/1210268-20171215212518449-481592366.png" alt="" width="998" height="502" /></span></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px;">&nbsp;使用步骤：</span></p>
+<p><span style="font-size: 16px;">1.在布局文件中使用RecyclerView，定义id，宽高与空间相同<br /></span></p>
+<p><span style="font-size: 16px;"><span style="font-size: 16px;">2.准备<span style="font-size: 16px;">RecyclerView的子项item布局，之后要在适配器类中使用，这里就不在赘述</span></span></span></p>
+<p><span style="font-size: 16px;"><span style="font-size: 16px;"><span style="font-size: 16px;">3.定义个泛型类，如之前在ListView中所说的T类，<span style="font-size: 16px;">适配器的泛型</span><br /></span></span></span></p>
+<p><span style="font-size: 16px;">3.定义一个适配器T类，使其继承RecyclerView.Adapter&lt;T.ViewHolder&gt;（ViewHolder是T类中的一个内部类），需要一个构造方法接收数据源，复写三个方法</span></p>
+<p><span style="font-size: 16px;"><img src="http://images2017.cnblogs.com/blog/1210268/201712/1210268-20171216122015091-1303835763.png" alt="" /></span></p>
+<p><span style="font-size: 16px; color: #ff0000;">RecyclerAdapter是继承RecyclerView.Adapter&lt;RecyclerAdapter.ViewHolder&gt;</span></p>
+<p><span style="font-size: 16px; color: #ff0000;">这个尖括号里的本来应该是RecyclerView.ViewHolder,但是我们在RecyclerAdapter里定义了一个内部类ViewHolder，使其继承了RecyclerView.ViewHolder，所以我们就可以在尖括号里直接调用内部类</span></p>
+<p><span style="font-size: 16px; color: #ff0000;"><span style="color: #000000;">我们先来看一下ViewHolder这个内部类，它里面有两个TextView的成员变量，之后，添加一个构造方法，参数是一个View，为这个两个textview通过findviewbyid找到实例</span><br /></span></p>
+<p><span style="font-size: 16px;">我们来看RecycleAdapter这个类，在开头我们就声明了一个List的成员变量students，之后，添加构造方法，传入一个LIst，将其赋值给RecycleAdapter的成员变量students</span></p>
+<p><span style="font-size: 16px;">&nbsp;</span></p>
+<p><span style="font-size: 16px;">之后需要复写三个方法，<span style="color: #3366ff;">OnCreateViewHolder，onBindViewHolder，getItemCount</span><br /></span></p>
+<p><span style="font-size: 16px;"><img src="http://images2017.cnblogs.com/blog/1210268/201712/1210268-20171216122958825-1046121799.png" alt="" /></span></p>
+<p><span style="font-size: 16px;">onCreateViewHolder方法里面，首先就是通过LayoutInflater.from()方法接收一个context，之后，再通过inflate将item布局放进总布局中，之后再将这个view作为参数传到ViewHolder中去，同时，返回一个ViewHolder</span></p>
+<p><span style="font-size: 16px;">onBindViewHolder方法，由list的get方法，获得list里面的某个对象，之后，由holder调用两个TextView的setText方法进行设置，举一反三，如果是imageview的话，同样可以使用setresource设置其显示的图片，设置的参数，我们可以直接由Student类中的get方法获得</span></p>
+<p><span style="font-size: 16px;">&nbsp;getItemCount 就是获得全部item的数量，这里item数量其实就是list中的项目，直接返回其的size就行了<br /></span></p>
+<p><span style="font-size: 16px;">4.准备数据，添加到适配器中<br /></span></p>
+<p><span style="font-size: 16px;">5.创建一个布局管理器LayoutManager，便于RecycleView设置布局，这里布局管理器有几种</span></p>
+<p><span style="font-size: 16px;">一种的像LIstView的垂直排列，LinearlayoutManager</span></p>
+<p><span style="font-size: 16px;"><img src="http://images2017.cnblogs.com/blog/1210268/201712/1210268-20171216133725809-2011752322.png" alt="" /></span></p>
+<p><span style="font-size: 16px;">我们也可以将其改为水平排列，只需调用linearLayoutManger的setOrientation，设置为LinearLayoutManager.HORIZONTAL</span></p>
+<p><span style="font-size: 16px;"><img src="http://images2017.cnblogs.com/blog/1210268/201712/1210268-20171216134015872-345824872.png" alt="" /></span></p>
+<p><span style="font-size: 16px;">还有GiidLayout网格布局 StaggerGildLayoutManager瀑布流布局，使用方法如上，不过，参数有所区别，想了解更多请转百度</span></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px;">6.通过findviewbyid方法找到RecycleView的实例，为其设置LayoutManager，设置Adapter</span></p>
+<p><span style="font-size: 16px;"><img src="http://images2017.cnblogs.com/blog/1210268/201712/1210268-20171216134552716-2112098787.png" alt="" /></span></p>
+<p>&nbsp;7.设置onClick方法，RecycleView里没有onClick方法，需要我们自己写，在哪里写呢？在RecycleAdapter中的onBindViewHolder方法中</p>
+<p><img src="http://images2017.cnblogs.com/blog/1210268/201712/1210268-20171216142020499-1661235504.png" alt="" /></p>
+<p><span style="font-size: 16px;">我们用Viewholder来找到子项，为其设置一个onClickListener，之后，为其设置onClick事件处理</span></p>
+<p><span style="font-size: 16px;">上面这是比较简单的一种，还有其他几种方法，我在这也不一一测试，感兴趣的话可以自己研究研究<br /></span></p>
+<p><span style="font-size: 16px;">参考地址：http://blog.csdn.net/RaphetS/article/details/51254538</span></p>
+<p>&nbsp;</p>
+<h3>补充：RecyclerView更新数据</h3>
+<p>更新数据方法使用的是adpater的<span style="color: #0099ff;">notifyDataSetChanged()<span style="color: #000000;">方法</span></span></p>
+<p><span style="color: #0099ff;"><span style="color: #000000;">使用这个方法前，需要对原来的list做出相应的改变，mlist是之前用来new adpater中使用的list<br /></span></span></p>
+<p><span style="color: #0099ff;"><span style="color: #000000;"><img src="https://images2018.cnblogs.com/blog/1210268/201803/1210268-20180316141547736-1322683916.png" alt="" /></span></span></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px;">更多的RecycleView高级使用，请参考下面的地址</span></p>
+<p>http://blog.csdn.net/skykingf/article/details/50827141</p>
+<p>http://www.jianshu.com/p/58ca20e1a5d6</p>
+<h2>&nbsp;</h2>
+<p><span style="font-size: 16px;">&nbsp;</span></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px;">&nbsp;</span></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px;">&nbsp;</span></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px;">&nbsp;</span></p>
+<p>&nbsp;</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<br />
+</div>

@@ -1,0 +1,92 @@
+原文链接：http://www.cnblogs.com/kexing/archive/2018/04/10/8779286.html
+<p><span style="font-size: 16px;">一个简单的TextView实现了打字机的效果让文字一个个显示出来，</span></p>
+<h2>方法介绍：</h2>
+<h3>startShow&nbsp; 开始打字</h3>
+<p><span style="font-size: 16px;">使用：</span></p>
+<p><img src="https://images2018.cnblogs.com/blog/1210268/201804/1210268-20180410151622278-397327846.png" alt="" /></p>
+<p>&nbsp;</p>
+<p>&nbsp;<img src="https://images2018.cnblogs.com/blog/1210268/201804/1210268-20180410152159816-256125092.gif" alt="" /></p>
+<p>&nbsp;</p>
+<h3>startShow(int typeStartTime,int typeTime)&nbsp;</h3>
+<pre><span style="color: #33cc33;">/**<br /><span style="color: #33cc33;"> *<br /><span style="color: #33cc33;"> * <span style="color: #3300ff;">@param <span style="color: #d9e577;">typeStartTime <span style="color: #33cc33;">开始打印的延迟时间（经过多长的时间开始打印）<br /><span style="color: #33cc33;"> * <span style="color: #3300ff;">@param <span style="color: #d9e577;">typeTime <span style="color: #33cc33;">打印每个字的间隔时间<br /><span style="color: #33cc33;"> */</span></span></span></span></span></span></span></span></span></span></span></pre>
+<pre><span style="color: #33cc33;">&nbsp;</span></pre>
+<p><span style="font-size: 16px;">使用：</span></p>
+<p><span style="font-size: 16px;"><img src="https://images2018.cnblogs.com/blog/1210268/201804/1210268-20180410151948874-1779993889.png" alt="" /></span></p>
+<p><img src="https://images2018.cnblogs.com/blog/1210268/201804/1210268-20180410151958466-1961058484.gif" alt="" /></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h3>typeAndhide(View v,int duration)&nbsp;&nbsp; 打字结束后隐藏TextView</h3>
+<pre><span style="color: #33cc33;">/**<br /><span style="color: #33cc33;"> *<br /><span style="color: #33cc33;"> * <span style="color: #3300ff;">@param <span style="color: #d9e577;">v <span style="color: #33cc33;">根布局的实例（通过findviewbyid找到）<br /><span style="color: #33cc33;"> * <span style="color: #3300ff;">@param <span style="color: #d9e577;">duration <span style="color: #33cc33;">经过多少秒消失<br /><span style="color: #33cc33;"> */</span></span></span></span></span></span></span></span></span></span></span></pre>
+<p><span style="font-size: 16px;">使用：</span></p>
+<h3><img src="https://images2018.cnblogs.com/blog/1210268/201804/1210268-20180410153230851-228090422.png" alt="" /></h3>
+<p><img src="https://images2018.cnblogs.com/blog/1210268/201804/1210268-20180410153052592-1756065678.gif" alt="" /></p>
+<h3>hide(View v,int duration)&nbsp; 隐藏</h3>
+<pre><span style="color: #33cc33;">* <span style="color: #3300ff;">@param <span style="color: #d9e577;">v <span style="color: #33cc33;">根布局的实例（通过findviewbyid找到）<br /><span style="color: #33cc33;">* <span style="color: #3300ff;">@param <span style="color: #d9e577;">duration <span style="color: #33cc33;">经过多少秒消失</span></span></span></span></span></span></span></span></pre>
+<p><span style="font-size: 16px;">&nbsp;使用：</span></p>
+<p><img src="https://images2018.cnblogs.com/blog/1210268/201804/1210268-20180410154228315-32654645.png" alt="" /></p>
+<p>&nbsp;</p>
+<p><img src="https://images2018.cnblogs.com/blog/1210268/201804/1210268-20180410154158938-1748628387.gif" alt="" /></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<pre><span style="color: #33cc33;">&nbsp;</span></pre>
+<p>&nbsp;</p>
+<table border="0" align="center">
+<tbody>
+<tr>
+<td>
+<h4><span style="font-size: 16px;">属性</span></h4>
+</td>
+<td>
+<h4><span style="font-size: 16px;">说明</span></h4>
+</td>
+<td>
+<h4><span style="font-size: 16px;">默认值</span></h4>
+</td>
+</tr>
+<tr>
+<td>
+<h4><span style="font-size: 16px;">text</span></h4>
+</td>
+<td>
+<h4><span style="font-size: 16px;">文字</span></h4>
+</td>
+<td>
+<h4><span style="font-size: 16px;">无</span></h4>
+</td>
+</tr>
+<tr>
+<td>
+<h4><span style="font-size: 16px;">typeSignal</span></h4>
+</td>
+<td>
+<h4><span style="font-size: 16px;">打字的标记（_或者是光标）</span></h4>
+</td>
+<td>
+<h4><span style="font-size: 16px;">无</span></h4>
+</td>
+</tr>
+<tr>
+<td>
+<h4><span style="font-size: 16px;">typeStartTime</span></h4>
+</td>
+<td>
+<h4><span style="font-size: 16px;">延迟多少时间开始打字</span></h4>
+</td>
+<td>
+<h4><span style="font-size: 16px;">400ms</span></h4>
+</td>
+</tr>
+<tr>
+<td>
+<h4><span style="font-size: 16px;">typeTime</span></h4>
+</td>
+<td>
+<h4><span style="font-size: 16px;">逐字打出的间隔时间</span></h4>
+</td>
+<td>
+<h4><span style="font-size: 16px;">500ms</span></h4>
+</td>
+</tr>
+</tbody>
+</table>

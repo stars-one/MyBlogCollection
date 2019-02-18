@@ -1,0 +1,28 @@
+原文链接：http://www.cnblogs.com/kexing/archive/2018/01/04/8196281.html
+<h3><span>前言：</span></h3>
+<p><span style="font-size: 16px;">可能大家看到标题会有些懵逼，以为我发错了，这应该是五才对吧，其实，五我已经发了，不过被管理大大移出首页了，不知道这一篇是不是也会是同样的命运。。</span></p>
+<p><span style="font-size: 16px;">今天所写的是关于支付宝内购的破解</span></p>
+<p><span style="font-size: 16px;">原版 链接: https://pan.baidu.com/s/1nuUEnyh 密码: 6666</span></p>
+<p><span style="font-size: 16px;">破解版 链接: https://pan.baidu.com/s/1skB9lpF 密码: 6666</span></p>
+<h2>破解步骤：</h2>
+<h3><span style="font-size: 16px;">1.试玩游戏</span></h3>
+<p><span style="font-size: 16px;">可以发现支付的时候，有几种方式给我们选择，我们选择支付宝，之后点击支付，如果手机没有安装支付宝，那么游戏就会跳转到一个支付宝的网页，如果有就会弹出一个支付宝支付的对话框，订过外卖的同学应该都知道吧！</span></p>
+<p><span style="font-size: 16px;">这里，介绍一下支付宝的代码，如下图</span></p>
+<p><span style="font-size: 16px;"><img src="http://images2017.cnblogs.com/blog/1210268/201801/1210268-20180104212727518-1697465370.png" alt="" width="1037" height="413" /></span></p>
+<p><span style="font-size: 16px;">我们需要实现取消支付之后完成成功支付，这样一来我们破解的思路就很清晰了吧！</span></p>
+<h3><span style="font-size: 16px;">2.破解游戏</span></h3>
+<p><span style="font-size: 16px;">我们搜索9000，将其转为十六进制0x2328再搜索，可以找到一个smali，里面含有着switch_0这样的代码</span></p>
+<p><span style="font-size: 16px;"><img src="http://images2017.cnblogs.com/blog/1210268/201801/1210268-20180104215049471-80503241.png" alt="" width="1217" height="469" /></span></p>
+<p><span style="font-size: 16px;">之后，我们进去就会看到一个switch结构的分支语句，将6001（对应着支付取消）的十六进制0x1771后面的switch修改为switch_0即可</span></p>
+<p><span style="font-size: 16px;"><img src="http://images2017.cnblogs.com/blog/1210268/201801/1210268-20180104215251518-705364007.png" alt="" /></span></p>
+<p><span style="font-size: 16px;">相信大家也不用我多解释什么了吧</span></p>
+<h3>3.游戏测试</h3>
+<p><span style="font-size: 16px;">我将APP的名字改了下，同时，也用了上一期的知识，加入了一个Toast，下面为测试的图片</span></p>
+<p>&nbsp;<img src="http://images2017.cnblogs.com/blog/1210268/201801/1210268-20180104215541331-615543716.png" alt="" width="398" height="708" /></p>
+<p><img src="http://images2017.cnblogs.com/blog/1210268/201801/1210268-20180104215706893-1586410408.jpg" alt="" width="744" height="418" /></p>
+<p>&nbsp;</p>
+<p><img src="http://images2017.cnblogs.com/blog/1210268/201801/1210268-20180104215648268-327438482.jpg" alt="" width="768" height="432" /></p>
+<p>&nbsp;<img src="http://images2017.cnblogs.com/blog/1210268/201801/1210268-20180104215740565-1830218146.jpg" alt="" width="771" height="433" /></p>
+<p><img src="http://images2017.cnblogs.com/blog/1210268/201801/1210268-20180104215610596-1598296159.jpg" alt="" width="406" height="717" /></p>
+<p>&nbsp;</p>
+<p><span style="color: #ff0000;">PS：好像发现了一个bug，就是在安装有支付宝的手机，必须将支付宝的后台进程关闭，使充值是跳转到网页的支付界面，之后返回才能破解成功，这个问题正在研究解决，若是研究出来，我会更新的</span></p>

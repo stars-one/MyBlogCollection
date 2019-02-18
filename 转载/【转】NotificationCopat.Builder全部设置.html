@@ -1,0 +1,70 @@
+原文链接：http://www.cnblogs.com/kexing/archive/2018/01/28/8371051.html
+<p>1.方法：setContentTitle(CharSequence title)<br />      　　 &nbsp;&nbsp;功能：设置通知栏标题。<br />      　　 &nbsp;&nbsp;例子：setContentTitle("测试标题")。<br />    　　2.方法：setContentText(CharSequence text)<br />      　　 &nbsp;&nbsp;功能：设置通知栏显示内容。<br />      　　 &nbsp;&nbsp;例子：setContentText("测试内容")。<br />    　　3.方法：setContentIntent(PendingIntent intent)<br />      　　 &nbsp;&nbsp;功能：设置通知栏点击意图。<br />      　　 &nbsp;&nbsp;例子：setContentIntent(PendingIntent.getActivity(this, 1, new Intent(), flags))。<br />    　　4.方法：setTicker(CharSequence tickerText)、setTicker(CharSequence tickerText, RemoteViews views)<br />      　　 &nbsp;&nbsp;功能：设置通知在第一次到达时在状态栏中显示的文本。<br />            　　　注意：5.0及之后没有效果。<br />      　　 &nbsp;&nbsp;例子：setTicker("测试通知来啦")。<br />    　　5.方法：setWhen(long when)<br />      　　　功能：通知产生的时间，会在通知栏信息里显示，一般是系统获取到的时间。<br />      　　　例子：setWhen(System.currentTimeMillis())。<br />    　　6.方法：setPriority(int pri)<br />      　　　功能：设置通知优先级。<br />      　　　例子：setPriority(Notification.PRIORITY_DEFAULT)。<br />      　　　参数属性：</p>
+<div class="cnblogs_code">
+<pre>Notification.PRIORITY_DEFAULT <span style="color: #008000;">//<span style="color: #008000;">默认优先级，用于没有特殊优先级分类的通知
+Notification.PRIORITY_HIGH <span style="color: #008000;">//<span style="color: #008000;">高优先级，用于重要的通信内容，例如短消息或者聊天
+Notification.PRIORITY_LOW <span style="color: #008000;">//<span style="color: #008000;">低优先级，可以通知用户但又不是很紧急的事件
+Notification.PRIORITY_MAX <span style="color: #008000;">//<span style="color: #008000;">重要而紧急的通知，通知用户这个事件是时间上紧迫的或者需要立即处理的
+Notification.PRIORITY_MIN <span style="color: #008000;">//<span style="color: #008000;">用于后台消息（例如天气或者位置信息）。最低优先级通知将只在状态栏显示图标，只有用户下拉通知抽屉才能看到内容。</span></span></span></span></span></span></span></span></span></span></pre>
+</div>
+<p> 　　7.方法：setNumber(int number)<br />      　　　功能：设置通知集合的数量。<br />      　　　例子：setNumber(10)。<br />    　　8.方法：setAutoCancel(boolean autoCancel)<br />      　　　功能：true，当用户点击面板就可以让通知自动取消。<br />      　　　例子：setAutoCancel(true)。<br />    　　9.方法：setOngoing(boolean ongoing)<br />      　　　功能：true，设置它为一个正在进行的通知，通常表示一个后台任务，用户积极参与（如播放音乐）或以某种方式正在等待，因此占用设备（如一个文件下载，同步操作，主动网络连接）。<br />      　　　例子：setOngoing(false)。<br />    　　10.方法：setDefaults(int defaults)<br />       　　　 功能：向通知添加声音、闪灯和震动效果，最简单、最一致的方式是使用当前的用户默认设置，使用defaults属性，可以组合Notification.DEFAULT_ALL、Notification.DEFAULT_SOUND添加声音。<br />       　　　 例子：setDefaults(Notification.DEFAULT_VIBRATE)。<br />       　　　 参数属性：</p>
+<div class="cnblogs_code">
+<pre>Notification.DEFAULT_VISIBLE <span style="color: #008000;">//<span style="color: #008000;">添加默认震动提醒 需要VIBRATE permission
+Notification.DEFAULT_SOUND <span style="color: #008000;">//<span style="color: #008000;">添加默认声音提醒
+Notification.DEFAULT_LIGHTS <span style="color: #008000;">//<span style="color: #008000;">添加默认三色灯提醒
+Notification.DEFAULT_ALL <span style="color: #008000;">//<span style="color: #008000;">添加默认以上三种全部提醒</span></span></span></span></span></span></span></span></pre>
+</div>
+<p> 　　11.方法：setSmallIcon(int icon)<br />       　　 &nbsp; &nbsp;&nbsp;功能：设置通知的小Icon。<br />       　　　 &nbsp;例子：setSmallIcon(R.mipmap.ic_launcher)。<br />    　　12.方法：setCategory(String category)<br />       　　　 &nbsp;功能：设置通知类别。<br />       　　　 &nbsp;例子：setCategory(Notification.CATEGORY_MESSAGE)。<br />       　　　 &nbsp;参数属性：</p>
+<div class="cnblogs_code">
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码" /></a></span></div>
+<pre>Notification.CATEGORY_CALL <span style="color: #008000;">//<span style="color: #008000;">呼入（语音或视频）或类似的同步通信请求。
+Notification.CATEGORY_MESSAGE <span style="color: #008000;">//<span style="color: #008000;">直接消息（短信、即时消息等）。
+Notification.CATEGORY_EMAIL <span style="color: #008000;">//<span style="color: #008000;">异步批量消息（电子邮件）。
+Notification.CATEGORY_EVENT <span style="color: #008000;">//<span style="color: #008000;">日历事件。
+Notification.CATEGORY_PROMO <span style="color: #008000;">//<span style="color: #008000;">促销或广告。
+Notification.CATEGORY_ALARM <span style="color: #008000;">//<span style="color: #008000;">闹钟或定时器。
+Notification.CATEGORY_PROGRESS <span style="color: #008000;">//<span style="color: #008000;">长时间后台操作的进展。
+Notification.CATEGORY_SOCIAL <span style="color: #008000;">//<span style="color: #008000;">社交网络或共享更新。
+Notification.CATEGORY_ERROR <span style="color: #008000;">//<span style="color: #008000;">后台操作或者身份验证状态出错。
+Notification.CATEGORY_TRANSPORT <span style="color: #008000;">//<span style="color: #008000;">回放媒体传输控制。
+Notification.CATEGORY_SYSTEM <span style="color: #008000;">//<span style="color: #008000;">系统或者设备状态更新，预留给系统使用。
+Notification.CATEGORY_SERVICE <span style="color: #008000;">//<span style="color: #008000;">运行后台服务的指示。
+Notification.CATEGORY_RECOMMENDATION <span style="color: #008000;">//<span style="color: #008000;">针对某一事物的具体及时的建议。
+Notification.CATEGORY_STATUS <span style="color: #008000;">//<span style="color: #008000;">关于设备或者上下文状态的正在进行的信息。
+Notification.CATEGORY_REMINDER <span style="color: #008000;">//<span style="color: #008000;">用户预定提醒。</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码" /></a></span></div>
+</div>
+<p> 　　13.方法：setColor(@ColorInt int argb)<br />       　　 &nbsp; &nbsp;&nbsp;功能：设置通知栏颜色。<br />       　　 &nbsp; &nbsp;&nbsp;例子：setColor(0x667788)。<br />    　　14.方法：setContentInfo(CharSequence info)<br />       　　 &nbsp; &nbsp;&nbsp;功能：在通知的右侧设置大文本。<br />       　　 &nbsp; &nbsp;&nbsp;例子：setContentInfo("大文本")。<br />    　　15.方法：setLocalOnly(boolean b)<br />       　　 &nbsp; &nbsp;&nbsp;功能：设置此通知是否仅与当前设备相关，如果设置为true,通知就不能桥接到其他设备上进行远程显示。&nbsp;<br />       　　 &nbsp; &nbsp; 例子：setLocalOnly(true)。<br />    　　16.方法：setVibrate(long[] pattern)<br />       　　 &nbsp; &nbsp;&nbsp;功能：设置使用震动模式。<br />       　　 &nbsp; &nbsp; 例子：setVibrate(new long[] {0,300,500,700})。延迟0秒，然后震动300ms，再延迟500ms，接着震动700ms。<br />    　　17.方法：setUsesChronometer(boolean b)<br />       　　　 &nbsp;功能：设置是否显示时间计时，电话通知就会使用到。<br />       　　　 &nbsp;例子：setUsesChronometer(true)。<br />    　　18.方法：setRemoteInputHistory(CharSequence[] text)<br />       　　　 &nbsp;功能：设置远程输入历史。<br />       　　　 &nbsp;例子：setRemoteInputHistory(new CharSequence[] {"1","2","3"})。<br />    　　19.方法：setOnlyAlertOnce(boolean onlyAlertOnce)<br />       　　　 &nbsp;功能：设置仅提醒一次。<br />       　　　 &nbsp;例子：setOnlyAlertOnce(true)。<br />    　　20.方法：setLights(@ColorInt int argb, int onMs, int offMs)<br />       　　　 &nbsp;功能：android支持三色灯提醒，这个方法就是设置不同场景下的不同颜色的灯。<br />             　　　 &nbsp;注意：（1）只有在设置了标志符Flags为Notification.FLAG_SHOW_LIGHTS的时候，才支持三色灯提醒。<br />	           　　　　　　 &nbsp;（2）这边的颜色跟设备有关，不是所有的颜色都可以，要看具体设备。<br />       　　　 &nbsp; 例子：setLights(Oxff0000ff, 300, 0)</p>
+<p>　　　　 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;其中argb表示灯光颜色，onMs表示亮持续时间，offMs表示暗的时间。<br />	     　　　　 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;还有一种写法是：</p>
+<div class="cnblogs_code">
+<pre>Notification notify =<span style="color: #000000;"> mBuilder.build();
+notify.flags =<span style="color: #000000;"> Notification.FLAG_SHOW_LIGHTS;
+notify.ledARGB = 0xff0000ff<span style="color: #000000;">;
+notify.ledOnMS = 300<span style="color: #000000;">;
+notify.ledOffMs = 300;</span></span></span></span></pre>
+</div>
+<p> 　　21.方法：setSound(Uri sound)、setSound(Uri sound, int streamType)、setSound(Uri sound, AudioAttributes audioAttributes)<br />       　　　 &nbsp;功能：设置默认或者自定义的铃声来提醒。<br />       　　　 &nbsp;例子：setDefaults(Notification.DEFAULT_SOUND);//获取默认铃声<br />             　　　　　　 &nbsp; &nbsp;setSound(Uti.parse("file:///sdcard/xx/xx.mp3"));//获取自定义铃声<br />	     　　　　　　　&nbsp;setSound(Uri.withAppendedPath(Audio.Media.INTERNAL_CONTENT_URL, "5"));//获取Android多媒体库内的铃声<br />	     　　　　　　其中streamType指的铃声的使用流。<br />　　　 &nbsp;参数属性：</p>
+<div class="cnblogs_code">
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码" /></a></span></div>
+<pre>AudioManager.STREAM_MUSIC <span style="color: #008000;">//<span style="color: #008000;">用于音乐播放的音频流
+AudioManager.STREAM_RING <span style="color: #008000;">//<span style="color: #008000;">用于电话铃声的音频流
+AudioManager.STREAM_VOICE_CALL <span style="color: #008000;">//<span style="color: #008000;">用于电话呼叫的音频流
+AudioManager.STREAM_SYSTEM <span style="color: #008000;">//<span style="color: #008000;">用于系统声音的音频流
+AudioManager.STREAM_ALARM <span style="color: #008000;">//<span style="color: #008000;">用于警报的音频流
+AudioManager.STREAM_NOTIFICATION <span style="color: #008000;">//<span style="color: #008000;">用于通知的音频流
+AudioManager.STREAM_BLUETOOTH_SCO <span style="color: #008000;">//<span style="color: #008000;">蓝牙已经连接的电话呼叫的音频流
+AudioManager.STREAM_SYSTEM_ENFORCED <span style="color: #008000;">//<span style="color: #008000;">在特定国家强制系统声音的音频流（比如日本的照相机）
+AudioManager.STREAM_DTMF <span style="color: #008000;">//<span style="color: #008000;">用于DTMF(双音多频电话)音调的音频流
+AudioManager.STREAM_TTS <span style="color: #008000;">//<span style="color: #008000;">TTS(文本到语音)的音频流</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码" /></a></span></div>
+</div>
+<p> 　　22.方法：setProgress(int max, int progress, boolean indeterminate)<br />       　　　 &nbsp;功能：设置带进度条的通知，可以在下载中使用。<br />             　　　 &nbsp;注意：此方法在4.0及以后版本才有用，如果为早期版本，需要自定义通知布局，其中包含ProgressBar视图。<br />       　　　 &nbsp;例子：setProgress(100, 66, true)。<br />             　　　　　　 &nbsp;其中max表示精度条最大数值，progress表示当前进度，indeterminate表示进度是否不确定，true为不确定，false为确定。<br />
+	     　　　　　　 &nbsp;如果为确定的进度条，调用setProgress(max, progress, 
+false)来设置通知，在更新进度的时候在此发起通知更新progress,并且在下载完成后要移除进度条，通过调用setProgress(0,0,false)即可。<br />	     　　　　　　 &nbsp;如果为不确定（持续活动）的进度条，这是在处理进度无法准确获知时显示活动正在持续，所以调用setProgress(0,0,true),操作结束时，调用setProgress(0,0,false)并更新通知以移除指示条。<br />    　　23.方法：build()<br />       　　　 &nbsp;功能：整合所有已设置的选项，返回一个新的Notification对象。<br />       　　　 &nbsp;例子：build()。	<br />    　　24.方法：setStyle(Style style)<br />       　　　 &nbsp;功能：在构建应用时添加一个丰富的通知样式。<br />       　　&nbsp;　&nbsp;例子：setStyle(inboxStyle)<br />       　　　 &nbsp;参数属性：</p>
+<div class="cnblogs_code">
+<pre>BigPictureStyle <span style="color: #008000;">//<span style="color: #008000;">用于生成包含大图像附件的大格式通知的辅助类
+BigTextStyle <span style="color: #008000;">//<span style="color: #008000;">用于生成包含大量文本的大格式通知的辅助类
+MessagingStyle <span style="color: #008000;">//<span style="color: #008000;">用于生成大格式通知的辅助类，其中包含任意数量的不同类型的多个来回消息
+InboxStyle <span style="color: #008000;">//<span style="color: #008000;">用于生成大格式通知的辅助类，其中包含一个（最多5个）字符串列表</span></span></span></span></span></span></span></span></pre>
+</div>
+<p> 　　25.方法：addAction(int icon, CharSequence title, PendingIntent intent)、addAction(Notification.Action action)<br />       　　　 &nbsp;功能：向通知添加操作，操作通常与通知的content相连被系统作为按钮来显示。在系统的content下方显示图片与title，点击这个图片或者title就会触发设置的intent。<br />             　　　 &nbsp;注意：Android 4.1版本及其以上才能使用，之下版本不能使用。<br />       　　　 &nbsp;例子：addAction(R.drawable.icon,"test action",actionPendingIntent)<br />    　　26.方法：setContent(RemoteViews views)<br />       　　　 &nbsp;功能：支持使用自定义视图替代标准的视图。<br />       　　　 &nbsp;例子：setContent(mRemoteViews)。	<br />    　　27.方法：setLargeIcon(Bitmap icon)<br />       　　　 &nbsp;功能：设置下拉列表中的图标（大图标）<br />       　　　 &nbsp;例子：setLargeIcon(BitmapFactory.decodeResource(getResources(),R.drawable.icon))。	<br />    　　28.方法：setPublicVersion(Notification n)<br />       　　　 &nbsp;功能：设置安全锁屏下的通知<br />       　　　 &nbsp;例子：setPublicVersion(publicBuilder.build())。	<br />    　　29.方法：setDeleteIntent(PendingIntent intent)<br />       　　　 &nbsp;功能：设置通知删除时的意图<br />       　　　 &nbsp;例子：setDeleteIntent(deletePendingIntent)。<br />    　　30.方法：setExtras(Bundle extras)<br />       　　　 &nbsp;功能：为通知设置数据。<br />       　　　 &nbsp;例子：setExtras(bundle)，不太清楚主要用于做什么。<br />    　　31.方法：setSubText(CharSequence text)<br />       　　　 &nbsp;功能：在通知模板上设置第三行文本。<br />             　　　 &nbsp;注意：如果使用了setProgress()，就不要使用setSubText()了，它们占据同一个位置。<br />	           　　　　　　 &nbsp;如果不提供大格式通知，则此方法没有效果，第三行文本只出现在展开视图中。<br />       　　　 &nbsp;例子：setSubText("sub text")。<br />    　　32.方法：setFullScreenIntent(PendingIntent intent, boolean highPriority)<br />       　　　 &nbsp;功能：只适用于具有极高优先级的通知，比如电话或者闹铃，如果设备被用用于其他东西，请给用户一个选项关闭它并使用一个正常的通知，因为这个可能会有破坏性。<br />       　　　 &nbsp;例子：setFullScreenIntent(fullScreenIntent, true)。<br />    　　33.方法：setGroup(String groupKey)<br />       　　　 &nbsp;功能：设置该通知组的密钥，即确认为哪一组。<br />       　　　 &nbsp;例子：setGroup(&ldquo;test_notification&rdquo;)。<br />    　　34.方法：setGroupSummary(boolean isGroupSummary)<br />       　　　 &nbsp;功能：设置是否为一组通知的第一个显示。<br />       　　　 &nbsp;例子：setGroupSummary(true)。<br />    　　35.方法：setSortKey(String sortKey)<br />       　　　 &nbsp;功能：设置针对一个包内的通知进行排序的键值，<br />       　　　 &nbsp;例子：setSortKey("sort")</p>

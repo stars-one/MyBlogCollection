@@ -1,0 +1,80 @@
+原文链接：http://www.cnblogs.com/kexing/archive/2018/03/16/8548648.html
+<h2>前言：</h2>
+<p><span style="font-size: 16px;">最近忙着搞项目，难得有时间，便来整理搞项目中学习到的知识</span></p>
+<p><span style="font-size: 16px;">使用之前，先介绍一下android这种的五种数据储存方式，分别为文件储存，SharePrefence，SQL，使用ContentProvider存储数据，网络存储数据，其中，SharePrefence是一个轻量的储存，主要是用来储存app的相关设置，设置界面就是使用的这种储存方式</span></p>
+<p><span style="font-size: 16px;">想要深入了解的请看下面的参考博文</span></p>
+<h3 class="t"><a href="http://www.baidu.com/link?url=ns6IAWD9aiUA-im53oIE0Wte7bGWvvuQPfA8JeBteXAT2VfJkIgTsENUAunKHAHSPcsfQqSaOD9x_ieCESsBE_&amp;wd=&amp;eqid=d8089c9400036aa7000000065aab621f" target="_blank" data-click="{
+			'F':'778317EA',
+			'F1':'9D73F1C4',
+			'F2':'4CA6DE6B',
+			'F3':'54E5343F',
+			'T':'1521181215',
+						'y':'AE5EFF5F'
+			 
+									}"><em>Android</em> <em>数据存储</em>五种方式使用与总结 - CSDN博客</a></h3>
+<h2>使用：</h2>
+<p><span style="font-size: 16px;">按照以往，我们创建界面的时候，是用的xml布局+activity文件，设置界面也是与之类似</span></p>
+<h3><span style="font-size: 16px;">第一步：创建xml文件夹</span></h3>
+<p><span style="font-size: 16px;">切换到Project模式，新建一个xml文件夹，用来放设置界面的布局文件</span></p>
+<p><span style="font-size: 16px;"><img src="https://images2018.cnblogs.com/blog/1210268/201803/1210268-20180316142507939-1175337135.png" alt="" /></span></p>
+<h3>第二步：编写布局文件</h3>
+<p><span style="font-size: 16px;">在xml文件夹中新建一个xml文件</span></p>
+<p><img src="https://images2018.cnblogs.com/blog/1210268/201803/1210268-20180316142737390-198361919.png" alt="" /></p>
+<p><span style="font-size: 16px;">命名的话以pref_xxx形式，官方的命名规范就是以pref为前缀命名的</span></p>
+<p><span style="font-size: 16px;">打开xml文件，可以发现与我们之前写布局文件是一样的，有design模式和text模式，这里我们可以看到有七种可以选择，我只讲解EditTextPreference和SwitichPreference</span></p>
+<p><span style="font-size: 16px;">需要详解的可以参考这一篇<a href="http://www.baidu.com/link?url=SlXVM-YehxwWX-zLJrZSUARtMPibW2N9nKau7tKfKq2Q5b3Hs_zRkGshgjrd3vfe&amp;wd=&amp;eqid=9c2682000003d50e000000065aab64c9" target="_blank" data-click="{
+			'F':'778317EA',
+			'F1':'9D73F1E4',
+			'F2':'4CA6DE6B',
+			'F3':'54E5242F',
+			'T':'1521181897',
+						'y':'5DAFFFE7'
+			 
+									}"><em>Android</em>:详解如何创建Google风格的<em>SettingsActivity</em> - 简书</a></span></p>
+<p><img src="https://images2018.cnblogs.com/blog/1210268/201803/1210268-20180316142648694-1554058363.png" alt="" /></p>
+<p>&nbsp;</p>
+<p><img src="https://images2018.cnblogs.com/blog/1210268/201803/1210268-20180316143245901-247080189.png" alt="" /></p>
+<p><span style="font-size: 16px;">结合上面的两张图片，我讲解一下相关的属性</span></p>
+<p><span style="font-size: 16px;">defaultValue是默认值，</span></p>
+<p><span style="font-size: 16px;"><span style="color: #ff0000;">key类似于我们写layout文件中定义的id</span>，我们可以通过id找到控件，同样的，在这里，我们也可以通过key可以找到控件</span></p>
+<p><span style="font-size: 16px;">summary就是开通会员下面的那一行字</span></p>
+<p><span style="font-size: 16px;">title就是标题，也就是开通会员</span></p>
+<p><span style="font-size: 16px;">EditViewPreference 这个是封装了EditView的一个控件，当我们点击的时候，会弹出一个对话框让我们输入数据，当我们输入数据之后，数据就会保存在SharePreference之中</span></p>
+<p><span style="font-size: 16px;">同理，switch是一个开关，点击的时候会将true或者false保存在SharePreference中</span></p>
+<p><span style="font-size: 16px;">如果我们只是想弄一个选项，点击会打开一个浏览器，上面的控件均不合适，我们怎么办呢？不知道你注意到没有，最外层使用的是PreferenceScreen</span></p>
+<p><span style="font-size: 16px;"><img src="https://images2018.cnblogs.com/blog/1210268/201803/1210268-20180316144033355-1565833672.png" alt="" /><img src="https://images2018.cnblogs.com/blog/1210268/201803/1210268-20180316144049880-123120567.png" alt="" /></span></p>
+<p><span style="font-size: 16px;">我们可以像上图之中这样使用PreferenceScreen，之后在java代码之中可以为它设置监听器，跳转到浏览器</span></p>
+<p><span style="font-size: 16px;">key可以定义在sting.xml中，当然，也可以直接设置</span></p>
+<h3>第三步：创建Fragment</h3>
+<div>
+<div><span style="font-size: 16px;">对于Android 3.0以下的应用，我们需要在 Activity 中显示设置，应当扩展 PreferenceActivity 类。这是传统 Activity 类的扩展，该类根据 Preference 对象的层次结构显示设置列表。当用户进行更改时，PreferenceActivity 会自动保留与每个 Preference 相关的设置。对 Android 3.0 及 更高版本系统的应用，则应改为使用 PreferenceFragment。与仅使用上述 Activity 相比，无论在构建何种 Activity，Fragment都可为应用提供一个更加灵活的体系结构。</span></div>
+<span style="color: #ff0000; font-size: 16px;">现在来说，最低版本都是android4.0了，我们就直接抛弃以前的方法，使用Fragment即可</span></div>
+<div><br />新建一个Fragment</div>
+<div><img src="https://images2018.cnblogs.com/blog/1210268/201803/1210268-20180316144814079-1104813480.png" alt="" width="846" height="606" /></div>
+<div>
+<p>由于我们这个是设置界面，所以不需要想正常的fragment那样使用，所以将三个选项都取消</p>
+<p><img src="https://images2018.cnblogs.com/blog/1210268/201803/1210268-20180316144921905-13862123.png" alt="" width="885" height="752" /></p>
+<p><span style="font-size: 16px;">首先我们要修改fragment，使其继承PreferenceFragment</span></p>
+<p><img src="https://images2018.cnblogs.com/blog/1210268/201803/1210268-20180316145044463-1527520055.png" alt="" /></p>
+<p><span style="font-size: 16px;">之后，在onCreate方法中添加一行代码，使用addPreferenceFromResource方法绑定之前的设置界面的xml</span></p>
+<p><span style="font-size: 16px;"><img src="https://images2018.cnblogs.com/blog/1210268/201803/1210268-20180316145159555-603209873.png" alt="" /></span></p>
+<p><span style="font-size: 16px;">如果之前有使用过fragment的，应该知道我们只能在onViewCreated方法中来找控件</span></p>
+<p><span style="color: #ff0000; font-size: 16px;">这里通过key来找到设置界面的控件</span></p>
+<p><span style="color: #ff0000; font-size: 16px;">调用静态方法getDefaultSharedPreference来获得sharePreference，之后通过get方法来获取之前保存的数值</span></p>
+<p><span style="color: #3366ff; font-size: 16px;">这里需要提及一下，原本的SharedPreference中可以保存int boolean String等类型的数据，但是，如果像我们这里使用设置来保存app设置的相关数据，sharedPreference只有两种数据，一种是String，另外一种则是boolean，如果想要int，需要将获得的String转换为int类型</span></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><img src="https://images2018.cnblogs.com/blog/1210268/201803/1210268-20180316145323749-663679079.png" alt="" /></p>
+<p><span style="font-size: 16px;">找到控件之后，我们可以调用相关的方法为其设置监听器来实现相关的功能</span></p>
+<h3>第四步：动态添加在framelayout中</h3>
+<p><span style="font-size: 16px;">我们需要新建一个activity文件，其布局需要一个framelayout</span></p>
+<p><img src="https://images2018.cnblogs.com/blog/1210268/201803/1210268-20180316150313260-1535721070.png" alt="" /></p>
+<p><span style="font-size: 16px;">之后，我们通过Fragment的方法动态添加设置fragment</span></p>
+<pre><span style="color: #0099ff; font-size: 16px;">FragmentManager fragmentManager = <span style="color: #0099ff;">getFragmentManager();<br /><span style="color: #0099ff;">FragmentTransaction transaction = fragmentManager.<span style="color: #0099ff;">beginTransaction();<br />transaction.<span style="color: #0099ff;">add(<span style="color: #0099ff;">R.id.<span style="color: #660e7a; font-weight: bold; font-style: italic;">setting_framlayout,<span style="color: #0099ff;">settingFragment).<span style="color: #0099ff;">commit();<br /></span></span></span></span></span></span></span></span></span></pre>
+</div>
+<p><span style="font-size: 16px;">学过fragment的话，应该知道，我们使用Fragment的时候，有两个包给我们选择，一个是v4包，另外一个则是app包，使用v4包的那个fragment可以获得更好的兼容性（低版本）</span></p>
+<p><span style="font-size: 16px;"><span style="color: #ff0000;">所以这里需要注意，使用的fragment是app包的Fragment，</span>刚开始我使用的v4包，一直出错，查找原因之后，发现了，之前settingFragment继承的是PreferenceFragment，而<span style="font-size: 16px;">PreferenceFragment</span>继承的则是app包下的Fragment</span></p>
+<h3>补充：</h3>
+<p><span style="font-size: 16px;">通过setEnable方法（对象为控件）可以禁用控件（如果设置密码锁的话可以使用此方法）</span></p>
+<p><span style="font-size: 16px;">可以将Preference转型为相关的对象，如Preference可以转为EditText<span style="font-size: 16px;">Preference</span>，或者可以转为Switch<span style="font-size: 16px;">Preference</span>，之后就可以调用相关的对象的方法（与原来的在xml定义的控件相同的使用方法）</span></p>
+<p>&nbsp;</p>

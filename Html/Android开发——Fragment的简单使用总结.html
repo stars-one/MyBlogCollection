@@ -1,0 +1,155 @@
+原文链接：http://www.cnblogs.com/kexing/archive/2018/03/21/8595703.html
+<h2>前言：</h2>
+<p><span style="font-size: 16px;">之前搞项目的时候，就使用了这个Fragment，中间遇到了许多坑，把坑都解决了，现在写一篇较为简单的Fragment使用总结</span></p>
+<h2>Fragment的简单介绍：</h2>
+<p><span style="font-size: 16px;">简单来说，Fragment其实可以理解为一个具有自己生命周期的控件，只不过这个控件又有点特殊，它有自己的处理输入事件的能力，有自己的生命周期，又必须依赖于Activity，能互相通信和托管。</span></p>
+<p><span style="font-size: 16px;">使用Fragment可以精简Activity文件的代码，便于更好的阅读，同时，有着更好的速度加载</span></p>
+<p><span style="font-size: 16px;">使用Fragment的另外一种情况是可以在平板和手机显示不同的界面，由于没有接触平板电脑APP的开发，所以这个方面就不说明了。</span></p>
+<h2>&nbsp;</h2>
+<h2>Fragment的使用：</h2>
+<h3>目录：</h3>
+<h4>1.创建Fragment及Fragment对应的布局文件</h4>
+<h4>2.使用静态方法创建Fragment（xml文件中使用）</h4>
+<h4>3.动态创建并使用Fragment（java代码）</h4>
+<h4>4.通过FragmentManager的方法来找到静态方法创建的Fragment实例</h4>
+<h4><span style="font-size: 16px;">5.Fragment像activity一样使用</span></h4>
+<h4>6.Fragment的生命周期</h4>
+<h4>7.Fragment的消息传递（重点）</h4>
+<h4>8.Fragment点击事件冲突处理</h4>
+<p>&nbsp;</p>
+<h3>1.创建Fragment及Fragment对应的布局文件</h3>
+<p><span style="font-size: 16px;">创建的话我们可以通过手动创建一个Fragment文件及一个xml布局文件，之后在Fragment的onCreateView方法中调用inflate来返回一个View</span></p>
+<p><img src="https://images2018.cnblogs.com/blog/1210268/201803/1210268-20180320113320109-328481532.png" alt="" /></p>
+<p><span style="font-size: 16px;">其实Android Studio给我们提供了一个很好的自动化生成Fragment及布局文件工具，我们直接new，选择Fragment-&gt;blank即可</span></p>
+<p><img src="https://images2018.cnblogs.com/blog/1210268/201803/1210268-20180320113455158-325444115.png" alt="" /></p>
+<p><span style="font-size: 16px;">至于其他的几种Fragment，有兴趣可以百度找资料</span></p>
+<p><span style="font-size: 16px;">之后我们来到了新建的界面，Android Studio会自动生成Fragment与Fragment对应的布局，而且代码中也是帮我们加上了之前的那一行代码来刷新视图</span></p>
+<p><span style="font-size: 16px;"><img src="https://images2018.cnblogs.com/blog/1210268/201803/1210268-20180320114322422-2050803871.png" alt="" width="933" height="793" /></span></p>
+<p><img src="https://images2018.cnblogs.com/blog/1210268/201803/1210268-20180320114529300-1405191930.png" alt="" /></p>
+<p><span style="font-size: 16px;">为了方便下面的使用，我们简单地将fragment__test这个布局文件的背景设置为红色</span></p>
+<h3>2.使用静态方法创建Fragment（xml文件中使用）</h3>
+<div class="cnblogs_code">
+<pre></pre>
+<pre><span style="font-size: 16px;">&lt;<span style="color: #cc0099;">fragment<br /><span style="color: #cc0099;">    <span style="color: #0099ff;">android:id=<span style="color: #ff3333;">"@+id/fragmetn1"<br /><span style="color: #ff3333;">    <span style="color: #0099ff;">android:layout_width=<span style="color: #ff3333;">"match_parent"<br /><span style="color: #ff3333;">    <span style="color: #0099ff;">android:layout_height=<span style="color: #ff3333;">"match_parent"<br /><span style="color: #ff3333;">    <span style="color: #0099ff;">android:name=<span style="color: #ff3333;">"com.wan.fragmenttest.TestFragment"<br /><span style="color: #ff3333;">    <span style="color: #0099ff;">tools:layout=<span style="color: #ff3333;">"@layout/fragment_test"/&gt;</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></pre>
+</div>
+<p><span style="font-size: 16px;">上面的代码即是添加Fragment的代码，和我们使用控件差不多，就是需要使用name这个属性来指定相关的Fragment</span></p>
+<p><span style="font-size: 16px;">id是必须的，没有的话就会出现闪退，tools:layout是用来显示当前的Fragment，没有的话预览图就是灰色的，可用可不用，不过方便查看效果还是用吧</span></p>
+<p><span style="font-size: 16px;"><img src="https://images2018.cnblogs.com/blog/1210268/201803/1210268-20180320131201500-2079966208.png" alt="" width="1006" height="517" /></span></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px;">我们这样就是成功的用静态方法使用了一个Fragment</span></p>
+<h3>3.动态创建并使用Fragment（java代码）</h3>
+<p><span style="font-size: 16px;">首先，我们把之前的在activity布局文件中的Fragment给删除，换成一个framelayout，并给其定义了一个id</span></p>
+<p><span style="font-size: 16px;"><img src="https://images2018.cnblogs.com/blog/1210268/201803/1210268-20180320175901958-1667530762.png" alt="" /></span></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px;">之后，我们new一个Fragment，使用<span style="color: #ff0000;">FragmentTransaction</span>的<span style="color: #ff0000;">add</span>或者是<span style="color: #ff0000;">replace</span>方法，将其放入一个framelayout之中</span></p>
+<p><span style="font-size: 16px;">FragmentTransaction<span style="color: #ff0000;">由FragmentManager的beginTransaction</span>方法获得</span></p>
+<p><span style="font-size: 16px; color: #000000;">add方法<span style="color: #ff0000;">第一个参数为一个layout布局</span>，就是我们之前的那个framelayout的id，<span style="color: #ff0000;">第二个则是fragment</span>，我们之前new的一个TestFragment，commit提交事务，不提交事务是无效的，不信的话可以自行测试</span></p>
+<p>&nbsp;<img src="https://images2018.cnblogs.com/blog/1210268/201803/1210268-20180320180310243-1002010656.png" alt="" /></p>
+<p><span style="color: #ff0000;"><span style="font-size: 16px;">PS：这里需要注意一下</span>，Fragment有两个不同的包，一个是app，另外一个是v4</span></p>
+<p><img src="https://images2018.cnblogs.com/blog/1210268/201803/1210268-20180320180508258-138117719.png" alt="" /></p>
+<p><span style="color: #000000;">由图中可以看到，这两个有什么区别呢？</span></p>
+<p><span style="color: #000000; font-size: 16px;"><span style="font-family: KaiTi_GB2312;"><span style="font-family: KaiTi_GB2312;">android.support.v4.app.fragment包是为可以向下兼容至1.6系统.</span></span></span></p>
+<p style="margin-top: 0px; margin-bottom: 1.1em; padding-top: 0px; padding-bottom: 0px;"><span style="font-size: 16px;">&nbsp;</span><span style="font-family: KaiTi_GB2312;"><span style="background-color: #ffffff;"><span style="color: #330033;"><span style="font-size: 14px;"><span style="font-size: 16px;">android.app.fragment包是3.0系统以后的才能使用的,不过这也无所谓了,现在android4.0已占用了百分之九十九的市场</span></span></span></span></span></p>
+<p style="margin-top: 0px; margin-bottom: 1.1em; padding-top: 0px; padding-bottom: 0px;"><span style="font-family: KaiTi_GB2312;"><span style="background-color: #ffffff;"><span style="color: #330033;"><span style="font-size: 14px;"><span style="font-size: 16px;"><span style="color: #ff0000;">我们使用app这个包就好</span></span> <br /></span></span></span></span></p>
+<p style="margin-top: 0px; margin-bottom: 1.1em; padding-top: 0px; padding-bottom: 0px;"><span style="font-family: KaiTi_GB2312; color: #ff0000;"><span style="background-color: #ffffff;"><span style="font-size: 14px;"><span style="font-size: 16px;">如果使用的是v4包的话，获得FragmentManager需要使用getSupportFragmentManager方法</span></span></span></span></p>
+<p style="margin-top: 0px; margin-bottom: 1.1em; padding-top: 0px; padding-bottom: 0px;"><span style="font-family: KaiTi_GB2312; color: #ff0000;"><span style="background-color: #ffffff;"><span style="font-size: 14px;"><span style="font-size: 16px;">如果使用的是app包的话，直接使用getFragmentManager方法来获得FragmentManager</span></span></span></span></p>
+<p><span style="font-size: 16px;">动态的我们只能运行来查看测试结果，可以看到与之前使用静态方法是一样的界面</span></p>
+<p><img src="https://images2018.cnblogs.com/blog/1210268/201803/1210268-20180320181541780-1220040481.png" alt="" width="423" height="736" /></p>
+<h3>4.通过FragmentManager的方法来找到静态方法创建的Fragment实例</h3>
+<p><span style="font-size: 16px;">两种方法：</span></p>
+<p><span style="font-size: 16px;"><span style="color: #ff0000;">findFragmentById方法与findFragmentByTa</span>g</span></p>
+<p><span style="font-size: 16px;">我们在xml中定义一个id，之后可以通过findFragmentById方法<span style="font-size: 16px;">找到实例</span></span></p>
+<p><span style="font-size: 16px;">同样的道理，我们在xml中给Fragment定义一个Tag，之后就可以通过findFragmentByTag方法来找到实例</span></p>
+<p><span style="font-size: 16px;">使用Fragment有两种方法我们可以通Fragment</span></p>
+<p>&nbsp;</p>
+<h3><span style="font-size: 16px;">5.Fragment像activity一样使用</span></h3>
+<p><span style="font-size: 16px;">如果我们的Fragment中使用了button等控件，那么，我们可以像activity中，通过findViewbyid方法来找到控件的实例，并为其设置监听器</span></p>
+<p><span style="font-size: 16px;">不过，需要注意的是，Fragment只有在View被创建之后才能通过findviewbyid找到控件的实例，<span style="color: #ff0000;">也就是只有在onViewCreated中才能使用findviewbyid方法</span></span></p>
+<p><span style="font-size: 16px;"><img src="https://images2018.cnblogs.com/blog/1210268/201803/1210268-20180320182711663-414985565.png" alt="" /></span></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h3>6.Fragment的生命周期</h3>
+<p><img src="https://images2018.cnblogs.com/blog/1210268/201803/1210268-20180320182925555-506021413.png" alt="" /></p>
+<p>&nbsp;</p>
+<pre class="prettyprint"><span style="font-size: 16px;"><code class="has-numbering">Fragment                                      
+
+<strong><span style="color: #0000ff;">1. 界面打开    </span> </strong>            
+    onCreate() 方法执行！                
+    onCreateView() 方法执行！             
+    onActivityCreated() 方法执行！   
+    onStart() 方法执行！
+    onResume() 方法执行！
+
+<span style="color: #0000ff;"><strong>2. 按下主屏幕键/锁屏 </strong> </span>      
+    onPause() 方法执行！
+    onStop() 方法执行！
+
+<strong><span style="color: #0000ff;">3. 重新打开</span></strong>
+    onStart() 方法执行！
+    onResume() 方法执行！
+
+<span style="color: #0000ff;"><strong>4. 按下后退键</strong></span>
+    onPause() 方法执行！
+    onStop() 方法执行！
+    onDestroyView() 方法执行！
+    onDestroy() 方法执行！
+    onDetach() 方法执行！
+
+
+<strong>在Activity中加入Fragment,对应的生命周期</strong>
+<span style="color: #0000ff;"><strong>1. 打开</strong></span>
+Fragment onCreate() 方法执行！
+Fragment onCreateView() 方法执行！
+Activity onCreate() 方法执行！
+Fragment onActivityCreated() 方法执行！
+Activity onStart() 方法执行！
+Fragment onStart() 方法执行！
+Activity onResume() 方法执行！
+Fragment onResume() 方法执行！
+
+<span style="color: #0000ff;">2. 按下主屏幕键/锁屏</span>
+Fragment onPause() 方法执行！
+Activity onPause() 方法执行！
+Fragment onStop() 方法执行！
+Activity onStop() 方法执行！
+
+<span style="color: #0000ff;">3. 再次打开</span>
+Activity onRestart() 方法执行！
+Activity onStart() 方法执行！
+Fragment onStart() 方法执行！
+Activity onResume() 方法执行！
+Fragment onResume() 方法执行！
+
+<span style="color: #0000ff;">4. 按下后退键</span>
+Fragment onPause() 方法执行！
+Activity onPause() 方法执行！
+Fragment onStop() 方法执行！
+Activity onStop() 方法执行！
+Fragment onDestroyView() 方法执行！
+Fragment onDestroy() 方法执行！
+Fragment onDetach() 方法执行！
+Activity onDestroy() 方法执行！<br /></code></span></pre>
+<h3>7.Fragment的消息传递</h3>
+<p><span style="font-size: 16px;">在activity中，我们使用Bundle来携带数据进行传递，在Fragment中，也是使用的Bundle</span></p>
+<p><span style="font-size: 16px;">如何使用呢？</span></p>
+<p><span style="font-size: 16px;">首先，<span style="font-size: 16px;">为Fragment创建一个静态方法newInstance</span></span></p>
+<p><span style="font-size: 16px;">我们可以直接输入newInstance，就会出现代码补全提示，选择之后就会补全了代码</span></p>
+<p><span style="font-size: 16px;"><img src="https://images2018.cnblogs.com/blog/1210268/201803/1210268-20180321085726863-659300825.png" alt="" /></span></p>
+<p><img src="https://images2018.cnblogs.com/blog/1210268/201803/1210268-20180321085802639-789182595.png" alt="" /></p>
+<p><span style="font-size: 16px;">方法如上所示，首先，<span style="color: #ff0000;">创建了一个Bundle的对象和一个TestFragment的对象，调用Fragment中的setArguments，将bundle存放进去，之后，返回一个TestFragment</span></span></p>
+<p><span style="font-size: 16px;">这里的bundle还没有携带任何的数据，现在我们想传入一个String的数据，代码如下所示</span></p>
+<p><span style="font-size: 16px;"><img src="https://images2018.cnblogs.com/blog/1210268/201803/1210268-20180321090138788-741119329.png" alt="" /></span></p>
+<p><span style="font-size: 16px;">这样我们就完成了传递数据，但是，还差一步，我们得接收数据，由之前的 生命周期，我们可以知道，onCreate方法是第一步执行的，所以，<span style="color: #ff0000;">在onCreate方法中接收Bundle传来的数据</span></span></p>
+<p><span style="font-size: 16px;">接收数据前，<span style="font-size: 16px;">我们得<span style="color: #ff0000;">在Fragment文件中声明几个全局变量，用来接收数据</span></span></span></p>
+<p><span style="font-size: 16px;"><span style="font-size: 16px;"><span style="color: #ff0000;"><img src="https://images2018.cnblogs.com/blog/1210268/201803/1210268-20180321090507752-860994325.png" alt="" /></span></span></span></p>
+<p><span style="font-size: 16px;">这样便是完成了消息的传递</span></p>
+<p><span style="font-size: 16px;">补充参考：<a id="post_title_link_8467762" href="http://www.cnblogs.com/kexing/p/8467762.html">Android开发&mdash;&mdash;fragment中数据传递与刷新UI（更改控件）</a></span></p>
+<h3>8.Fragment点击事件冲突处理</h3>
+<p>图中，有两个日记，点击就会弹出查看日记</p>
+<p><img src="https://images2018.cnblogs.com/blog/1210268/201803/1210268-20180321092323755-1479906848.png" alt="" /></p>
+<p><img src="https://images2018.cnblogs.com/blog/1210268/201803/1210268-20180321092441415-1716049366.gif" alt="" /></p>
+<p><span style="font-size: 16px;">由图中可以看到，我们的点击透过了当前的Fragment，这显然不是我们想要的结果，我们应该怎么做呢？答案很简单，就是给当前显示出的那个Fragment添加一个onTouch监听器</span></p>
+<p><span style="font-size: 16px;"><img src="https://images2018.cnblogs.com/blog/1210268/201803/1210268-20180321092708759-1968736651.png" alt="" /></span></p>
+<p><img src="https://images2018.cnblogs.com/blog/1210268/201803/1210268-20180321092729780-659701382.png" alt="" /></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px;">PS：在Fragment中可以通过getActivity方法获得context</span></p>

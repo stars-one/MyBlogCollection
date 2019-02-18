@@ -1,0 +1,47 @@
+原文链接：http://www.cnblogs.com/kexing/archive/2017/08/15/7367743.html
+<p>1.用代码里实现</p>
+<div class="dp-highlighter bg_java">
+<div class="bar">
+<div class="tools">&nbsp;</div>
+<div class="tools">
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">this</span>.requestWindowFeature(Window.FEATURE_NO_TITLE);<span style="color: #008000;">//</span><span style="color: #008000;">去掉标题栏  </span></pre>
+</div>
+<p>&nbsp;</p>
+</div>
+</div>
+</div>
+<p>&nbsp;</p>
+<p><span style="color: #ff0000;">提示：这句代码要写在Activity中的setContentView()方法前面。</span></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>2.在清单文件（Androidmanifest.xml）里面实现</p>
+<div class="dp-highlighter bg_java">&nbsp;　<span style="color: #3366ff;">　android:theme=<span class="string">"@android:style/Theme.NoTitleBar</span></span></div>
+<p>这样用可以将整个应用设置成无标题栏，但是这个的话会使得整个布局背景变为灰色，如果说不想要黑色的话，就改为<span style="color: #3366ff;">&nbsp;<span style="color: #3366ff;">android:theme=<span class="string">"@android:style/Theme.Light.NoTitleBar</span></span></span></p>
+<p><span style="color: #ff0000;">顺便一提，这个方法也可以直接在布局文件的可视化界面直接改变主题实现相同的效果</span></p>
+<p><span style="color: #ff00ff;">如果只需要在一个Activity设置成一个无标题栏的形式，只要把上面的第三行代码写到某一个Activity里面就可以了。</span></p>
+<p>3.在style.xml文件里定义</p>
+<div class="dp-highlighter bg_html">
+<div class="bar">&nbsp;</div>
+<ol class="dp-xml" start="1">
+<li class="alt"><span class="tag" style="color: #3366ff;">&lt;?<span class="tag-name">xml&nbsp;<span class="attribute">version=<span class="attribute-value">"1.0"&nbsp;<span class="attribute">encoding=<span class="attribute-value">"UTF-8"&nbsp;<span class="tag">?&gt;&nbsp;&nbsp;</span></span></span></span></span></span></span></li>
+<li><span class="tag" style="color: #3366ff;">&lt;<span class="tag-name">resources<span class="tag">&gt;&nbsp;&nbsp;</span></span></span></li>
+<li class="alt"><span style="color: #3366ff;">&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;<span class="tag-name">style&nbsp;<span class="attribute">name=<span class="attribute-value">"notitle"<span class="tag">&gt;&nbsp;&nbsp;</span></span></span></span></span></span></li>
+<li><span style="color: #3366ff;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;<span class="tag-name">item&nbsp;<span class="attribute">name=<span class="attribute-value">"android:windowNoTitle"<span class="tag">&gt;true<span class="tag">&lt;/<span class="tag-name">item<span class="tag">&gt;&nbsp;&nbsp;</span></span></span></span></span></span></span></span></span></li>
+<li class="alt"><span style="color: #3366ff;">&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;/<span class="tag-name">style<span class="tag">&gt;&nbsp;&nbsp;&nbsp;</span></span></span></span></li>
+<li><span class="tag" style="color: #3366ff;">&lt;/<span class="tag-name">resources<span class="tag">&gt;&nbsp;&nbsp;</span></span></span></li>
+</ol></div>
+<p>然后在Androidmanifest.xml中引用就可以了，这种方法略微显得稍麻烦了些。</p>
+<div class="dp-highlighter bg_html">
+<div class="bar">&nbsp;</div>
+<ol class="dp-xml" start="1">
+<li class="alt"><span class="tag" style="color: #3366ff;">&lt;<span class="tag-name">application&nbsp;<span class="attribute">android:icon=<span class="attribute-value">"@drawable/icon"&nbsp;&nbsp;&nbsp;</span></span></span></span></li>
+<li><span style="color: #3366ff;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="attribute">android:label=<span class="attribute-value">"@string/app_name"&nbsp;&nbsp;&nbsp;</span></span></span></li>
+<li class="alt"><span style="color: #3366ff;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="attribute">android:theme=<span class="attribute-value">"@style/notitle"<span class="tag">&gt;&nbsp;&nbsp;</span></span></span></span></li>
+</ol></div>
+<p>&nbsp;</p>
+<p>其实可以看得出来，第二种方法和第三种方法实质是一样的，只不过第二种方法调用的是系统定义好的style.xml文件，而第三种方法则是在自己的应用里定义style.xml，然后再自己再调用，其实道理是一样</p>
+<p>&nbsp;</p>
+<h3>隐藏状态栏：</h3>
+<p>setContentView之前加上这一条代码</p>
+<pre class="prettyprint"><span style="font-size: 16px;"><code class="hljs avrasm has-numbering">getWindow()<span class="hljs-preprocessor">.setFlags(WindowManager<span class="hljs-preprocessor">.LayoutParams<span class="hljs-preprocessor">.FLAG_FULLSCREEN, WindowManager<span class="hljs-preprocessor">.LayoutParams<span class="hljs-preprocessor">.FLAG_FULLSCREEN)<span class="hljs-comment">;</span></span></span></span></span></span></code></span></pre>

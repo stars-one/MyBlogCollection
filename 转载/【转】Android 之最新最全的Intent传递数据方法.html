@@ -1,0 +1,294 @@
+原文链接：http://www.cnblogs.com/kexing/archive/2018/01/11/8270667.html
+<div>
+<p><span style="font-size: 16px;">原文地址：https://www.jianshu.com/p/1169dba99261</span></p>
+<h2>intent传递数据</h2>
+<p>为什么要和intent单独拿出来讲，因为Intent传递数据也是非常重要的</p>
+<h2>一、简单的传递数据</h2>
+<div class="image-package">
+<div class="image-container" style="max-width: 631px; max-height: 238px;">
+<div class="image-view" data-width="631" data-height="238"><img style="cursor: zoom-in;" src="//upload-images.jianshu.io/upload_images/7508328-68370ce8d591a4e5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/631" alt="" data-original-src="//upload-images.jianshu.io/upload_images/7508328-68370ce8d591a4e5.png" data-original-width="631" data-original-height="238" data-original-format="image/png" data-original-filesize="49180" /></div>
+</div>
+</div>
+<h2>二、传递数组</h2>
+<pre class="hljs java"><code class="java">bd.putStringArray(<span class="hljs-string">"StringArray", <span class="hljs-keyword">new String[]{<span class="hljs-string">"呵呵",<span class="hljs-string">"哈哈"});
+<span class="hljs-comment">//可把StringArray换成其他数据类型,比如int,float等等..
+</span></span></span></span></span></code></pre>
+<p>读取数组：</p>
+<pre class="hljs java"><code class="java">String[] str = bd.getStringArray(<span class="hljs-string">"StringArray")
+</span></code></pre>
+<h2>三、传递集合</h2>
+<h4>1）List&lt;基本数据类型或String&gt;</h4>
+<pre class="hljs java"><code class="java">intent.putStringArrayListExtra(name, value)
+intent.putIntegerArrayListExtra(name, value)
+</code></pre>
+<p>读取集合：</p>
+<pre class="hljs java"><code class="java">intent.getStringArrayListExtra(name)
+intent.getIntegerArrayListExtra(name)
+</code></pre>
+<h4>2）List&lt; Object&gt;</h4>
+<p>将list强转成Serializable类型,然后传入(可用Bundle做媒介)</p>
+<p>写入集合：</p>
+<pre class="hljs java"><code class="java">putExtras(key, (Serializable)list)
+</code></pre>
+<p>读取集合：</p>
+<pre class="hljs java"><code class="java">(List&lt;Object&gt;) getIntent().getSerializable(key)
+</code></pre>
+<blockquote>
+<p>PS:Object类需要实现Serializable接口</p>
+</blockquote>
+<h4>3）Map&lt;String, Object&gt;,或更复杂的</h4>
+<p>解决方法是：外层套个List</p>
+<pre class="hljs java"><code class="java"><span class="hljs-comment">//传递复杂些的参数 
+Map&lt;String, Object&gt; map1 = <span class="hljs-keyword">new HashMap&lt;String, Object&gt;();  
+map1.put(<span class="hljs-string">"key1", <span class="hljs-string">"value1");  
+map1.put(<span class="hljs-string">"key2", <span class="hljs-string">"value2");  
+List&lt;Map&lt;String, Object&gt;&gt; list = <span class="hljs-keyword">new ArrayList&lt;Map&lt;String, Object&gt;&gt;();  
+list.add(map1);  
+
+Intent intent = <span class="hljs-keyword">new Intent();  
+intent.setClass(MainActivity.<span class="hljs-keyword">this,ComplexActivity.class);  
+Bundle bundle = <span class="hljs-keyword">new Bundle();  
+
+<span class="hljs-comment">//须定义一个list用于在budnle中传递需要传递的ArrayList&lt;Object&gt;,这个是必须要的  
+ArrayList bundlelist = <span class="hljs-keyword">new ArrayList();   
+bundlelist.add(list);   
+bundle.putParcelableArrayList(<span class="hljs-string">"list",bundlelist);  
+intent.putExtras(bundle);                
+startActivity(intent); 
+</span></span></span></span></span></span></span></span></span></span></span></span></span></code></pre>
+<h2>四、Intent传递对象</h2>
+<p>传递对象的方式有两种：将对象转换为Json字符串或者通过Serializable,Parcelable序列化 不建议使用Android内置的抠脚Json解析器，可使用fastjson或者Gson第三方库！</p>
+<hr />
+<h4>1）将对象转换为Json字符串</h4>
+<p>Gson解析的例子：</p>
+<p>Model:</p>
+<pre class="hljs java"><code class="java"><span class="hljs-keyword">public <span class="hljs-class"><span class="hljs-keyword">class <span class="hljs-title">Book{
+    <span class="hljs-keyword">private <span class="hljs-keyword">int id;
+    <span class="hljs-keyword">private String title;
+    <span class="hljs-comment">//...
+}
+
+<span class="hljs-keyword">public <span class="hljs-class"><span class="hljs-keyword">class <span class="hljs-title">Author{
+    <span class="hljs-keyword">private <span class="hljs-keyword">int id;
+    <span class="hljs-keyword">private String name;
+    <span class="hljs-comment">//...
+}
+</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></code></pre>
+<p><strong>写入数据：</strong></p>
+<pre class="hljs java"><code class="java">Book book=<span class="hljs-keyword">new Book();
+book.setTitle(<span class="hljs-string">"Java编程思想");
+Author author=<span class="hljs-keyword">new Author();
+author.setId(<span class="hljs-number">1);
+author.setName(<span class="hljs-string">"Bruce Eckel");
+book.setAuthor(author);
+Intent intent=<span class="hljs-keyword">new Intent(<span class="hljs-keyword">this,SecondActivity.class);
+intent.putExtra(<span class="hljs-string">"book",<span class="hljs-keyword">new Gson().toJson(book));
+startActivity(intent);
+</span></span></span></span></span></span></span></span></span></code></pre>
+<p><strong>读取数据：</strong></p>
+<pre class="hljs java"><code class="java">String bookJson=getIntent().getStringExtra(<span class="hljs-string">"book");
+Book book=<span class="hljs-keyword">new Gson().fromJson(bookJson,Book.class);
+Log.d(TAG,<span class="hljs-string">"book title-&gt;"+book.getTitle());
+Log.d(TAG,<span class="hljs-string">"book author name-&gt;"+book.getAuthor().getName());
+</span></span></span></span></code></pre>
+<h4>2）使用Serializable,Parcelable序列化对象</h4>
+<p>但是不知道你有没有发现，putExtra()方法中所支持的数据类型是有限的，虽然常用的一些数据类型它都会支持，但是当你想去传递一些自定义对象的时候就会发现无从下手。不用担心，下面我们就学习一下使用Intent 来传递对象的技巧。</p>
+<h6>方式一：Serializable 方式</h6>
+<p>Serializable 是序列化的意思，表示将一个对象转换成可存储或可传输的状态。序列化后的对象可以在网络上进行传输，也可以存储到本地。至于序列化的方法也很简单，只需要让一个类去实现Serializable 这个接口就可以了。<br />
+比如说有一个Person 类，其中包含了name 和age 这两个字段，想要将它序列化就可以这样写：</p>
+<pre class="hljs java"><code class="java"><span class="hljs-keyword">public <span class="hljs-class"><span class="hljs-keyword">class <span class="hljs-title">Person <span class="hljs-keyword">implements <span class="hljs-title">Serializable{  
+<span class="hljs-keyword">private String name;  
+<span class="hljs-keyword">private <span class="hljs-keyword">int age;  
+<span class="hljs-function"><span class="hljs-keyword">public String <span class="hljs-title">getName<span class="hljs-params">() {  
+        <span class="hljs-keyword">return name;  
+    }  
+<span class="hljs-function"><span class="hljs-keyword">public <span class="hljs-keyword">void <span class="hljs-title">setName<span class="hljs-params">(String name) {  
+        <span class="hljs-keyword">this.name = name;  
+    }  
+<span class="hljs-function"><span class="hljs-keyword">public <span class="hljs-keyword">int <span class="hljs-title">getAge<span class="hljs-params">() {  
+        <span class="hljs-keyword">return age;  
+        }  
+<span class="hljs-function"><span class="hljs-keyword">public <span class="hljs-keyword">void <span class="hljs-title">setAge<span class="hljs-params">(<span class="hljs-keyword">int age) {  
+        <span class="hljs-keyword">this.age = age;  
+    }  
+}  
+</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></code></pre>
+<blockquote>
+<p>其中get、set 方法都是用于赋值和读取字段数据的，最重要的部分是在第一行。这里让Person 类去实现了Serializable 接口，这样所有的Person 对象就都是可序列化的了。</p>
+</blockquote>
+<p>接下来在FirstActivity 中的写法非常简单：</p>
+<pre class="hljs java"><code class="java">Person person = <span class="hljs-keyword">new Person();  
+person.setName(<span class="hljs-string">"Tom");  
+person.setAge(<span class="hljs-number">20);  
+Intent intent = <span class="hljs-keyword">new Intent(FirstActivity.<span class="hljs-keyword">this, SecondActivity.class);  
+intent.putExtra(<span class="hljs-string">"person_data", person);  
+startActivity(intent); 
+</span></span></span></span></span></span></code></pre>
+<p>可以看到，这里我们创建了一个Person 的实例，然后就直接将它传入到putExtra()方法中了。由于Person 类实现了Serializable 接口，所以才可以这样写。</p>
+<p>接下来在SecondActivity 中获取这个对象也很简单，写法如下：</p>
+<pre class="hljs java"><code class="java">Person person = (Person) getIntent().getSerializableExtra(<span class="hljs-string">"person_data"); 
+</span></code></pre>
+<h6>方式二：Parcelable</h6>
+<p>除了Serializable 之外，使用Parcelable 也可以实现相同的效果，不过不同于将对象进行序列化，Parcelable 方式的实现原理是将一个完整的对象进行分解，而分解后的每一部分都是Intent 所支持的数据类型，这样也就实现传递对象的功能了。<br />
+下面我们来看一下Parcelable 的实现方式，修改Person 中的代码，如下所示：</p>
+<pre class="hljs java"><code class="java"><span class="hljs-keyword">public <span class="hljs-class"><span class="hljs-keyword">class <span class="hljs-title">Person <span class="hljs-keyword">implements <span class="hljs-title">Parcelable {  
+    <span class="hljs-keyword">private String name;  
+    <span class="hljs-keyword">private <span class="hljs-keyword">int age;  
+      
+    <span class="hljs-meta">@Override  
+    <span class="hljs-function"><span class="hljs-keyword">public <span class="hljs-keyword">int <span class="hljs-title">describeContents<span class="hljs-params">() {  
+        <span class="hljs-comment">// TODO Auto-generated method stub  
+        <span class="hljs-keyword">return <span class="hljs-number">0;  
+    }  
+  
+    <span class="hljs-meta">@Override  
+    <span class="hljs-function"><span class="hljs-keyword">public <span class="hljs-keyword">void <span class="hljs-title">writeToParcel<span class="hljs-params">(Parcel dest, <span class="hljs-keyword">int flags) {  
+        <span class="hljs-comment">// TODO Auto-generated method stub  
+        dest.writeString(name);  
+        dest.writeInt(age);  
+    }  
+    <span class="hljs-keyword">public <span class="hljs-keyword">static <span class="hljs-keyword">final Parcelable.Creator&lt;Person&gt; CREATOR=<span class="hljs-keyword">new Parcelable.Creator&lt;Person&gt;() {  
+  
+        <span class="hljs-meta">@Override  
+        <span class="hljs-function"><span class="hljs-keyword">public Person <span class="hljs-title">createFromParcel<span class="hljs-params">(Parcel source) {  
+            <span class="hljs-comment">// TODO Auto-generated method stub  
+            Person person=<span class="hljs-keyword">new Person();  
+            person.name=source.readString();  
+            person.age=source.readInt();  
+            <span class="hljs-keyword">return person;  
+        }  
+  
+        <span class="hljs-meta">@Override  
+        <span class="hljs-keyword">public Person[] newArray(<span class="hljs-keyword">int size) {  
+            <span class="hljs-comment">// TODO Auto-generated method stub  
+            <span class="hljs-keyword">return <span class="hljs-keyword">new Person[size];  
+        }  
+    };  
+  
+}  
+</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></code></pre>
+<p>Parcelable 的实现方式要稍微复杂一些。可以看到，首先我们让Person 类去实现了Parcelable 接口，这样就必须重写describeContents()和writeToParcel()这两个方法。其中describeContents()方法直接返回0 就可以了，而writeToParcel()方法中我们需要调用Parcel的writeXxx()方法将Person 类中的字段一一写出。注意字符串型数据就调用writeString()方法，整型数据就调用writeInt()方法，以此类推。</p>
+<p>除此之外，我们还必须在Person 类中提供一个名为CREATOR 的常量，这里创建了Parcelable.Creator 接口的一个实现，并将泛型指定为Person。接着需要重写createFromParcel()和newArray()这两个方法，在createFromParcel()方法中我们要去读取刚才写出的name 和age字段，并创建一个Person 对象进行返回，其中name 和age 都是调用Parcel 的readXxx()方法读取到的，注意这里读取的顺序一定要和刚才写出的顺序完全相同。而newArray()方法中的实现就简单多了，只需要new 出一个Person 数组，并使用方法中传入的size 作为数组大小就可以了。</p>
+<p>接下来在FirstActivity 中我们仍然可以使用相同的代码来传递Person 对象，只不过在SecondActivity 中获取对象的时候需要稍加改动，如下所示：</p>
+<pre class="hljs java"><code class="java">Person person = (Person) getIntent().getParcelableExtra(<span class="hljs-string">"person_data");  
+</span></code></pre>
+<blockquote>
+<p>注意这里不再是调用getSerializableExtra()方法，而是调用getParcelableExtra()方法来获取传递过来的对象了，其他的地方都完全相同。这样我们就把使用Intent 来传递对象的两种实现方式都学习完了，对比一下，Serializable的方式较为简单，<strong>在这里强调一下，网上很多博客很多文章都说Parcelable要比Serializable效率要高，其实不然，在读取速度方面Serializable其实他要比Parcelable更快</strong>，具体我们可以看一下这篇文章<br />
+<a href="https://www.jianshu.com/p/fcc59fb523b6" target="_blank">http://www.jianshu.com/p/fcc59fb523b6</a></p>
+
+
+</blockquote>
+<h2>五、Intent传递Bitmap</h2>
+<p>bitmap默认实现Parcelable接口,直接传递即可</p>
+<pre class="hljs java"><code class="java">Bitmap bitmap = <span class="hljs-keyword">null;
+Intent intent = <span class="hljs-keyword">new Intent();
+Bundle bundle = <span class="hljs-keyword">new Bundle();
+bundle.putParcelable(<span class="hljs-string">"bitmap", bitmap);
+intent.putExtra(<span class="hljs-string">"bundle", bundle);
+</span></span></span></span></span></code></pre>
+<h2>六、定义全局数据，传递数据</h2>
+<p>如果是传递简单的数据，有这样的需求，Activity1 -&gt; Activity2 -&gt; Activity3 -&gt; Activity4， 你想在Activity中传递某个数据到Activity4中，怎么破，一个个页面传么？</p>
+<p>显然不科学是吧，如果你想某个数据可以在任何地方都能获取到，你就可以考虑使用 Application全局对象了！</p>
+<h4>关键部分代码：</h4>
+<h6>第一步自定义Application类：</h6>
+<pre class="hljs java"><code class="java"><span class="hljs-class"><span class="hljs-keyword">class <span class="hljs-title">MyApp <span class="hljs-keyword">extends <span class="hljs-title">Application {
+    <span class="hljs-keyword">private String myState;
+    <span class="hljs-function"><span class="hljs-keyword">public String <span class="hljs-title">getState<span class="hljs-params">(){
+        <span class="hljs-keyword">return myState;
+    }
+    <span class="hljs-function"><span class="hljs-keyword">public <span class="hljs-keyword">void <span class="hljs-title">setState<span class="hljs-params">(String s){
+        myState = s;
+    }
+}
+</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></code></pre>
+<h6>第二步AndroidManifest.xml中声明：</h6>
+<pre class="hljs xml"><code class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">application <span class="hljs-attr">android:name=<span class="hljs-string">".MyApp" <span class="hljs-attr">android:icon=<span class="hljs-string">"@drawable/icon" 
+  <span class="hljs-attr">android:label=<span class="hljs-string">"@string/app_name"&gt;
+</span></span></span></span></span></span></span></span></code></pre>
+<h6>第三步在需要的地方调用：</h6>
+<pre class="hljs java"><code class="java"><span class="hljs-class"><span class="hljs-keyword">class <span class="hljs-title">Blah <span class="hljs-keyword">extends <span class="hljs-title">Activity {
+    <span class="hljs-meta">@Override
+    <span class="hljs-function"><span class="hljs-keyword">public <span class="hljs-keyword">void <span class="hljs-title">onCreate<span class="hljs-params">(Bundle b){
+        ...
+    MyApp appState = ((MyApp)getApplicationContext());
+    String state = appState.getState();
+        ...
+    }
+}
+</span></span></span></span></span></span></span></span></span></span></span></code></pre>
+<p><strong>高逼格写法</strong><br />
+：在任何位置都能获取到Application全局对象。</p>
+<p>Applicaiton是系统的一个组件，他也有自己的一个生命周期，我们可以在onCraete里获得这个 Application对象。贴下修改后的代码吧！</p>
+<pre class="hljs java"><code class="java"><span class="hljs-class"><span class="hljs-keyword">class <span class="hljs-title">MyApp <span class="hljs-keyword">extends <span class="hljs-title">Application {
+    <span class="hljs-keyword">private String myState;
+    <span class="hljs-keyword">private <span class="hljs-keyword">static MyApp instance;
+    
+    <span class="hljs-function"><span class="hljs-keyword">public <span class="hljs-keyword">static MyApp <span class="hljs-title">getInstance<span class="hljs-params">(){
+        <span class="hljs-keyword">return instance;
+    }
+    
+    
+    <span class="hljs-function"><span class="hljs-keyword">public String <span class="hljs-title">getState<span class="hljs-params">(){
+        <span class="hljs-keyword">return myState;
+    }
+    <span class="hljs-function"><span class="hljs-keyword">public <span class="hljs-keyword">void <span class="hljs-title">setState<span class="hljs-params">(String s){
+        myState = s;
+    }
+    
+    <span class="hljs-meta">@Override
+    <span class="hljs-function"><span class="hljs-keyword">public <span class="hljs-keyword">void <span class="hljs-title">onCreate<span class="hljs-params">(){
+        onCreate();
+        instance = <span class="hljs-keyword">this;
+    }
+ 
+}
+</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></code></pre>
+<p>然后在任意地方我们就可以直接调用：MyApp.getInstance（）来获得Application的全局对象！</p>
+<blockquote>
+<p>注意事项：<br />
+Application对象是存在于内存中的，也就有它可能会被系统杀死，比如这样的场景：<br />
+我们在Activity1中往application中存储了用户账号，然后在Activity2中获取到用户账号，并且显示！</p>
+<p>如果我们点击home键，然后过了N久候，系统为了回收内存kill掉了我们的app。这个时候，我们重新 打开这个app，这个时候很神奇的，回到了Activity2的页面，但是如果这个时候你再去获取Application 里的用户账号，程序就会报NullPointerException，然后crash掉~<br />
+之所以会发生上述crash，是因为这个Application对象是全新创建的，可能你以为App是重新启动的， 其实并不是，仅仅是创建一个新的Application，然后启动上次用户离开时的Activity，从而创造App 并没有被杀死的假象！所以如果是比较重要的数据的话，建议你还是进行本地化，另外在使用数据的时候 要对变量的值进行非空检查！还有一点就是：不止是Application变量会这样，单例对象以及公共静态变量 也会这样~</p>
+
+
+</blockquote>
+<h2>七、单例模式传参</h2>
+<p>上面的Application就是基于单例的，单例模式的特点就是可以保证系统中一个类有且只有一个实例。 这样很容易就能实现，在A中设置参数，在B中直接访问了。这是几种方法中效率最高的。</p>
+<p>范例代码：(代码来自于网上~)</p>
+<h4>①定义一个单例类：</h4>
+<pre class="hljs java"><code class="java"><span class="hljs-keyword">public <span class="hljs-class"><span class="hljs-keyword">class <span class="hljs-title">XclSingleton  
+{  
+    <span class="hljs-comment">//单例模式实例  
+    <span class="hljs-keyword">private <span class="hljs-keyword">static XclSingleton instance = <span class="hljs-keyword">null;  
+      
+    <span class="hljs-comment">//synchronized 用于线程安全，防止多线程同时创建实例  
+    <span class="hljs-function"><span class="hljs-keyword">public <span class="hljs-keyword">synchronized <span class="hljs-keyword">static XclSingleton <span class="hljs-title">getInstance<span class="hljs-params">(){  
+        <span class="hljs-keyword">if(instance == <span class="hljs-keyword">null){  
+            instance = <span class="hljs-keyword">new XclSingleton();  
+        }     
+        <span class="hljs-keyword">return instance;  
+    }     
+      
+    <span class="hljs-keyword">final HashMap&lt;String, Object&gt; mMap;  
+    <span class="hljs-function"><span class="hljs-keyword">private <span class="hljs-title">XclSingleton<span class="hljs-params">()  
+    {  
+        mMap = <span class="hljs-keyword">new HashMap&lt;String,Object&gt;();  
+    }  
+      
+    <span class="hljs-function"><span class="hljs-keyword">public <span class="hljs-keyword">void <span class="hljs-title">put<span class="hljs-params">(String key,Object value){  
+        mMap.put(key,value);  
+    }  
+      
+    <span class="hljs-function"><span class="hljs-keyword">public Object <span class="hljs-title">get<span class="hljs-params">(String key)  
+    {  
+        <span class="hljs-keyword">return mMap.get(key);  
+    }  
+      
+} 
+</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></code></pre>
+<h4>②设置参数:</h4>
+<pre class="hljs java"><code class="java">XclSingleton.getInstance().put(<span class="hljs-string">"key1", <span class="hljs-string">"value1");  
+XclSingleton.getInstance().put(<span class="hljs-string">"key2", <span class="hljs-string">"value2");  </span></span></span></span></code></pre>
+</div>
+<h3 class="title"><br /><br />作者：侯蛋蛋_<br />链接：https://www.jianshu.com/p/1169dba99261<br />來源：简书<br />著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</h3>

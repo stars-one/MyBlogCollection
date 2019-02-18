@@ -1,0 +1,224 @@
+原文链接：http://www.cnblogs.com/kexing/archive/2018/01/31/8392485.html
+<p>GIthub地址：<a href="https://github.com/rengwuxian/MaterialEditText#features" target="_blank">https://github.com/rengwuxian/MaterialEditText#features</a></p>
+<p>使用文档：</p>
+<div class="markdown_views">
+<p>在android新推出的Material Design中对文本输入框的样式提供了标准,并且在AppCompat v21 中提供了Material Design的空间外观支持,如下图:</p>
+<p><img title="" src="http://wiki.jikexueyuan.com/project/material-design/images/components-textfields-singlelinetextfields-textfields_single_06_large_mdpi.png" alt="google提供样式" /></p>
+<p>不过该控件在使用的过程中比较繁琐,需要通过为控件定制theme的方式来实现自定义控件颜色,并且并没有提供Material Design中提到的特性,因此,为了使用实现该特性效果,我们可以使用<a href="https://github.com/rengwuxian/MaterialEditText" target="_blank">rengwuxian在github推出的库MaterialEditText</a>.来实现</p>
+<p>使用方法:</p>
+<p>首先引用库 <br />
+compile &lsquo;com.rengwuxian.materialedittext:library:2.1.4&rsquo;</p>
+<h3 id="基本使用"><a name="t0"></a>基本使用</h3>
+<pre class="prettyprint"><code class="language-python hljs  has-numbering">&lt;com.rengwuxian.materialedittext.MaterialEditText
+  android:layout_width=<span class="hljs-string">"match_parent"
+  android:layout_height=<span class="hljs-string">"wrap_content"
+  android:hint=<span class="hljs-string">"Basic"/&gt;</span></span></span></code></pre>
+<ul class="pre-numbering">
+<li style="color: #999999;">1</li>
+<li style="color: #999999;">2</li>
+<li style="color: #999999;">3</li>
+<li style="color: #999999;">4</li>
+</ul>
+<p><img title="" src="http://img.blog.csdn.net/20150924155453087" alt="这里写图片描述" /></p>
+<h3 id="自定义颜色"><a name="t1"></a>自定义颜色</h3>
+<p>修改输入的字体颜色</p>
+<pre class="prettyprint"><code class="language-python hljs  has-numbering">  app:met_baseColor=<span class="hljs-string">"#0056d3"</span></code></pre>
+<ul class="pre-numbering">
+<li style="color: #999999;">1</li>
+</ul>
+<p><img title="" src="http://img.blog.csdn.net/20150924155619898" alt="这里写图片描述" /></p>
+<ul>
+<li>修改输入框的颜色</li>
+</ul>
+<pre class="prettyprint"><code class="language-python hljs  has-numbering">app:met_primaryColor=<span class="hljs-string">"#982360"</span></code></pre>
+<ul class="pre-numbering">
+<li style="color: #999999;">1</li>
+</ul>
+<p><img title="" src="http://img.blog.csdn.net/20150924155811697" alt="这里写图片描述" /></p>
+<ul>
+<li>在Material Design中另一个新特新就是在EditText输入时,hint内容将缩小位移到输入框上方 <br />
+而在MaterialEditText中同样实现了该功能Floating Label</li>
+
+</ul>
+<pre class="prettyprint"><code class="language-python hljs  has-numbering"> app:met_floatingLabel=<span class="hljs-string">"normal"</span></code></pre>
+<ul class="pre-numbering">
+<li style="color: #999999;">1</li>
+</ul>
+<p><img title="" src="http://img.blog.csdn.net/20150924160511819" alt="这里写图片描述" /></p>
+<pre class="prettyprint"><code class="language-python hljs  has-numbering">
+ app:met_floatingLabel=<span class="hljs-string">"highlight"
+</span></code></pre>
+<ul class="pre-numbering">
+<li style="color: #999999;">1</li>
+<li style="color: #999999;">2</li>
+<li style="color: #999999;">3</li>
+</ul>
+<p><img title="" src="http://img.blog.csdn.net/20150924160544380" alt="这里写图片描述" /></p>
+<pre class="prettyprint"><code class="language-python hljs  has-numbering">app:met_floatingLabelText=<span class="hljs-string">"XXX"
+</span></code></pre>
+<ul class="pre-numbering">
+<li style="color: #999999;">1</li>
+<li style="color: #999999;">2</li>
+</ul>
+<p>met_floatingLabelText方法需要配合上面两个参数才能生效</p>
+<pre class="prettyprint"><code class="language-python hljs  has-numbering"> &lt;com.rengwuxian.materialedittext.MaterialEditText
+        android:layout_width=<span class="hljs-string">"match_parent"
+        android:layout_height=<span class="hljs-string">"wrap_content"
+        app:met_baseColor=<span class="hljs-string">"#0056d3"
+        app:met_primaryColor=<span class="hljs-string">"#982360"
+        app:met_floatingLabelText=<span class="hljs-string">"aaaaaa"
+        app:met_floatingLabel=<span class="hljs-string">"normal"
+        android:hint=<span class="hljs-string">"Basic"/&gt;
+</span></span></span></span></span></span></span></code></pre>
+<ul class="pre-numbering">
+<li style="color: #999999;">1</li>
+<li style="color: #999999;">2</li>
+<li style="color: #999999;">3</li>
+<li style="color: #999999;">4</li>
+<li style="color: #999999;">5</li>
+<li style="color: #999999;">6</li>
+<li style="color: #999999;">7</li>
+<li style="color: #999999;">8</li>
+<li style="color: #999999;">9</li>
+</ul>
+<p><img title="" src="http://img.blog.csdn.net/20150924161455052" alt="这里写图片描述" /> <br />
+<img title="" src="http://img.blog.csdn.net/20150924161502807" alt="这里写图片描述" /></p>
+<h3 id="底部省略号"><a name="t2"></a>底部省略号</h3>
+<p>当设置底部省略号后,控件会在文字向左滚动时,在底部显示一个三个点的胜率号,这个方法会自动将android:singleLine设置为true</p>
+<pre class="prettyprint"><code class="language-python hljs  has-numbering"> app:met_singleLineEllipsis=<span class="hljs-string">"true"</span></code></pre>
+<ul class="pre-numbering">
+<li style="color: #999999;">1</li>
+</ul>
+<p><img title="" src="http://img.blog.csdn.net/20150924161956167" alt="这里写图片描述" /></p>
+<h3 id="字符数限制"><a name="t3"></a>字符数限制</h3>
+<p>设置字符数限制后,控件右下角会显示已输入字符数和最大字符数的角标,并在超过限制后显示警告色(默认为红色).</p>
+<pre class="prettyprint"><code class="language-python hljs  has-numbering">//设置警告色:
+ app:met_errorColor=<span class="hljs-string">"#000000"
+
+//设置最多字数和最小字数
+
+ app:met_minCharacters=<span class="hljs-string">"5"
+ app:met_maxCharacters=<span class="hljs-string">"10"</span></span></span></code></pre>
+<ul class="pre-numbering">
+<li style="color: #999999;">1</li>
+<li style="color: #999999;">2</li>
+<li style="color: #999999;">3</li>
+<li style="color: #999999;">4</li>
+<li style="color: #999999;">5</li>
+<li style="color: #999999;">6</li>
+<li style="color: #999999;">7</li>
+</ul>
+<p><img title="" src="http://img.blog.csdn.net/20150924163001552" alt="这里写图片描述" /></p>
+<ul>
+<li>Helper Text和Error Text <br />
+helper Text 通过xml中</li>
+
+</ul>
+<pre class="prettyprint"><code class="language-python hljs  has-numbering">app:met_helperText=<span class="hljs-string">"Integer"</span></code></pre>
+<ul class="pre-numbering">
+<li style="color: #999999;">1</li>
+</ul>
+<p>Error Text需要动态调用 <br />
+setError(CharSequence error)</p>
+<ul>
+<li>正则表达式检查:</li>
+
+</ul>
+<pre class="prettyprint"><code class="language-python hljs  has-numbering">validationEditText.isValid(<span class="hljs-string">"\\d+");</span></code></pre>
+<ul class="pre-numbering">
+<li style="color: #999999;">1</li>
+</ul>
+<ul>
+<li>带有报错字符串的正则表达式检查:</li>
+</ul>
+<pre class="prettyprint"><code class="language-python hljs  has-numbering">validationEditText.validate(<span class="hljs-string">"\\d+", <span class="hljs-string">"Only Integer Valid!");</span></span></code></pre>
+<ul class="pre-numbering">
+<li style="color: #999999;">1</li>
+</ul>
+<ul>
+<li>自定义accent typeface 字体</li>
+</ul>
+<pre class="prettyprint"><code class="language-python hljs  has-numbering">app:met_accentTypeface=<span class="hljs-string">"fonts/Roboto-LightItalic.ttf"</span></code></pre>
+<ul class="pre-numbering">
+<li style="color: #999999;">1</li>
+</ul>
+<p><img title="" src="http://img.blog.csdn.net/20150924163746154" alt="这里写图片描述" /></p>
+<h3 id="列表内容"><a name="t4"></a>列表内容</h3>
+<p>Hide UnderLine <br />
+删除默认的下划线</p>
+<pre class="prettyprint"><code class="language-python hljs  has-numbering">app:met_hideUnderline=<span class="hljs-string">"true"</span></code></pre>
+<ul class="pre-numbering">
+<li style="color: #999999;">1</li>
+</ul>
+<p><img title="" src="http://img.blog.csdn.net/20150924164730981" alt="这里写图片描述" /></p>
+<h3 id="字符串检查"><a name="t5"></a>字符串检查</h3>
+<p>检查后，如果有错，将自动调用 setError() 方法来提示错误。</p>
+<p>单一条件检查:</p>
+<pre class="prettyprint"><code class="language-python hljs  has-numbering">et.validateWith(new RegexpValidator(<span class="hljs-string">"Only Integer Valid!", <span class="hljs-string">"\\d+"));</span></span></code></pre>
+<ul class="pre-numbering">
+<li style="color: #999999;">1</li>
+</ul>
+<p>复合条件检查:</p>
+<pre class="prettyprint"><code class="language-python hljs  has-numbering">et.addValidator(new CustomValidator1())
+.addValidator(new CustomValidator2())
+.addValidator(new RegexpValidator(<span class="hljs-string">"Only Integer Valid!", <span class="hljs-string">"\\d+"));</span></span></code></pre>
+<ul class="pre-numbering">
+<li style="color: #999999;">1</li>
+<li style="color: #999999;">2</li>
+<li style="color: #999999;">3</li>
+</ul>
+<h3 id="放置图片"><a name="t6"></a>放置图片</h3>
+<p>在输入框左右放置图片,默认图片和输入框之间的距离为16dp <br />
+可以通过met_iconPadding设置</p>
+<pre class="prettyprint"><code class="language-python hljs  has-numbering">app:met_iconLeft=<span class="hljs-string">"@mipmap/ic_launcher"
+app:met_iconRight=<span class="hljs-string">"@mipmap/ic_launcher"</span></span></code></pre>
+<ul class="pre-numbering">
+<li style="color: #999999;">1</li>
+<li style="color: #999999;">2</li>
+</ul>
+<p><img title="" src="http://img.blog.csdn.net/20150924171121411" alt="这里写图片描述" /></p>
+<p>显示清空输入框btn <br />
+app:met_clearButton= &ldquo;true&rdquo; <br />
+<img title="" src="http://img.blog.csdn.net/20150924171412920" alt="这里写图片描述" /></p>
+<ul>
+<li><strong>全部参数</strong></li>
+<li><strong>通用颜色</strong> <br />
+met_baseColor: 底部横线和所有文字在无焦点状态的基础色。默认为黑色。 <br />
+met_primaryColor: 底部横线和 Floating label 的高亮色（如果 met_floatingLabel 设置为 highlight 的话）。默认使用 baseColor。 <br />
+met_textColor: 和自带的 android:textColor 作用相同。换用这个就好。 <br />
+met_textColorHint: 和自带的 android:textColorHint 作用相同。换用这个就好。 <br />
+met_underlineColor: 自定义底部横线的颜色。 <br />
+-<strong>Floating label</strong> <br />
+met_floatingLabel: Floating label 应该怎样被展示。选项有：none, normal, highlight。 默认是 none. <br />
+met_floatingLabelText: 自定义 floating label 的文字。 <br />
+met_floatingLabelTextSize: Floating label 的字体大小。默认为 12sp。 <br />
+met_floatingLabelTextColor: Floating label 的字体颜色。默认为半透明的 baseColor. <br />
+met_floatingLabelPadding: Floating label 和主文字区域的间隔。 <br />
+met_floatingLabelAnimating: 是否使用动画来显示和消失 floating label 。默认为 true 。 <br />
+met_floatingLabelAlwaysShown: 是否总是显示 Floating label 。默认为 false 。</li>
+<li><strong>字数限制</strong> <br />
+met_minCharacters: 限制的最少字数。默认为0。 <br />
+met_maxCharacters: 限制的最大字数。0为无限制。默认为0. <br />
+-<strong>Helper/Error text</strong> <br />
+met_helperText: 底部的 helper text。 <br />
+met_helperTextAlwaysShown: 是否总是显示 helper text， 而不仅仅是在获得焦点状态时。默认为 false。 <br />
+met_helperTextColor: Helper text 的字体颜色。 <br />
+met_errorColor: Error text 的字体颜色。 <br />
+met_bottomTextSize: 底部文字（Helper/Error text）的字体大小。默认为12sp。 <br />
+met_minBottomTextLines:底部为文字预留的行数，不管是否有 Helper/Error text 正在显示。</li>
+<li><strong>字体（Typeface）</strong> <br />
+met_typeface: 主文字的字体. <br />
+met_accentTypeface: 辅助文字的字体. <br />
+Material Design 风格的左右图标 <br />
+met_iconLeft: 左边的图标. <br />
+met_iconRight: 右边的图标. <br />
+met_iconPadding: 图标和主区域之间的padding。默认为16dp, 遵守 Google&rsquo;s Material Design Spec 中的建议.</li>
+<li><strong>Others</strong> <br />
+met_hideUnderline: 是否隐藏底部横线。默认为 false。 <br />
+met_autoValidate: 是否自动检查字符串。默认为 false。 <br />
+met_singleLineEllipsis: 是否在文字超长时显示底部的省略号。默认为 false。 <br />
+met_clearButton: 是否显示用来清空文字的 Clear button 。默认为 false。</li>
+
+</ul>
+
+                            </div>

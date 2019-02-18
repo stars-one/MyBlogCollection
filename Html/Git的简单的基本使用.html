@@ -1,0 +1,89 @@
+原文链接：http://www.cnblogs.com/kexing/archive/2018/01/25/8344413.html
+<h2>前言：</h2>
+<p><span style="font-size: 16px;">接触了Android Studio，自然是知道了Github这个网站，这个网站有许多大神们做的开源库，我们只需要简单地引入就是可以使用到这些开源库从而实现酷炫的效果，最近也是刚接触到Git的使用，作为笔记写到博客上</span></p>
+<p><span style="font-size: 16px;">到GIt官网下载GIt安装即可</span></p>
+<p><span style="font-size: 16px;">虽然是有图形化的操作，但是，首先掌握命令操作，之后图形化操作就是更好使用了</span></p>
+<h2>GIt的命令使用：</h2>
+<p><span style="font-size: 16px;">在window开始搜索gitbush</span></p>
+<h3>1.配置身份</h3>
+<p><span style="font-size: 16px;">git config --global user,name "XX"</span></p>
+<p><span style="font-size: 16px;">git config --global user.email "xx@163.com"</span></p>
+<h3>2.创建代码仓库</h3>
+<p><span style="font-size: 16px;">我们进入到我们开发项目的目录，</span></p>
+<p><span style="font-size: 16px;">cd c:&nbsp; 进入到c盘</span></p>
+<p><span style="font-size: 16px;">cd Users/Test&nbsp; 进入到当前盘的Users/Test文件夹</span></p>
+<p><span style="font-size: 16px;">git init&nbsp; 创建代码仓库</span></p>
+<h3>3.查看本地所有的进行过的git操作</h3>
+<p><span style="font-size: 16px;">ls -al&nbsp; 这两个都是love的l</span></p>
+<p><span style="font-size: 16px; color: #0000ff;">其实，这些git操作是放在一个Test文件夹中的一个隐藏的.git文件夹中，我们如果想要删除本地仓库，只需要将这个隐藏的文件夹删除即可</span></p>
+<h3>4.提交代码</h3>
+<p><span style="font-size: 16px;">git add xx.xml&nbsp; 后面可以加单独的文件</span></p>
+<p><span style="font-size: 16px;">git add app&nbsp; app是一个文件夹</span></p>
+<p><span style="font-size: 16px;">git add .&nbsp; 全部文件</span></p>
+<p><span style="font-size: 16px;">add这个只是添加，我们还需要提交</span></p>
+<p><span style="font-size: 16px;">git commit -m "First commit" 双引号之中是相关的描述，没有描述是不合法的</span></p>
+<h3>5.忽略文件</h3>
+<p><span style="font-size: 16px;">git会检查目录之下是否有.gitignore文件，如果存在的话就会一行行读取这个文件里的内容，，将每一行指定的文件或目录排除</span></p>
+<p><span style="font-size: 16px;">Android Studio创建项目的时候已经帮我们生成了两个.gitignore文件，一个是在根目录，另外一个则是在app中</span></p>
+<p><span style="font-size: 16px;">我们打开app文件夹中的.gitignore，可以看到这样的一行代码</span></p>
+<p><span style="font-size: 16px;"><img src="http://images2017.cnblogs.com/blog/1210268/201801/1210268-20180125181057694-227425924.png" alt="" /></span></p>
+<p><span style="font-size: 16px;">这就是说要将app文件夹中的build文件夹排除</span></p>
+<p><span style="font-size: 16px;">如果我们还需要排除app文件中的其他文件夹，格式与上面的类似，之后使用add与commit两个命令即可</span></p>
+<h3>6.查看修改的内容</h3>
+<p><span style="font-size: 16px;">git status&nbsp; 显示出什么地方已经修改，这是对上一次commit来说，图片中红色就是修改的地方</span></p>
+<p><img src="http://images2017.cnblogs.com/blog/1210268/201801/1210268-20180125182823225-188580274.png" alt="" /></p>
+<p><span style="font-size: 16px;">git diff&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 查看所有文件的更改内容，绿色的即是添加的内容，红色的话则是删除的内容</span></p>
+<p><span style="font-size: 16px;">也可以指定查看某个文件的更改内容，例如</span></p>
+<p><span style="font-size: 16px; color: #0000ff;">git diff app/src/main/java/com/wan/gameditor/activity/ShowActivity.java</span></p>
+<p><img src="http://images2017.cnblogs.com/blog/1210268/201801/1210268-20180125183028944-1810948492.png" alt="" /></p>
+<p><span style="color: #0000ff; font-size: 16px;">小提示：进入到diff模式后需要按下q键才能返回之前输入指令的界面</span></p>
+<h3>&nbsp;7.撤销操作</h3>
+<p>&nbsp;<span style="font-size: 16px;">上面我们修改了代码，但是我们需要将其撤销，则需要使用checkout</span></p>
+<p><span style="color: #0000ff; font-size: 16px;">git checkout app/src/main/res/layout/replace_list_frament.xml</span></p>
+<p><span style="font-size: 16px;">撤销某个文件就是按照上面的格式</span></p>
+<p><span style="font-size: 16px;">如果想撤销全部修改的操作，则是加上个点就好</span></p>
+<p><span style="color: #0000ff; font-size: 16px;">git checkout .</span></p>
+<p><span style="font-size: 16px;">checkout命令只是针对没有使用的add命令的前提下，如果已经使用了add，则我们需要使用reset命令，例如</span></p>
+<p><span style="color: #0000ff; font-size: 16px;">git reset Head app/src/main/res/layout/replace_list_frament.xml</span></p>
+<p><span style="color: #000000; font-size: 16px;">撤销某一个进行过add操作的文件，之后在像之前那样使用checkout就能成功撤销了</span></p>
+<p><span style="font-size: 16px;">测试的时候也可以直接写</span></p>
+<p><span style="color: #0000ff;">git reset Head</span></p>
+<p><span style="color: #000000;">则是撤回全部的进行过add操作的文件</span></p>
+<h3><span style="color: #000000;">8.查看提交记录</span></h3>
+<p><span style="color: #000000;">git log 显示历史提交信息</span></p>
+<p><span style="color: #000000;"><img src="http://images2017.cnblogs.com/blog/1210268/201801/1210268-20180125190444584-1136271519.png" alt="" /></span></p>
+<p><span style="font-size: 16px;">查看某一行记录，需要加上一个参数-1</span></p>
+<p><span style="font-size: 16px; color: #0000ff;">git log &nbsp;d6d34f0a4727a9baffe49348fead56fd823a3a4f -1</span></p>
+<p><span style="font-size: 16px; color: #000000;">查看该条记录具体修改的内容则需要加上参数-p</span></p>
+<p><span style="font-size: 16px; color: #0000ff;"><span style="font-size: 16px; color: #0000ff;">git log &nbsp;d6d34f0a4727a9baffe49348fead56fd823a3a4f -1</span> -p<br /></span></p>
+<h3><span style="color: #000000;">9.推送到远程仓库（<span style="color: #000000;">GIthub官网<span style="color: #000000;">上</span></span>）</span></h3>
+<p><span style="color: #000000;">首先我们需要注册一个GIthub账号，之后新建一个repository，之后就会有一个github的网址</span></p>
+<p><span style="color: #000000;"><img src="http://images2017.cnblogs.com/blog/1210268/201801/1210268-20180125191525069-1912105152.png" alt="" /></span></p>
+<p><span style="font-size: 16px;">将其复制下来，之后到git bush中配置</span></p>
+<p><span style="font-size: 16px; color: #0000ff;">git&nbsp;remote&nbsp;add&nbsp;origin http://github.com...</span></p>
+<p><span style="font-size: 16px;">使用push将本地的仓库代码上传到远程仓库中</span></p>
+<p><span style="font-size: 16px; color: #0000ff;">git&nbsp;push&nbsp;origin&nbsp;master&nbsp; </span></p>
+<p><span style="font-size: 16px; color: #000000;">PS:提一下这里的master是主线的意思</span></p>
+<h3><span style="color: #000000;">10创建分支线</span></h3>
+<p><span style="color: #000000; font-size: 16px;"><span style="color: #0000ff;">git branch version1.0</span>&nbsp; 创建一个名为version1.0的分支线</span></p>
+<p><span style="color: #000000; font-size: 16px;"><span style="color: #0000ff;">git checkout version1.0&nbsp;</span> 切换到version1.0分支线</span></p>
+<p><span style="color: #000000; font-size: 16px;">将分支线与主线合并</span></p>
+<p><span style="color: #0000ff; font-size: 16px;">git checkout master</span></p>
+<p><span style="color: #0000ff; font-size: 16px;">git merge version1.0</span></p>
+<p>&nbsp;<img src="http://images2017.cnblogs.com/blog/1210268/201801/1210268-20180125192652772-1682756067.png" alt="" /></p>
+<p><span style="font-size: 16px;">master前面的星号代表着当前是在master这条主线上，我们输入checkout就可以切换到version1.0这条支线上</span></p>
+<p><span style="font-size: 16px;">删除的话使用参数-D</span></p>
+<p><span style="font-size: 16px; color: #0000ff;">git branch -D version1.0</span></p>
+<h3><span style="color: #000000;">11.克隆</span></h3>
+<p><span style="color: #000000; font-size: 16px;"><span style="color: #0000ff;">git clone https://github.com..&nbsp;&nbsp;</span> 将远程仓库的代码下载到本地</span></p>
+<p><span style="color: #000000; font-size: 16px;"><span style="color: #0000ff;">git push origin master</span> 提交到远程仓库</span></p>
+<p><span style="color: #000000; font-size: 16px;"><span style="color: #0000ff;">git fetch origin master</span> 将远程仓库的代码同步到本地（不会与本地代码合并，存放在一个master的文件夹中）</span></p>
+<p><span style="color: #000000; font-size: 16px;"><span style="color: #0000ff;">git diff orign/master</span> 查看远程仓库修改的内容</span></p>
+<p><span style="color: #000000; font-size: 16px;"><span style="color: #0000ff;">git merge orign/master</span> 将orign/master分支修改合并到主分支上（也就是当前的分支）</span></p>
+<p><span style="color: #000000; font-size: 16px;"><span style="color: #0000ff;">git pull origin master</span>&nbsp; push相当于实现了fetch与merge的功能</span></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px;">11部分的感觉有些难以理解，我就暂时放下，毕竟现在还是一个人搞项目</span></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p class="alt">可以参考一下这一篇git简单操作说明 <a href="http://www.bootcss.com/p/git-guide/%20%20" target="_blank">http:</a><span class="comment"><a href="http://www.bootcss.com/p/git-guide/%20%20" target="_blank">//www.bootcss.com/p/git-guide/&nbsp; </a><br /></span></p>
+<p>&nbsp;</p>

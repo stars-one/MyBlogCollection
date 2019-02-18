@@ -1,0 +1,2 @@
+原文链接：http://www.cnblogs.com/kexing/archive/2017/10/01/7616826.html
+<p><span style="font-size: 16px; font-family: 宋体;">之前使用了Android Studio的插件直接为button绑定了监听器，并实现onClick方法（我的onClick方法无论点击哪一个都是要实现setcontentview这个方法设置layout），之后，在onClick方法执行（也就是设置了一个新的layout）之后，点击新layout中的按钮，会弹出一个Toast，我把这个按钮先在onCreate方法中通过findviewbyid获取，之后为此按钮绑定监听器，但是，就是这一步绑定监听器的方法导致了我在点击设置新的layout之前的onClick方法失效，点击时会出现应用已停止的错误提示，这个bug的原因是因为我使用了activity本身作为事件监听器类，之后，我想到了通过xml的属性实现onClick的方法，问题得以解决，当然，解决方法不是唯一的，还有其他的方法，就由读者们自己去探究了</span></p>

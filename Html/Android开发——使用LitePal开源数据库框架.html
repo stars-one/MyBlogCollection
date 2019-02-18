@@ -1,0 +1,68 @@
+原文链接：http://www.cnblogs.com/kexing/archive/2017/12/28/8127146.html
+<p><span style="font-size: 16px;">前言：之前使用Android内置的数据库，感觉一大堆SQL语句，一不小心就错了，很难受，学习了这个LItePal的开源数据库框架，瞬间觉得Android内置的数据库简直是垃圾般的存在</span></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px;">LitePal GitHub首页：https://github.com/LitePalFramework/LitePal</span></p>
+<h2>配置步骤</h2>
+<h3>1.添加依赖</h3>
+<p><span style="font-size: 16px;">切换project模式，展开APP的文件夹，找到build.gradle文件，去里面添加依赖，这里我用的是最新版本，可以在LitePal的Github官网上找到最新的版本</span></p>
+<p><span style="font-size: 16px;"><img src="http://images2017.cnblogs.com/blog/1210268/201712/1210268-20171227172427628-1268956244.png" alt="" width="982" height="627" /></span></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h3>2.配置LitePal.xml文件及相关设置</h3>
+<p><span style="font-size: 16px;">在main文件夹中新建一个asstes文件夹，之后，创建LitePal.xml，复制LitePal上的GItHub给出的代码，这里我就直接写了，其中，<span style="color: #ff0000;">dbname代表数据库的名称，version代表版本号，list标签之下有表</span>（专业术语为映射模型类），这里之后会提及</span></p>
+<p><span style="font-size: 16px;"><img src="http://images2017.cnblogs.com/blog/1210268/201712/1210268-20171227175403191-512597799.png" alt="" /></span></p>
+<p>&nbsp;</p>
+<p>&nbsp;此外<span style="font-size: 16px;">，我们还需要在AndroidMainfest文件中添加一行代码<span style="color: #0099ff;">android:name=<span style="color: #ff3333;">"org.litepal.LitePalApplication"</span></span></span></p>
+<p><span style="font-size: 16px;"><img src="http://images2017.cnblogs.com/blog/1210268/201712/1210268-20171227175946519-863697369.png" alt="" /></span></p>
+<p>&nbsp;</p>
+<h2><span style="font-size: 16px;">&nbsp;3.创建一个Java Bean类<br /></span></h2>
+<p><span style="font-size: 16px;">这里创建了一个书的bean类，有着三个成员变量，之后，使用alt+insert，选择getter and setter，添加get与set方法</span></p>
+<p><img src="http://images2017.cnblogs.com/blog/1210268/201712/1210268-20171227180437581-824466108.png" alt="" /></p>
+<p>&nbsp;</p>
+<h3>&nbsp;4.在LItePal.xml文件中list标签下配置表（映射模型类）</h3>
+<p><span style="font-size: 16px;">记得包名要写完整</span></p>
+<p>&nbsp;<img src="http://images2017.cnblogs.com/blog/1210268/201712/1210268-20171227181011597-1982338814.png" alt="" /></p>
+<p>&nbsp;</p>
+<h2>&nbsp;使用步骤：</h2>
+<h3>1.创建和升级数据库</h3>
+<p><span style="font-size: 16px;">在相关activity的java文件直接使用<span style="font-size: 16px;">LitePal</span>的<span style="font-size: 16px;">getDatabase</span>方法创建数据库，即是添加下面的代码即可，写在onClick事件中即可，这里就不放截图</span></p>
+<p><span style="font-size: 16px; color: #3366ff;">　　LitePal.getDatabase();</span></p>
+<p><span style="font-size: 16px; color: #000000;">升级数据库，<span style="color: #ff0000;">直接在Bean的java文件中添加新的成员变量及其的get与set方法即可</span>，升级数据库的代码还是使用上面的那一行代码</span></p>
+<p><span style="font-size: 16px; color: #000000;">举个例子，例如上述，我们想要添加一个出版社的列，我们只需要在Book里面创建一个成员变量，及get与set方法，之后，去LitePal.xml文件中，将version的版本加1，也就是改为2即可，其他的都不需要更改</span></p>
+<p><span style="font-size: 16px; color: #000000;">例如，我们想要再加一张表，也是类似的操作，创建一个Bean类，之后，在LitePal.xml文件中使用mapping标签，同时，将版本号加一，也就是改为2即可，其他的也是不需要改变</span></p>
+<h3>2.添加数据</h3>
+<p><span style="font-size: 16px;">修改模型类（也就是Book），使其继承DataSupport</span></p>
+<p><span style="font-size: 16px;"><img src="http://images2017.cnblogs.com/blog/1210268/201712/1210268-20171228122250847-461611883.png" alt="" /></span></p>
+<p><span style="font-size: 16px;">之后，我们只需要新建一个对象，调用其set方法，为其里面的成员变量赋值，之后，调用save方法，就是成功地往数据库中添加了数据</span></p>
+<p><span style="font-size: 16px;"><img src="http://images2017.cnblogs.com/blog/1210268/201712/1210268-20171228122603066-1604441694.png" alt="" /></span></p>
+<p>&nbsp;</p>
+<h3>3.修改（更新）数据</h3>
+<p><span style="font-size: 16px;">更新的操作其实很简单，使用udateAll方法即可，例如，我们要将上面书名为The Last的作者改为<span style="font-size: 16px;">John，</span>价格改成16</span></p>
+<p><span style="font-size: 16px;"><span style="font-size: 16px;"><img src="http://images2017.cnblogs.com/blog/1210268/201712/1210268-20171228123215722-700387571.png" alt="" /></span></span></p>
+<p><span style="font-size: 16px;">updateAll里面写了约束条件，也就是书名为The Last的那一条数据，修改，如果updateAll里面无参数，就是将表里面的数据的作者与价格更改为John和16</span></p>
+<h3>4.删除数据</h3>
+<p><span style="font-size: 16px;">调用DataSupport的deleteAll方法，与上面的updateAll类似，参数里填约束条件，如果不写，就是删除整张表</span></p>
+<div class="cnblogs_code">
+<pre>　　　　　DataSupport.deleteAll(Book.<span style="color: #0000ff;">class</span>,"name is ?","The Last");<span style="color: #008000;">//</span><span style="color: #008000;">删除名字为The Last的数据<br /></span></pre>
+<pre>　　　　　DataSupport.deleteAll(Book.<span style="color: #0000ff;">class,"name is ? and price is ？","The Last","15");<span style="color: #008000;">//<span style="color: #008000;">删除名字为The Last，价格为15的的数据</span></span></span>
+       　DataSupport.deleteAll(Book.<span style="color: #0000ff;">class</span>,"price &lt; ?","16");<span style="color: #008000;">//</span><span style="color: #008000;">删除价格低于16的数据</span></pre>
+</div>
+<p>&nbsp;</p>
+<h3>5.查找数据</h3>
+<p><span style="font-size: 16px;">查找方法调用的DataSupport的findAll方法即可，下面给出示例代码</span></p>
+<p><span style="font-size: 16px;">　　<span style="color: #0000ff;">select指定查询列，where查找出符合约束条件的数据，order将查询结果排序，limit限制查询数据数目</span></span></p>
+<pre></pre>
+<div class="cnblogs_code">
+<pre>　　　　　List&lt;Book&gt; books = DataSupport.findAll(Book.<span style="color: #0000ff;">class</span>);<span style="color: #008000;">//</span><span style="color: #008000;">查找Book这张表的全部数据，返回的是一个List</span>
+        List&lt;Book&gt; books1 = DataSupport.select("name","price").find(Book.<span style="color: #0000ff;">class</span>);<span style="color: #008000;">//</span><span style="color: #008000;">指定查询Book这张表中的name与price两列的数据，返回的也是一个List</span>
+        List&lt;Book&gt; books2 = DataSupport.where("price &gt; ?","16").find(Book.<span style="color: #0000ff;">class</span>);<span style="color: #008000;">//</span><span style="color: #008000;">指定在Book这张表查找符合价格大于16（约束条件）的数据，返回的是一个List</span>
+        List&lt;Book&gt; books4 = DataSupport.order("price desc").find(Book.<span style="color: #0000ff;">class</span>);<span style="color: #008000;">//</span><span style="color: #008000;">将查询结果按照价格从高到低排序（desc 降序），不写或者asc则是升序</span>
+        List&lt;Book&gt; books5 = DataSupport.limit(3).find(Book.<span style="color: #0000ff;">class</span>);<span style="color: #008000;">//</span><span style="color: #008000;">查询Book表中的前三条数据</span></pre>
+</div>
+<pre></pre>
+<p>&nbsp;</p>
+<pre><span style="color: #0099ff; font-size: 16px;"><span style="color: #0099ff;"><span style="color: #0099ff;"><span style="color: #3300ff;"><span style="color: #0099ff;"><span style="color: #cc0099;"><span style="color: #33cc33;">&nbsp;<span style="color: #000000;">值得一提的是，可以使用findBySQL方法进行原生的查询，也就是之前使用内置数据库的方法，返回的是一个Cursor对象，这里我就不使用了</span></span></span></span></span></span></span></span></pre>
+<p>&nbsp;</p>
+<p>&nbsp;<img src="http://images2017.cnblogs.com/blog/1210268/201712/1210268-20171228130315394-1493259055.jpg" alt="" /></p>
+<p>&nbsp;</p>

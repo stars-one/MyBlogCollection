@@ -1,0 +1,307 @@
+原文链接：http://www.cnblogs.com/kexing/archive/2018/02/09/8400929.html
+<h3>目录：</h3>
+<p><strong><span style="font-size: 16px;">一、Viewpager的简单介绍</span></strong></p>
+<p><strong><span style="font-size: 16px;">二、简单的Viewpager使用</span></strong></p>
+<p><strong><span style="font-size: 16px;">三、简单显示图片的Viewpager实现</span></strong></p>
+<p><strong><span style="font-size: 16px;">四、广告图的实现及Viewpager指示器（小圆点）的实现</span></strong></p>
+<p><span style="font-size: 16px;"><strong>五、APP引导页的实现</strong></span></p>
+<h2>一、ViewPager介绍</h2>
+<p>官方文档解释：</p>
+<p><span style="color: #339966;">Layout manager that allows the user to flip left and right through pages of data. You supply an implementation of a PagerAdapter to generate the pages that the view shows.</span><br /><span style="color: #339966;">ViewPager is most often used in conjunction with android.app.Fragment, which is a convenient way to supply and manage the lifecycle of each page. There are standard adapters implemented for using fragments with the ViewPager, which cover the most common use cases. These are android.support.v4.app.FragmentPagerAdapter and android.support.v4.app.FragmentStatePagerAdapter; each of these classes have simple code showing how to build a full user interface with them.</span><br /><span style="color: #339966;">Views which are annotated with the ViewPager.DecorView annotation are treated as part of the view pagers 'decor'. Each decor view's position can be controlled via its android:layout_gravity attribute. For example:</span><br /><span style="color: #339966;">&nbsp;&nbsp; &lt;android.support.v4.view.ViewPager</span><br /><span style="color: #339966;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; android:layout_width="match_parent"</span><br /><span style="color: #339966;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; android:layout_height="match_parent"&gt;</span><br /><span style="color: #339966;">&nbsp; </span><br /><span style="color: #339966;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;android.support.v4.view.PagerTitleStrip</span><br /><span style="color: #339966;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; android:layout_width="match_parent"</span><br /><span style="color: #339966;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; android:layout_height="wrap_content"</span><br /><span style="color: #339966;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; android:layout_gravity="top" /&gt;</span><br /><span style="color: #339966;">&nbsp; </span><br /><span style="color: #339966;">&nbsp;&nbsp; &lt;/android.support.v4.view.ViewPager&gt;</span><br /><span style="color: #339966;">&nbsp; &nbsp;</span><br /><span style="color: #339966;">For more information about how to use ViewPager, read Creating Swipe Views with Tabs.</span><br /><span style="color: #339966;">You can find examples of using ViewPager in the API 4+ Support Demos and API 13+ Support Demos sample code.</span></p>
+<p><span style="color: #000000;"><strong>大概的意思为：</strong></span></p>
+<div>
+<ul>
+<li>
+<p><span style="font-size: 16px;">布局管理器允许左右翻转带数据的页面，你想要显示的视图可以通过实现PagerAdapter来显示。这个类其实是在早期设计和开发的，它的API在后面的更新之中可能会被改变，当它们在新版本之中编译的时候可能还会改变源码。</span></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</li>
+<li>
+<p><span style="font-size: 16px;">ViewPager经常用来连接Fragment，它很方便管理每个页面的生命周期，使用ViewPager管理Fragment是标准的适配器实现。最常用的实现一般有FragmentPagerAdapter和FragmentStatePagerAdapter。</span></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</li>
+<li>
+<p><span style="font-size: 16px;">FragmentPagerAdapter和FragmentStatePagerAdapter是ViewPager和Fragment一起使用时才会用到，后面会详细介绍，这里就不介绍了</span></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+<h2>二、简单的ViewPager使用</h2>
+<p>使用方法其实与Listview和RecyclerView的方法类似</p>
+<p><span style="font-size: 16px;"><strong>1.布局文件使用Viewpager</strong></span></p>
+<p><img src="http://images2017.cnblogs.com/blog/1210268/201801/1210268-20180130154401937-1109435052.png" alt="" /></p>
+<h3>2.定义一个适配器类使其继承PagerAdapter，复写其中的四个方法，分别是getCount，isViewFromObject，instantiateItem和destroyItem</h3>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">　　@Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> getCount() {
+        </span><span style="color: #0000ff;">return</span> 3;<span style="color: #008000;">//</span><span style="color: #008000;">在Viewpager显示3个页面</span>
+<span style="color: #000000;">    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">boolean</span><span style="color: #000000;"> isViewFromObject(View view, Object object) {
+        </span><span style="color: #0000ff;">return</span> view==<span style="color: #000000;">object;
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> Object instantiateItem(ViewGroup container, <span style="color: #0000ff;">int</span><span style="color: #000000;"> position) {
+        TextView tv </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> TextView(container.getContext());
+        tv.setGravity(Gravity.CENTER);
+        tv.setTextSize(</span>20<span style="color: #000000;">);
+        tv.setText(</span>"第" + position + "页"<span style="color: #000000;">);
+
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 添加到ViewPager容器</span>
+<span style="color: #000000;">        container.addView(tv);
+
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 返回填充的View对象</span>
+        <span style="color: #0000ff;">return</span><span style="color: #000000;"> tv;
+
+
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span> destroyItem(ViewGroup container, <span style="color: #0000ff;">int</span><span style="color: #000000;"> position, Object object) {
+      
+        container.removeView((View) object);
+    }</span></pre>
+</div>
+<p>&nbsp;</p>
+<h3>3.findviewbyid方法找到viewpager</h3>
+<h3>4.设置适配器</h3>
+<p><img src="http://images2017.cnblogs.com/blog/1210268/201802/1210268-20180204002944640-835136090.png" alt="" /></p>
+<h3>效果图：</h3>
+<p>&nbsp;<img src="http://images2017.cnblogs.com/blog/1210268/201802/1210268-20180204005340359-402790059.gif" alt="" width="440" height="731" /></p>
+<h2>三、简单显示图片的Viewpager实现</h2>
+<h3>1.布局中使用viewpager</h3>
+<p><img src="http://images2017.cnblogs.com/blog/1210268/201802/1210268-20180204134907373-2142947230.png" alt="" /></p>
+<p>&nbsp;</p>
+<h3>2.定义一个适配器类使其继承PagerAdapter，复写其中的四个方法，分别是getCount，isViewFromObject，instantiateItem和destroyItem</h3>
+<div class="cnblogs_code">
+<pre><span style="font-size: 16px;"><span style="color: #ff0000;"><strong> private int [] mImage;
+
+    </strong></span><span style="color: #0000ff;">public</span> AdvertiseViewpagerAdapter(<span style="color: #0000ff;">int</span><span style="color: #000000;">[] mImage) {
+        </span><span style="color: #0000ff;">this</span>.mImage = mImage;<span style="color: #008000;">//</span><span style="color: #008000;">接收传入的mIamge</span>
+<span style="color: #000000;">    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> getCount() {
+        </span><span style="color: #0000ff;">return</span> 3;<span style="color: #008000;">//</span><span style="color: #008000;">在Viewpager显示3个页面</span>
+<span style="color: #000000;">    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">boolean</span><span style="color: #000000;"> isViewFromObject(View view, Object object) {
+        </span><span style="color: #0000ff;">return</span> view==<span style="color: #000000;">object;
+    }
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">设置每一页显示的内容</span>
+<span style="color: #000000;">    @Override
+    </span><span style="color: #0000ff;">public</span> Object instantiateItem(ViewGroup container, <span style="color: #0000ff;">int</span><span style="color: #000000;"> position) {
+        <span style="color: #ff0000;">ImageView imageView </span></span><span style="color: #ff0000;">= new ImageView(container.getContext());
+        imageView.setImageResource(mImage[position]);<span style="color: #339966;">//ImageView设置图片</span>
+        container.addView(imageView); <span style="color: #339966;">// 添加到ViewPager容器</span>
+        return imageView;<span style="color: #339966;">// 返回填充的View对象</span></span>
+<span style="color: #000000;">    }
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 销毁条目对象</span>
+<span style="color: #000000;">    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span> destroyItem(ViewGroup container, <span style="color: #0000ff;">int</span><span style="color: #000000;"> position, Object object) {
+        container.removeView((View) object);
+    }</span></span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px;">这里注意看红色的代码，我们在适配类中定义了一个成员变量，用来接收参数传入的图片资源id，之后在instantiateItem方法中，new一个ImageView，将其的图片设置为数组中存放的图片资源id，其他的代码与之前一样，这里就不多解释了</span></p>
+<h3><span style="font-size: 16px;">3.在activity文件中声明一个整型数组，将图片资源id存放进去</span></h3>
+<h3><span style="font-size: 16px;">4.new一个适配器，将整型数组传入</span></h3>
+<h3><span style="font-size: 16px;">5.findviewbyid找到viewpager，为其设置适配器</span></h3>
+<p><span style="font-size: 16px;"><img src="http://images2017.cnblogs.com/blog/1210268/201802/1210268-20180204135647514-368326882.png" alt="" /></span></p>
+<p>&nbsp;</p>
+<h3>效果图：</h3>
+<p><img src="http://images2017.cnblogs.com/blog/1210268/201802/1210268-20180204135721717-2031130218.gif" alt="" /></p>
+<h2>四、广告图的实现及Viewpager指示器（小圆点）的实现</h2>
+<p>&nbsp;<span style="font-size: 16px;">本来开始写的时候，我还是用的别人的库来实现小圆点功能，之后，研究了一下，发现实现其实很简单，想要了解的同学可以看我这一篇<a id="post_title_link_8413231" href="http://www.cnblogs.com/kexing/p/8413231.html">Android开发&mdash;&mdash;打造简单的Viewpager指示器（小圆点指示器）</a></span></p>
+<p><span style="font-size: 16px;">今天写的就是拿别人的来使用</span></p>
+<p><span style="font-size: 16px;">项目名称CircleIndicator，<a href="https://github.com/ongakuer/CircleIndicator" target="_blank">github</a></span></p>
+<h3><span style="font-size: 16px;">第一步，添加依赖</span></h3>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px;"><img src="http://images2017.cnblogs.com/blog/1210268/201802/1210268-20180204183214545-1327251947.png" alt="" /></span></p>
+<h3>第二步，在xml中使用</h3>
+<p><img src="http://images2017.cnblogs.com/blog/1210268/201802/1210268-20180204183729732-1884346520.png" alt="" /></p>
+<p>&nbsp;</p>
+<h3>第三步，为circleIndicator绑定viewpager</h3>
+<p>&nbsp;<img src="http://images2017.cnblogs.com/blog/1210268/201802/1210268-20180204183808295-1418274800.png" alt="" /></p>
+<p>&nbsp;</p>
+<p><strong><span style="font-size: 16px;">&nbsp;效果图：</span></strong></p>
+<p><strong><span style="font-size: 16px;">　　　</span></strong><span style="font-size: 16px;">　</span><span style="font-size: 16px;">颜色有些白，可能看得不太清楚。。</span></p>
+<p>&nbsp;<img src="http://images2017.cnblogs.com/blog/1210268/201802/1210268-20180204183908920-1958047910.gif" alt="" width="395" height="648" /></p>
+<p>&nbsp;</p>
+<p>PS：可以通过自定义属性修改颜色，不过，修改颜色就变成了正方形了，不太懂是怎么回事</p>
+<p><img src="http://images2017.cnblogs.com/blog/1210268/201802/1210268-20180204184438232-577009893.png" alt="" /></p>
+<p>&nbsp;</p>
+<h2><span>&nbsp;五、APP引导页的实现</span></h2>
+<p><span style="font-size: 16px;">首先，我们理解一下引导页的逻辑</span></p>
+<p><span><strong><img src="http://images2017.cnblogs.com/blog/1210268/201802/1210268-20180204185500201-627388048.png" alt="" /></strong></span></p>
+<p><span style="font-size: 16px;">这里有个问题，如何才能判断是否是第一次进入APP呢？其实很简单，使用<span style="font-size: 16px;"><span style="color: #000000;"> SharedPreferences</span></span>，这里我不多说了</span></p>
+<p><span style="font-size: 16px;">我这一篇有用到SharedPreferences，可以参考参考<a id="post_title_link_8414218" href="http://www.cnblogs.com/kexing/p/8414218.html">Android开发模板代码（二）&mdash;&mdash;为ImageView设置图片，退出后能保存ImageView的状态</a></span></p>
+<h3>&nbsp;</h3>
+<h3>1.在xml中使用viewpager</h3>
+<p><span style="font-size: 16px;">这里我们还可以加上一个圆形指示器，这样比较好看，市场上的大部分APP都是有个圆形指示器的嘛，我们也随主流</span></p>
+<p><span style="font-size: 16px;">这里我们可以使用之前的那个开源库CircleIndicator，如果你是想实现移动的小圆点指示器，打一波广告，推荐使用开源库<a href="https://github.com/Stars-One/CirclePointMove" target="_blank">CIrclePointMove</a></span></p>
+<p><span style="font-size: 16px;">这个开源库是我用两天写出来的，简单设置之后就能实现小圆点移动的功能</span></p>
+<p><span style="font-size: 16px; color: #0000ff;">提示：</span></p>
+<p><span style="font-size: 16px; color: #0000ff;">使用RelativeLayout，可以使得小圆点指示器显示在Viewpager上方</span></p>
+<p><span style="font-size: 16px; color: #0000ff;">layout_above 该控件显示在fragmentViewpager的上方</span></p>
+<p><span style="font-size: 16px; color: #0000ff;">layout_alignParentBottom 该控件是否贴近父布局的底部 </span></p>
+<p><span style="font-size: 16px;"><img src="http://images2017.cnblogs.com/blog/1210268/201802/1210268-20180209170022732-226019405.png" alt="" /></span></p>
+<p>&nbsp;</p>
+<h3>2.定义个适配类，这里我们使用viewpager装载fragment</h3>
+<p>我这里用了两个Fragment，一个fragment显示第一页，来一个显示第二页</p>
+<p><img src="http://images2017.cnblogs.com/blog/1210268/201802/1210268-20180209165325013-1918550671.png" alt="" /></p>
+<p><span style="font-size: 16px;">代码与之前类似，相信大家也是看到明白，不过，这里提一下，ViewPager的FragmentAdapter有两种<span style="color: #ff0000;">，一种是FragmentPagerAdapter，另外一种则是FragmentPageStateAdapter,这两种的区别在于，前者在换到其他页时不会销毁之前的页面内容，适合页面不多的情况使用，后者则是换到其他页会将之前的页面给销毁，返回到之前的页面就是重新加载，适合页面过多的情况使用</span></span></p>
+<h3>3.为Viewpager设置adapter</h3>
+<h3>4.使用CirclePointMove实现小圆点跟随viewpager移动</h3>
+<p><img src="http://images2017.cnblogs.com/blog/1210268/201802/1210268-20180209165903091-462017830.png" alt="" /></p>
+<p>&nbsp;</p>
+<h3>&nbsp;5.效果图</h3>
+<p><img src="http://images2017.cnblogs.com/blog/1210268/201802/1210268-20180209170739966-1249021765.gif" alt="" width="431" height="732" /></p>
+<p>&nbsp;</p>
+<p>&nbsp;<span style="color: #0000ff;">P</span><span style="color: #0000ff; font-size: 16px;">S：我这里只是简单地演示了Fragment，你也可以使用我上面的提示，在下面加个按钮实现下一页，需要使用到Viewpager的setCurrentItem方法，参数为position，还有跳过功能，直接显示出主界面</span></p>
+<p><span style="font-size: 16px;"><a href="https://github.com/Stars-One/-ViewpagerDemo" target="_blank">&nbsp;Demo</a></span></p>
+<p>&nbsp;</p>

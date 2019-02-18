@@ -1,0 +1,89 @@
+原文链接：http://www.cnblogs.com/kexing/archive/2018/02/04/8413231.html
+<h2>准备工作：</h2>
+<p><span style="font-size: 16px;">1.两张不同颜色的小圆点图片,可以去<a href="http://www.iconfont.cn/" target="_blank">阿里巴巴矢量图</a>网站搜索</span></p>
+<p><span style="font-size: 16px;">我把我使用的图片贴出来</span></p>
+<p><span style="font-size: 16px;"><img src="http://images2017.cnblogs.com/blog/1210268/201802/1210268-20180204141809435-16263351.png" alt="" /><img src="http://images2017.cnblogs.com/blog/1210268/201802/1210268-20180204141817654-319860898.png" alt="" /></span></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px;">2.一个简单的Viewpager的实现</span></p>
+<h3><span style="font-size: 18px;">下面是简单的Viewpager实现步骤：</span></h3>
+<p><span style="font-size: 16px;"><strong>1.布局文件使用Viewpager</strong></span></p>
+<p><img src="http://images2017.cnblogs.com/blog/1210268/201801/1210268-20180130154401937-1109435052.png" alt="" /></p>
+<h3>2.定义一个适配器类使其继承PagerAdapter，复写其中的四个方法，分别是getCount，isViewFromObject，instantiateItem和destroyItem</h3>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">　　@Override
+    <span style="color: #0000ff;">public <span style="color: #0000ff;">int<span style="color: #000000;"> getCount() {
+        <span style="color: #0000ff;">return 3;<span style="color: #008000;">//<span style="color: #008000;">在Viewpager显示3个页面
+<span style="color: #000000;">    }
+
+    @Override
+    <span style="color: #0000ff;">public <span style="color: #0000ff;">boolean<span style="color: #000000;"> isViewFromObject(View view, Object object) {
+        <span style="color: #0000ff;">return view==<span style="color: #000000;">object;
+    }
+
+    @Override
+    <span style="color: #0000ff;">public Object instantiateItem(ViewGroup container, <span style="color: #0000ff;">int<span style="color: #000000;"> position) {
+        TextView tv = <span style="color: #0000ff;">new<span style="color: #000000;"> TextView(container.getContext());
+        tv.setGravity(Gravity.CENTER);
+        tv.setTextSize(20<span style="color: #000000;">);
+        tv.setText("第" + position + "页"<span style="color: #000000;">);
+
+        <span style="color: #008000;">//<span style="color: #008000;"> 添加到ViewPager容器
+<span style="color: #000000;">        container.addView(tv);
+
+        <span style="color: #008000;">//<span style="color: #008000;"> 返回填充的View对象
+        <span style="color: #0000ff;">return<span style="color: #000000;"> tv;
+
+
+    }
+
+    @Override
+    <span style="color: #0000ff;">public <span style="color: #0000ff;">void destroyItem(ViewGroup container, <span style="color: #0000ff;">int<span style="color: #000000;"> position, Object object) {
+      
+        container.removeView((View) object);
+    }</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></pre>
+</div>
+<p>&nbsp;</p>
+<h3>3.findviewbyid方法找到viewpager</h3>
+<h3>4.设置适配器</h3>
+<p><img src="http://images2017.cnblogs.com/blog/1210268/201802/1210268-20180204002944640-835136090.png" alt="" /></p>
+<h3>效果图：</h3>
+<p>&nbsp;<img src="http://images2017.cnblogs.com/blog/1210268/201802/1210268-20180204005340359-402790059.gif" alt="" width="440" height="731" /></p>
+<h2>开始：</h2>
+<h3><span style="font-size: 16px;">1.布局的设计</span></h3>
+<p><span style="font-size: 16px;">我们来到xml文件中，原本里面只有一个viewpager，我们需要再增加个linearlayout，之后用三个linaerlayout水平放置，并且将其平分（平分使用权重weight属性），中间的linearlayout中水平放入三个ImageView，这个三个ImageView同样使用权重将中间的linearlayout给平分，相信这个布局还是比较简单的吧</span></p>
+<p><img src="http://images2017.cnblogs.com/blog/1210268/201802/1210268-20180204144127482-1639633075.png" alt="" /></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px;">我们放入ImageView之后，将第一个的ImageView的src设置为蓝色的，其他两个则是设置为灰色的，因为刚开始就是显示viewpager的第一页嘛，这个相信大家都能明白</span></p>
+<p>&nbsp;<img src="http://images2017.cnblogs.com/blog/1210268/201802/1210268-20180204144354904-1593185283.png" alt="" width="1076" height="637" /></p>
+<h3>2.复写onpagechangeclicklistener中的onPageSelected方法</h3>
+<p><span style="font-size: 16px;">首先，要说明一下，viewpager有一个接口名为onpagechangeclicklistener</span></p>
+<p><strong><span style="font-size: 16px;"><span style="font-size: 16px;">onPagechangeclicklistener</span>说明：</span></strong></p>
+<div id="cnblogs_post_body" class="blogpost-body">
+<p><span style="font-size: 16px;">ViewPage使用时，最关键的代码就是setOnPageChangeListener，<span style="color: #ff0000;">需要注意的是，高版本好像没有这个方法了，改为了addOnPageChangeListener，名称变了，参数没有变化</span></span></p>
+<p><span style="font-size: 16px;">参数是一个ViewPager.SimpleOnPageChangeListener对象。</span></p>
+<p><span style="font-size: 16px;">ViewPager.SimpleOnPageChangeListener是个接口，有三个方法，下面做介绍。</span></p>
+<p><span style="font-size: 16px;">注：ViewPager有两个操作，一个是用手指滑动翻页，一个是直接setCurrentItem（一般用于点击上面的tab直接setCurrentItem）。</span></p>
+<p><span style="font-size: 16px;">下面的方法介绍也会针对这两种情况分别介绍，</span><span style="font-size: 16px;">最后还会讨论这三个方法相对执行顺序的问题</span></p>
+<p><strong>1.onPageSelected(int position)：</strong></p>
+<p><span style="font-size: 16px;">这个方法有一个参数position，代表哪个页面被选中。当用手指滑动翻页的时候，如果翻动成功了（滑动的距离够长），手指抬起来就会立即执行这个方法，position就是当前滑动到的页面。如果直接setCurrentItem翻页，那position就和setCurrentItem的参数一致，这种情况在onPageScrolled执行方法前就会立即执行。</span><br /><strong>2.onPageScrolled(int position,float positionOffset, int positionOffsetPixels)：</strong></p>
+<p><span style="font-size: 16px;">这个方法会在屏幕滚动过程中不断被调用。</span><br /><span style="font-size: 16px;">有三个参数，第一个position，这个参数要特别注意一下。当用手指滑动时，如果手指按在页面上不动，position和当前页面index是一致的；如果手指向左拖动（相应页面向右翻动），这时候position大部分时间和当前页面是一致的，只有翻页成功的情况下最后一次调用才会变为目标页面；如果手指向右拖动（相应页面向左翻动），这时候position大部分时间和目标页面是一致的，只有翻页不成功的情况下最后一次调用才会变为原页面。</span><br /><span style="font-size: 16px;">当直接设置setCurrentItem翻页时，如果是相邻的情况（比如现在是第二个页面，跳到第一或者第三个页面），如果页面向右翻动，大部分时间是和当前页面是一致的，只有最后才变成目标页面；如果向左翻动，position和目标页面是一致的。这和用手指拖动页面翻动是基本一致的。</span><br /><span style="font-size: 16px;">如果不是相邻的情况，比如我从第一个页面跳到第三个页面，position先是0，然后逐步变成1，然后逐步变成2；我从第三个页面跳到第一个页面，position先是1，然后逐步变成0，并没有出现为2的情况。</span><br /><span style="font-size: 16px;">positionOffset是当前页面滑动比例，如果页面向右翻动，这个值不断变大，最后在趋近1的情况后突变为0。如果页面向左翻动，这个值不断变小，最后变为0。</span><br /><span style="font-size: 16px;">positionOffsetPixels是当前页面滑动像素，变化情况和positionOffset一致。</span><br /><strong>3.onPageScrollStateChanged(int state)：</strong></p>
+<p><span style="font-size: 16px;">这个方法在手指操作屏幕的时候发生变化。有三个值：0（END）,1(PRESS) , 2(UP) 。</span><br /><span style="font-size: 16px;">当用手指滑动翻页时，手指按下去的时候会触发这个方法，state值为1，手指抬起时，如果发生了滑动（即使很小），这个值会变为2，然后最后变为0
+ 。</span></p>
+<p><span style="font-size: 16px;">总共执行这个方法三次。一种特殊情况是手指按下去以后一点滑动也没有发生，这个时候只会调用这个方法两次，state值分别是1,0 。</span></p>
+<p><span style="font-size: 16px;">当setCurrentItem翻页时，会执行这个方法两次，state值分别为2 , 0 。</span><br /><span style="font-size: 16px;">三个方法的执行顺序为：用手指拖动翻页时，最先执行一遍onPageScrollStateChanged（1），然后不断执行onPageScrolled，放手指的时候，直接立即执行一次onPageScrollStateChanged（2），然后立即执行一次onPageSelected，然后再不断执行onPageScrollStateChanged，最后执行一次onPageScrollStateChanged（0）。</span><br /><span style="font-size: 16px;">其它的情况由这个可以推出来，不再赘述。</span></p>
+
+
+
+
+
+
+</div>
+<p><span style="font-size: 16px; color: #ff0000;">这个原理其实我们只需要关注第一个方法即可，即<strong>onPageSelected(int position)，</strong>当我们翻页了，这个方法就会执行，是viewpager显示参数为position的那页的内容</span></p>
+<p><span style="font-size: 16px; color: #000000;">我们为viewpager设置这个监听器，复写其中的onPageSelected方法，position为0的时候即是第一页，我们为第一个ImageView设置为蓝色圆形，position为1时，为第二个ImageView设置为蓝色圆形，以此类推，<span style="color: #ff0000;">记得在之前的xml文件中给三个ImageView定义一个id哦</span></span></p>
+<p><span style="font-size: 16px; color: #000000;"><img src="http://images2017.cnblogs.com/blog/1210268/201802/1210268-20180204145827076-926611662.png" alt="" /></span></p>
+<h3>3、效果图</h3>
+<p>&nbsp;<img src="http://images2017.cnblogs.com/blog/1210268/201802/1210268-20180204150322014-753937887.gif" alt="" /></p>
+<h2>&nbsp;</h2>
+<h2>大功告成！！</h2>
+<p><span style="color: #0000ff; font-size: 16px;">本来是实现圆点能够移动的，但是，看不懂大神们写的代码，只能简单的实现这样的小圆点了。。</span></p>

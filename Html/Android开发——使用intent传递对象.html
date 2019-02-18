@@ -1,0 +1,17 @@
+原文链接：http://www.cnblogs.com/kexing/archive/2018/01/11/8270713.html
+<p><span style="font-size: 16px;">intent传递对象有两种方法：</span></p>
+<p><span style="font-size: 16px;">方式一：Serializable 方式</span></p>
+<p><span style="font-size: 16px;">方式二：Parcelable方式</span></p>
+<p><span style="font-size: 16px;">在这里不多介绍了，这一篇就是快速上手使用教程，至于详细原理介绍的，请看这一篇<a href="http://www.cnblogs.com/kexing/p/8270667.html" target="_blank">http://www.cnblogs.com/kexing/p/8270667.html</a></span></p>
+<p><span style="font-size: 16px;">我们先在Android Studio下载一个插件android parcelable code generator，安装完毕重启Android Studio之后，我们创建一个java bean类，写上成员变量，直接快速生成getter与setter，之后按下alt+insert，出现的提示框中选择pareclable</span></p>
+<p><img src="http://images2017.cnblogs.com/blog/1210268/201801/1210268-20180111214520785-2030220962.png" alt="" /></p>
+<p><span style="font-size: 16px;">之后我们就是可以自己使用了，在第一个activity中写，temp是一个Book类的对象</span></p>
+<div class="cnblogs_code">
+<pre>　　　　　　<span style="font-size: 16px;">Intent intent = <span style="color: #0000ff;">new</span> Intent(FirstActivity.<span style="color: #0000ff;">this</span>,SecondActivity.<span style="color: #0000ff;">class</span><span style="color: #000000;">);
+        intent.putExtra(</span>"result"<span style="color: #000000;">,temp);
+        startActivity(intent);</span></span></pre>
+</div>
+<p><span style="font-size: 16px;">之后，在第二个activity中接收，写上</span></p>
+<p><span style="color: #000000; font-size: 16px;">Book book = getIntent().getParcelableExtra("result");</span></p>
+<p><span style="color: #000000; font-size: 16px;">这里旧版需要加上个转型，新的就会提示说是多余的，看情况</span></p>
+<p><span style="color: #000000; font-size: 16px;"><span style="color: #000000; font-size: 16px;">Book book = （Book）getIntent().getParcelableExtra("result");</span></span></p>

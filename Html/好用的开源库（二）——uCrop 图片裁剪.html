@@ -1,0 +1,50 @@
+原文链接：http://www.cnblogs.com/kexing/archive/2018/02/10/8440072.html
+<p><span style="font-size: 16px;">最近想要实现图片裁剪的功能，在Github上找到了这个uCrop,star的人挺多的，便是决定入坑，结果长达一个小时的看资料+摸索，终于是在项目中实现了图片裁剪的功能，今天便是来介绍一下uCrop的使用方法</span></p>
+<p><a href="https://github.com/Yalantis/uCrop" target="_blank"><span style="font-size: 16px;">uCrop</span></a></p>
+<h2><span style="font-size: 16px;">目录：</span></h2>
+<ol>
+<li>
+<h3><span style="font-size: 16px;">配置</span></h3>
+</li>
+<li>
+<h3><span style="font-size: 16px;">流程介绍</span></h3>
+</li>
+<li>
+<h3><span style="font-size: 16px;">使用</span></h3>
+</li>
+</ol>
+<h2>配置</h2>
+<h3><span style="font-size: 16px;">1.添加依赖</span></h3>
+<pre><span style="font-size: 16px;"><code>maven { url "https://jitpack.io" }<br /><code>compile 'com.github.yalantis:ucrop:2.2.1'</code></code></span></pre>
+<p><img src="http://images2017.cnblogs.com/blog/1210268/201802/1210268-20180210220457560-1315138150.png" alt="" /></p>
+<p><img src="http://images2017.cnblogs.com/blog/1210268/201802/1210268-20180210220528357-1029440363.png" alt="" /></p>
+<h3><span style="font-size: 16px;">2.配置Androidmanifest文件</span></h3>
+<div class="cnblogs_code">
+<pre><span style="font-size: 16px;"><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">activity
+            </span><span style="color: #ff0000;">android:name</span><span style="color: #0000ff;">="com.yalantis.ucrop.UCropActivity"</span><span style="color: #ff0000;">
+            android:screenOrientation</span><span style="color: #0000ff;">="portrait"</span><span style="color: #0000ff;">/&gt;</span></span></pre>
+</div>
+<p><span style="font-size: 16px;">screenOrientation是屏幕方向，由于是在手机上使用的，这里便设置为竖直方向</span></p>
+<h3>&nbsp;3.还有读写权限的声明</h3>
+<p><img src="http://images2017.cnblogs.com/blog/1210268/201802/1210268-20180210221709763-1701526944.png" alt="" /></p>
+<p><span style="font-size: 16px; color: #0000ff;">PS：这里Write权限其实是包括了读和写的权限，所以我们只需要声明一个就行了，多声明写的权限也是没有问题的</span></p>
+<h2><span style="color: #000000;">简单流程介绍：</span></h2>
+<p><span style="color: #000000; font-size: 16px;">使用之前我们来了解一下剪切图片的过程</span></p>
+<p><span style="color: #000000; font-size: 16px;">首先，Ucrop构造函数有两个参数，分别是需要裁剪的图片的Uri和裁剪之后的Uri，裁剪之后的Uri需要我们创建，之后对Ucrop进行一些设置，如裁剪框的宽高大小，设置裁剪框的竖线数量或者输出的图片格式等等</span></p>
+<p><span style="color: #000000; font-size: 16px;">完成设置后就可以进入到裁剪的那个Activity进行裁剪的操作，结束裁剪之后会有返回码，我们在onActivityResult方法中对其进行截取就可以获得裁剪之后的Uri，之后我们就可以利用这个Uri获得裁剪之后的图片</span></p>
+<h2>使用：</h2>
+<h3>1.新建一个输出的Uri，mDestinationUri</h3>
+<h3>2.新建一个Ucrop类，相关设置如图片中代码</h3>
+<p>参数传入的是需要裁剪的图片的Uri</p>
+<p><img src="http://images2017.cnblogs.com/blog/1210268/201802/1210268-20180210231956326-13769087.png" alt="" /></p>
+<h3>3.在onActivityResult中截取裁剪图片输出的Uri</h3>
+<p>&nbsp;<img src="http://images2017.cnblogs.com/blog/1210268/201802/1210268-20180210232829060-1374203129.png" alt="" /></p>
+<h3>4.处理图片</h3>
+<p><img src="http://images2017.cnblogs.com/blog/1210268/201802/1210268-20180210232919779-123566490.png" alt="" /></p>
+<p><span style="font-size: 16px;">这里直接使用Uri的toString方法将Uri转换为String</span></p>
+<h3><span style="font-size: 16px;">&nbsp;5.显示图片</span></h3>
+<p><span style="font-size: 16px;">这里使用IO流，具体可以看看代码理解理解（其实直接用刚才获得的那个Uri也行，不用转换成String类型）</span></p>
+<p>&nbsp;<img src="http://images2017.cnblogs.com/blog/1210268/201802/1210268-20180210233013654-277781535.png" alt="" /></p>
+<h2>可能出现的问题：</h2>
+<h3>出现应用已停止：</h3>
+<p><span style="font-size: 16px;">原因：在使用裁剪的当前的Activity使用了actionbar，在Androidmanifest文件中将该activity的theme改为Noactionbar即可</span></p>

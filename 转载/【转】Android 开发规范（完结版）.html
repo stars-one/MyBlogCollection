@@ -1,0 +1,1418 @@
+原文链接：http://www.cnblogs.com/kexing/archive/2018/01/17/8305703.html
+<h2><span style="font-size: 16px;">摘要</span></h2>
+<ul>
+<li><span style="font-size: 16px;"><a href="https://github.com/Blankj/AndroidStandardDevelop/blob/master/README.md#1-%E5%89%8D%E8%A8%80">1 前言</a></span></li>
+<li><span style="font-size: 16px;"><a href="https://github.com/Blankj/AndroidStandardDevelop/blob/master/README.md#2-as-%E8%A7%84%E8%8C%83">2 AS 规范</a></span></li>
+<li><span style="font-size: 16px;"><a href="https://github.com/Blankj/AndroidStandardDevelop/blob/master/README.md#3-%E5%91%BD%E5%90%8D%E8%A7%84%E8%8C%83">3 命名规范</a></span></li>
+<li><span style="font-size: 16px;"><a href="https://github.com/Blankj/AndroidStandardDevelop/blob/master/README.md#4-%E4%BB%A3%E7%A0%81%E6%A0%B7%E5%BC%8F%E8%A7%84%E8%8C%83">4 代码样式规范</a></span></li>
+<li><span style="font-size: 16px;"><a href="https://github.com/Blankj/AndroidStandardDevelop/blob/master/README.md#5-%E8%B5%84%E6%BA%90%E6%96%87%E4%BB%B6%E8%A7%84%E8%8C%83">5 资源文件规范</a></span></li>
+<li><span style="font-size: 16px;"><a href="https://github.com/Blankj/AndroidStandardDevelop/blob/master/README.md#6-%E7%89%88%E6%9C%AC%E7%BB%9F%E4%B8%80%E8%A7%84%E8%8C%83">6 版本统一规范</a></span></li>
+<li><span style="font-size: 16px;"><a href="https://github.com/Blankj/AndroidStandardDevelop/blob/master/README.md#7-%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93%E8%A7%84%E8%8C%83">7 第三方库规范</a></span></li>
+<li><span style="font-size: 16px;"><a href="https://github.com/Blankj/AndroidStandardDevelop/blob/master/README.md#8-%E6%B3%A8%E9%87%8A%E8%A7%84%E8%8C%83">8 注释规范</a></span></li>
+<li><span style="font-size: 16px;"><a href="https://github.com/Blankj/AndroidStandardDevelop/blob/master/README.md#9-%E6%B5%8B%E8%AF%95%E8%A7%84%E8%8C%83">9 测试规范</a></span></li>
+<li><span style="font-size: 16px;"><a href="https://github.com/Blankj/AndroidStandardDevelop/blob/master/README.md#10-%E5%85%B6%E4%BB%96%E7%9A%84%E4%B8%80%E4%BA%9B%E8%A7%84%E8%8C%83">10 其他的一些规范</a></span></li>
+</ul>
+<h3><span style="font-size: 16px;"><a id="user-content-1-前言" class="anchor" href="https://github.com/Blankj/AndroidStandardDevelop/blob/master/README.md#1-%E5%89%8D%E8%A8%80"></a>1 前言</span></h3>
+<p><span style="font-size: 16px;">为了有利于项目维护、增强代码可读性、提升 Code Review 效率以及规范团队安卓开发，故提出以下安卓开发规范，该规范结合本人多年的开发经验并吸取多家之精华，可谓是本人的呕心沥血之作，称其为当前最完善的安卓开发规范一点也不为过，如有更好建议，欢迎到 GitHub 提 issue，原文地址：<strong><a href="https://github.com/Blankj/AndroidStandardDevelop">Android 开发规范（完结版）</a></strong>。相关 Demo，可以查看我的 Android 开发工具类集合项目：<strong><a href="https://github.com/Blankj/AndroidUtilCode">Android 开发人员不得不收集的代码</a></strong>。后续可能会根据该规范出一个 CheckStyle 插件来检查是否规范，当然也支持在 CI 上运行。</span></p>
+<h3><span style="font-size: 16px;"><a id="user-content-2-as-规范" class="anchor" href="https://github.com/Blankj/AndroidStandardDevelop/blob/master/README.md#2-as-%E8%A7%84%E8%8C%83"></a>2 AS 规范</span></h3>
+<p><span style="font-size: 16px;">工欲善其事，必先利其器。</span></p>
+<ol>
+<li><span style="font-size: 16px;">尽量使用最新的稳定版的 IDE 进行开发；</span></li>
+<li><span style="font-size: 16px;">编码格式统一为 <strong>UTF-8</strong>；</span></li>
+<li><span style="font-size: 16px;">编辑完 .java、.xml 等文件后一定要 <strong>格式化，格式化，格式化</strong>（如果团队有公共的样式包，那就遵循它，否则统一使用 AS 默认模板即可）；</span></li>
+<li><span style="font-size: 16px;">删除多余的 import，减少警告出现，可利用 AS 的 Optimize Imports（Settings -&gt; Keymap -&gt; Optimize Imports）快捷键；</span></li>
+<li><span style="font-size: 16px;">Android 开发者工具可以参考这里：<strong><a href="http://www.jcodecraeer.com/a/anzhuokaifa/androidkaifa/2017/0526/7973.html" rel="nofollow">Android 开发者工具</a></strong>；</span></li>
+</ol>
+<h3><span style="font-size: 16px;"><a id="user-content-3-命名规范" class="anchor" href="https://github.com/Blankj/AndroidStandardDevelop/blob/master/README.md#3-%E5%91%BD%E5%90%8D%E8%A7%84%E8%8C%83"></a>3 命名规范</span></h3>
+<p><span style="font-size: 16px;">代码中的命名严禁使用拼音与英文混合的方式，更不允许直接使用中文的方式。正确的英文拼写和语法可以让阅读者易于理解，避免歧义。</span></p>
+<blockquote>
+<p><span style="font-size: 16px;">注意：即使纯拼音命名方式也要避免采用。但 <code>alibaba</code>、<code>taobao</code>、<code>youku</code>、<code>hangzhou</code> 等国际通用的名称，可视同英文。</span></p>
+</blockquote>
+<h4><span style="font-size: 16px;"><a id="user-content-31-包名" class="anchor" href="https://github.com/Blankj/AndroidStandardDevelop/blob/master/README.md#31-%E5%8C%85%E5%90%8D"></a>3.1 包名</span></h4>
+<p><span style="font-size: 16px;">包名全部小写，连续的单词只是简单地连接起来，不使用下划线，采用反域名命名规则，全部使用小写字母。一级包名是顶级域名，通常为 <code>com</code>、<code>edu</code>、<code>gov</code>、<code>net</code>、<code>org</code> 等，二级包名为公司名，三级包名根据应用进行命名，后面就是对包名的划分了，关于包名的划分，推荐采用 PBF（按功能分包 Package By Feature），一开始我们采用的也是 PBL（按层分包 Package By Layer），很坑爹。PBF 可能不是很好区分在哪个功能中，不过也比 PBL 要好找很多，且 PBF 与 PBL 相比较有如下优势：</span></p>
+<ul>
+<li>
+<p><span style="font-size: 16px;">package 内高内聚，package 间低耦合</span></p>
+<p><span style="font-size: 16px;">哪块要添新功能，只改某一个 package 下的东西。</span></p>
+<p><span style="font-size: 16px;">PBL 降低了代码耦合，但带来了 package 耦合，要添新功能，需要改 model、dbHelper、view、service 等等，需要改动好几个 package 下的代码，改动的地方越多，越容易产生新问题，不是吗？</span></p>
+<p><span style="font-size: 16px;">PBF 的话 featureA 相关的所有东西都在 featureA 包，feature 内高内聚、高度模块化，不同 feature 之间低耦合，相关的东西都放在一起，还好找。</span></p>
+</li>
+<li>
+<p><span style="font-size: 16px;">package 有私有作用域（package-private scope）</span></p>
+<p><span style="font-size: 16px;">你负责开发这块功能，这个目录下所有东西都是你的。</span></p>
+<p><span style="font-size: 16px;">PBL 的方式是把所有工具方法都放在 util 包下，小张开发新功能时候发现需要一个 xxUtil，但它又不是通用的，那应该放在哪里？没办法，按照分层原则，我们还得放在 util 包下，好像不太合适，但放在其它包更不合适，功能越来越多，util 类也越定义越多。后来小李负责开发一块功能时发现需要一个 xxUtil，同样不通用，去 util 包一看，怎么已经有了，而且还没法复用，只好放弃 xx 这个名字，改为 xxxUtil&hellip;&hellip;，因为 PBL 的 package 没有私有作用域，每一个包都是 public（跨包方法调用是很平常的事情，每一个包对其它包来说都是可访问的）；如果是 PBF，小张的 xxUtil 自然放在 featureA 下，小李的 xxUtil 在 featureB 下，如果觉得 util 好像是通用的，就去 util 包看看要不要把工具方法添进 xxUtil, class 命名冲突没有了。</span></p>
+<p><span style="font-size: 16px;">PBF 的 package 有私有作用域，featureA 不应该访问 featureB 下的任何东西（如果非访问不可，那就说明接口定义有问题）。</span></p>
+</li>
+<li>
+<p><span style="font-size: 16px;">很容易删除功能</span></p>
+<p><span style="font-size: 16px;">统计发现新功能没人用，这个版本那块功能得去掉。</span></p>
+<p><span style="font-size: 16px;">如果是 PBL，得从功能入口到整个业务流程把受到牵连的所有能删的代码和 class 都揪出来删掉，一不小心就完蛋。</span></p>
+<p><span style="font-size: 16px;">如果是 PBF，好说，先删掉对应包，再删掉功能入口（删掉包后入口肯定报错了），完事。</span></p>
+</li>
+<li>
+<p><span style="font-size: 16px;">高度抽象</span></p>
+<p><span style="font-size: 16px;">解决问题的一般方法是从抽象到具体，PBF 包名是对功能模块的抽象，包内的 class 是实现细节，符合从抽象到具体，而 PBL 弄反了。</span></p>
+<p><span style="font-size: 16px;">PBF 从确定 AppName 开始，根据功能模块划分 package，再考虑每块的具体实现细节，而 PBL 从一开始就要考虑要不要 dao 层，要不要 com 层等等。</span></p>
+</li>
+<li>
+<p><span style="font-size: 16px;">只通过 class 来分离逻辑代码</span></p>
+<p><span style="font-size: 16px;">PBL 既分离 class 又分离 package，而 PBF 只通过 class 来分离逻辑代码。</span></p>
+<p><span style="font-size: 16px;">没有必要通过 package 分离，因为 PBL 中也可能出现尴尬的情况：</span></p>
+<pre><span style="font-size: 16px;"><code>├── service
+        ├── MainService.java
+</code></span></pre>
+<p><span style="font-size: 16px;">按照 PBL, service 包下的所有东西都是 Service，应该不需要 Service 后缀，但实际上通常为了方便，直接 import service 包，Service 后缀是为了避免引入的 class 和当前包下的 class 命名冲突，当然，不用后缀也可以，得写清楚包路径，比如 <code>new com.domain.service.MainService()</code>，麻烦；而 PBF 就很方便，无需 import，直接 <code>new MainService()</code> 即可。</span></p>
+</li>
+<li>
+<p><span style="font-size: 16px;">package 的大小有意义了</span></p>
+<p><span style="font-size: 16px;">PBL 中包的大小无限增长是合理的，因为功能越添越多，而 PBF 中包太大（包里 class 太多）表示这块需要重构（划分子包）。</span></p>
+</li>
+</ul>
+<p><span style="font-size: 16px;">如要知道更多好处，可以查看这篇博文：<strong><a href="https://medium.com/@cesarmcferreira/package-by-features-not-layers-2d076df1964d#.mp782izhh" rel="nofollow">Package by features, not layers</a></strong>，当然，我们大谷歌也有相应的 Sample：<strong><a href="https://github.com/googlesamples/android-architecture/tree/todo-mvp/">todo-mvp</a></strong>，其结构如下所示，很值得学习。</span></p>
+<pre><span style="font-size: 16px;"><code>com
+└── example
+    └── android
+        └── architecture
+            └── blueprints
+                └── todoapp
+                    ├── BasePresenter.java
+                    ├── BaseView.java
+                    ├── addedittask
+                    │&nbsp;&nbsp; ├── AddEditTaskActivity.java
+                    │&nbsp;&nbsp; ├── AddEditTaskContract.java
+                    │&nbsp;&nbsp; ├── AddEditTaskFragment.java
+                    │&nbsp;&nbsp; └── AddEditTaskPresenter.java
+                    ├── data
+                    │&nbsp;&nbsp; ├── Task.java
+                    │&nbsp;&nbsp; └── source
+                    │&nbsp;&nbsp;     ├── TasksDataSource.java
+                    │&nbsp;&nbsp;     ├── TasksRepository.java
+                    │&nbsp;&nbsp;     ├── local
+                    │&nbsp;&nbsp;     │&nbsp;&nbsp; ├── TasksDbHelper.java
+                    │&nbsp;&nbsp;     │&nbsp;&nbsp; ├── TasksLocalDataSource.java
+                    │&nbsp;&nbsp;     │&nbsp;&nbsp; └── TasksPersistenceContract.java
+                    │&nbsp;&nbsp;     └── remote
+                    │&nbsp;&nbsp;         └── TasksRemoteDataSource.java
+                    ├── statistics
+                    │&nbsp;&nbsp; ├── StatisticsActivity.java
+                    │&nbsp;&nbsp; ├── StatisticsContract.java
+                    │&nbsp;&nbsp; ├── StatisticsFragment.java
+                    │&nbsp;&nbsp; └── StatisticsPresenter.java
+                    ├── taskdetail
+                    │&nbsp;&nbsp; ├── TaskDetailActivity.java
+                    │&nbsp;&nbsp; ├── TaskDetailContract.java
+                    │&nbsp;&nbsp; ├── TaskDetailFragment.java
+                    │&nbsp;&nbsp; └── TaskDetailPresenter.java
+                    ├── tasks
+                    │&nbsp;&nbsp; ├── ScrollChildSwipeRefreshLayout.java
+                    │&nbsp;&nbsp; ├── TasksActivity.java
+                    │&nbsp;&nbsp; ├── TasksContract.java
+                    │&nbsp;&nbsp; ├── TasksFilterType.java
+                    │&nbsp;&nbsp; ├── TasksFragment.java
+                    │&nbsp;&nbsp; └── TasksPresenter.java
+                    └── util
+                        ├── ActivityUtils.java
+                        ├── EspressoIdlingResource.java
+                        └── SimpleCountingIdlingResource.java
+</code></span></pre>
+<p><span style="font-size: 16px;">参考以上的代码结构，按功能分包具体可以这样做：</span></p>
+<pre><span style="font-size: 16px;"><code>com
+└── domain
+    └── app
+        ├── App.java 定义 Application 类
+        ├── Config.java 定义配置数据（常量）
+        ├── base 基础组件
+        ├── custom_view 自定义视图
+        ├── data 数据处理
+        │&nbsp;&nbsp; ├── DataManager.java 数据管理器，
+        │&nbsp;&nbsp; ├── local 来源于本地的数据，比如 SP，Database，File
+        │&nbsp;&nbsp; ├── model 定义 model（数据结构以及 getter/setter、compareTo、equals 等等，不含复杂操作）
+        │&nbsp;&nbsp; └── remote 来源于远端的数据
+        ├── feature 功能
+        │&nbsp;&nbsp; ├── feature0 功能 0
+        │&nbsp;&nbsp; │   ├── feature0Activity.java
+        │&nbsp;&nbsp; │   ├── feature0Fragment.java
+        │   │   ├── xxAdapter.java
+        │   │   └── ... 其他 class
+        │   └──&nbsp;...其他功能
+        ├── injection 依赖注入
+        ├── util 工具类
+        └── widget 小部件
+</code></span></pre>
+<h4><span style="font-size: 16px;"><a id="user-content-32-类名" class="anchor" href="https://github.com/Blankj/AndroidStandardDevelop/blob/master/README.md#32-%E7%B1%BB%E5%90%8D"></a>3.2 类名</span></h4>
+<p><span style="font-size: 16px;">类名都以 <code>UpperCamelCase</code> 风格编写。</span></p>
+<p><span style="font-size: 16px;">类名通常是名词或名词短语，接口名称有时可能是形容词或形容词短语。现在还没有特定的规则或行之有效的约定来命名注解类型。</span></p>
+<p><span style="font-size: 16px;">名词，采用大驼峰命名法，尽量避免缩写，除非该缩写是众所周知的， 比如 HTML、URL，如果类名称中包含单词缩写，则单词缩写的每个字母均应大写。</span></p>
+<table>
+<thead>
+<tr><th align="left"><span style="font-size: 16px;">类</span></th><th align="left"><span style="font-size: 16px;">描述</span></th><th align="left"><span style="font-size: 16px;">例如</span></th></tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><span style="font-size: 16px;"><code>Activity</code> 类</span></td>
+<td align="left"><span style="font-size: 16px;"><code>Activity</code> 为后缀标识</span></td>
+<td align="left"><span style="font-size: 16px;">欢迎页面类 <code>WelcomeActivity</code></span></td>
+</tr>
+<tr>
+<td align="left"><span style="font-size: 16px;"><code>Adapter</code> 类</span></td>
+<td align="left"><span style="font-size: 16px;"><code>Adapter</code> 为后缀标识</span></td>
+<td align="left"><span style="font-size: 16px;">新闻详情适配器 <code>NewsDetailAdapter</code></span></td>
+</tr>
+<tr>
+<td align="left"><span style="font-size: 16px;">解析类</span></td>
+<td align="left"><span style="font-size: 16px;"><code>Parser</code> 为后缀标识</span></td>
+<td align="left"><span style="font-size: 16px;">首页解析类 <code>HomePosterParser</code></span></td>
+</tr>
+<tr>
+<td align="left"><span style="font-size: 16px;">工具方法类</span></td>
+<td align="left"><span style="font-size: 16px;"><code>Utils</code> 或 <code>Manager</code> 为后缀标识</span></td>
+<td align="left"><span style="font-size: 16px;">线程池管理类：<code>ThreadPoolManager</code></span><br /><span style="font-size: 16px;">日志工具类：<code>LogUtils</code>（<code>Logger</code> 也可）</span><br /><span style="font-size: 16px;">打印工具类：<code>PrinterUtils</code></span></td>
+
+
+</tr>
+<tr>
+<td align="left"><span style="font-size: 16px;">数据库类</span></td>
+<td align="left"><span style="font-size: 16px;">以 <code>DBHelper</code> 后缀标识</span></td>
+<td align="left"><span style="font-size: 16px;">新闻数据库：<code>NewsDBHelper</code></span></td>
+
+
+</tr>
+<tr>
+<td align="left"><span style="font-size: 16px;"><code>Service</code> 类</span></td>
+<td align="left"><span style="font-size: 16px;">以 <code>Service</code> 为后缀标识</span></td>
+<td align="left"><span style="font-size: 16px;">时间服务 <code>TimeService</code></span></td>
+
+
+</tr>
+<tr>
+<td align="left"><span style="font-size: 16px;"><code>BroadcastReceiver</code> 类</span></td>
+<td align="left"><span style="font-size: 16px;">以 <code>Receiver</code> 为后缀标识</span></td>
+<td align="left"><span style="font-size: 16px;">推送接收 <code>JPushReceiver</code></span></td>
+
+
+</tr>
+<tr>
+<td align="left"><span style="font-size: 16px;"><code>ContentProvider</code> 类</span></td>
+<td align="left"><span style="font-size: 16px;">以 <code>Provider</code> 为后缀标识</span></td>
+<td align="left"><span style="font-size: 16px;"><code>ShareProvider</code></span></td>
+
+
+</tr>
+<tr>
+<td align="left"><span style="font-size: 16px;">自定义的共享基础类</span></td>
+<td align="left"><span style="font-size: 16px;">以 <code>Base</code> 开头</span></td>
+<td align="left"><span style="font-size: 16px;"><code>BaseActivity</code>, <code>BaseFragment</code></span></td>
+
+
+</tr>
+
+</tbody>
+
+</table>
+<p><span style="font-size: 16px;">测试类的命名以它要测试的类的名称开始，以 Test 结束。例如：<code>HashTest</code> 或 <code>HashIntegrationTest</code>。</span></p>
+<p><span style="font-size: 16px;">接口（interface）：命名规则与类一样采用大驼峰命名法，多以 able 或 ible 结尾，如 <code>interface Runnable</code>、<code>interface Accessible</code>。</span></p>
+<blockquote>
+<p><span style="font-size: 16px;">注意：如果项目采用 MVP，所有 Model、View、Presenter 的接口都以 I 为前缀，不加后缀，其他的接口采用上述命名规则。</span></p>
+
+
+</blockquote>
+<h4><span style="font-size: 16px;"><a id="user-content-33-方法名" class="anchor" href="https://github.com/Blankj/AndroidStandardDevelop/blob/master/README.md#33-%E6%96%B9%E6%B3%95%E5%90%8D"></a>3.3 方法名</span></h4>
+<p><span style="font-size: 16px;">方法名都以 <code>lowerCamelCase</code> 风格编写。</span></p>
+<p><span style="font-size: 16px;">方法名通常是动词或动词短语。</span></p>
+<table>
+<thead>
+<tr><th align="left"><span style="font-size: 16px;">方法</span></th><th><span style="font-size: 16px;">说明</span></th>
+</tr>
+
+
+</thead>
+<tbody>
+<tr>
+<td align="left"><span style="font-size: 16px;"><code>initXX()</code></span></td>
+<td><span style="font-size: 16px;">初始化相关方法，使用 init 为前缀标识，如初始化布局 <code>initView()</code></span></td>
+
+
+</tr>
+<tr>
+<td align="left"><span style="font-size: 16px;"><code>isXX()</code>, <code>checkXX()</code></span></td>
+<td><span style="font-size: 16px;">方法返回值为 boolean 型的请使用 is/check 为前缀标识</span></td>
+
+
+</tr>
+<tr>
+<td align="left"><span style="font-size: 16px;"><code>getXX()</code></span></td>
+<td><span style="font-size: 16px;">返回某个值的方法，使用 get 为前缀标识</span></td>
+
+
+</tr>
+<tr>
+<td align="left"><span style="font-size: 16px;"><code>setXX()</code></span></td>
+<td><span style="font-size: 16px;">设置某个属性值</span></td>
+
+
+</tr>
+<tr>
+<td align="left"><span style="font-size: 16px;"><code>handleXX()</code>, <code>processXX()</code></span></td>
+<td><span style="font-size: 16px;">对数据进行处理的方法</span></td>
+
+
+</tr>
+<tr>
+<td align="left"><span style="font-size: 16px;"><code>displayXX()</code>, <code>showXX()</code></span></td>
+<td><span style="font-size: 16px;">弹出提示框和提示信息，使用 display/show 为前缀标识</span></td>
+
+
+</tr>
+<tr>
+<td align="left"><span style="font-size: 16px;"><code>updateXX()</code></span></td>
+<td><span style="font-size: 16px;">更新数据</span></td>
+
+
+</tr>
+<tr>
+<td align="left"><span style="font-size: 16px;"><code>saveXX()</code>, <code>insertXX()</code></span></td>
+<td><span style="font-size: 16px;">保存或插入数据</span></td>
+
+
+</tr>
+<tr>
+<td align="left"><span style="font-size: 16px;"><code>resetXX()</code></span></td>
+<td><span style="font-size: 16px;">重置数据</span></td>
+
+
+</tr>
+<tr>
+<td align="left"><span style="font-size: 16px;"><code>clearXX()</code></span></td>
+<td><span style="font-size: 16px;">清除数据</span></td>
+
+
+</tr>
+<tr>
+<td align="left"><span style="font-size: 16px;"><code>removeXX()</code>, <code>deleteXX()</code></span></td>
+<td><span style="font-size: 16px;">移除数据或者视图等，如 <code>removeView()</code></span></td>
+
+
+</tr>
+<tr>
+<td align="left"><span style="font-size: 16px;"><code>drawXX()</code></span></td>
+<td><span style="font-size: 16px;">绘制数据或效果相关的，使用 draw 前缀标识</span></td>
+
+
+</tr>
+
+</tbody>
+
+</table>
+<h4><span style="font-size: 16px;"><a id="user-content-34-常量名" class="anchor" href="https://github.com/Blankj/AndroidStandardDevelop/blob/master/README.md#34-%E5%B8%B8%E9%87%8F%E5%90%8D"></a>3.4 常量名</span></h4>
+<p><span style="font-size: 16px;">常量名命名模式为 <code>CONSTANT_CASE</code>，全部字母大写，用下划线分隔单词。那到底什么算是一个常量？</span></p>
+<p><span style="font-size: 16px;">每个常量都是一个 <code>static final</code> 字段，但不是所有 <code>static final</code> 字段都是常量。在决定一个字段是否是一个常量时，得考虑它是否真的感觉像是一个常量。例如，如果观测任何一个该实例的状态是可变的，则它几乎肯定不会是一个常量。只是永远不打算改变的对象一般是不够的，它要真的一直不变才能将它示为常量。</span></p>
+<div class="highlight highlight-source-java">
+<pre><span class="pl-c" style="font-size: 16px;"><span class="pl-c">// Constants
+<span class="pl-k">static <span class="pl-k">final <span class="pl-k">int <span class="pl-c1">NUMBER <span class="pl-k">= <span class="pl-c1">5;
+<span class="pl-k">static <span class="pl-k">final <span class="pl-smi">ImmutableListNAMES <span class="pl-k">= <span class="pl-smi">ImmutableList<span class="pl-k">.of(<span class="pl-s"><span class="pl-pds">"Ed<span class="pl-pds">", <span class="pl-s"><span class="pl-pds">"Ann<span class="pl-pds">");
+<span class="pl-k">static <span class="pl-k">final <span class="pl-smi">Joiner <span class="pl-c1">COMMA_JOINER <span class="pl-k">= <span class="pl-smi">Joiner<span class="pl-k">.on(<span class="pl-s"><span class="pl-pds">',<span class="pl-pds">'); <span class="pl-c"><span class="pl-c">// because Joiner is immutable
+<span class="pl-k">static <span class="pl-k">final <span class="pl-k">SomeMutableType[] <span class="pl-c1">EMPTY_ARRAY <span class="pl-k">= {};
+<span class="pl-k">enum <span class="pl-en">SomeEnum { <span class="pl-c1">ENUM_CONSTANT }
+
+<span class="pl-c"><span class="pl-c">// Not constants
+<span class="pl-k">static <span class="pl-smi">String nonFinal <span class="pl-k">= <span class="pl-s"><span class="pl-pds">"non-final<span class="pl-pds">";
+<span class="pl-k">final <span class="pl-smi">String nonStatic <span class="pl-k">= <span class="pl-s"><span class="pl-pds">"non-static<span class="pl-pds">";
+<span class="pl-k">static <span class="pl-k">final <span class="pl-smi">SetmutableCollection <span class="pl-k">= <span class="pl-k">new <span class="pl-smi">HashSet();
+<span class="pl-k">static <span class="pl-k">final <span class="pl-smi">ImmutableSetmutableElements <span class="pl-k">= <span class="pl-smi">ImmutableSet<span class="pl-k">.of(mutable);
+<span class="pl-k">static <span class="pl-k">final <span class="pl-smi">Logger logger <span class="pl-k">= <span class="pl-smi">Logger<span class="pl-k">.getLogger(<span class="pl-smi">MyClass<span class="pl-k">.getName());
+<span class="pl-k">static <span class="pl-k">final <span class="pl-k">String[] nonEmptyArray <span class="pl-k">= {<span class="pl-s"><span class="pl-pds">"these<span class="pl-pds">", <span class="pl-s"><span class="pl-pds">"can<span class="pl-pds">", <span class="pl-s"><span class="pl-pds">"change<span class="pl-pds">"};</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></pre>
+</div>
+<h4><span style="font-size: 16px;"><a id="user-content-35-非常量字段名" class="anchor" href="https://github.com/Blankj/AndroidStandardDevelop/blob/master/README.md#35-%E9%9D%9E%E5%B8%B8%E9%87%8F%E5%AD%97%E6%AE%B5%E5%90%8D"></a>3.5 非常量字段名</span></h4>
+<p><span style="font-size: 16px;">非常量字段名以 <code>lowerCamelCase</code> 风格的基础上改造为如下风格：基本结构为 <code>scope{Type0}VariableName{Type1}</code>、<code>type0VariableName{Type1}</code>、<code>variableName{Type1}</code>。</span></p>
+<p><span style="font-size: 16px;">说明：<code>{}</code> 中的内容为可选。</span></p>
+<blockquote>
+<p><span style="font-size: 16px;">注意：所有的 VO（值对象）统一采用标准的 lowerCamelCase 风格编写，所有的 DTO（数据传输对象）就按照接口文档中定义的字段名编写。</span></p>
+</blockquote>
+<h5><span style="font-size: 16px;"><a id="user-content-351-scope范围" class="anchor" href="https://github.com/Blankj/AndroidStandardDevelop/blob/master/README.md#351-scope%E8%8C%83%E5%9B%B4"></a>3.5.1 scope（范围）</span></h5>
+<p><span style="font-size: 16px;">非公有，非静态字段命名以 <code>m</code> 开头。</span></p>
+<p><span style="font-size: 16px;">静态字段命名以 <code>s</code> 开头。</span></p>
+<p><span style="font-size: 16px;">其他字段以小写字母开头。</span></p>
+<p><span style="font-size: 16px;">例如：</span></p>
+<div class="highlight highlight-source-java">
+<pre><span class="pl-k" style="font-size: 16px;">public <span class="pl-k">class <span class="pl-en">MyClass {
+    <span class="pl-k">public <span class="pl-k">int publicField;
+    <span class="pl-k">private <span class="pl-k">static <span class="pl-smi">MyClass sSingleton;
+    <span class="pl-k">int mPackagePrivate;
+    <span class="pl-k">private <span class="pl-k">int mPrivate;
+    <span class="pl-k">protected <span class="pl-k">int mProtected;
+}</span></span></span></span></span></span></span></span></span></span></span></span></span></pre>
+</div>
+<p><span style="font-size: 16px;">使用 1 个字符前缀来表示作用范围，1 个字符的前缀必须小写，前缀后面是由表意性强的一个单词或多个单词组成的名字，而且每个单词的首写字母大写，其它字母小写，这样保证了对变量名能够进行正确的断句。</span></p>
+<h5><span style="font-size: 16px;"><a id="user-content-352-type0控件类型" class="anchor" href="https://github.com/Blankj/AndroidStandardDevelop/blob/master/README.md#352-type0%E6%8E%A7%E4%BB%B6%E7%B1%BB%E5%9E%8B"></a>3.5.2 Type0（控件类型）</span></h5>
+<p><span style="font-size: 16px;">考虑到 Android 众多的 UI 控件，为避免控件和普通成员变量混淆以及更好地表达意思，所有用来表示控件的成员变量统一加上控件缩写作为前缀（具体见附录 <a href="https://github.com/Blankj/AndroidStandardDevelop/blob/master/README.md#ui-%E6%8E%A7%E4%BB%B6%E7%BC%A9%E5%86%99%E8%A1%A8">UI 控件缩写表</a>）。</span></p>
+<p><span style="font-size: 16px;">例如：<code>mIvAvatar</code>、<code>rvBooks</code>、<code>flContainer</code>。</span></p>
+<h5><span style="font-size: 16px;"><a id="user-content-353-variablename变量名" class="anchor" href="https://github.com/Blankj/AndroidStandardDevelop/blob/master/README.md#353-variablename%E5%8F%98%E9%87%8F%E5%90%8D"></a>3.5.3 VariableName（变量名）</span></h5>
+<p><span style="font-size: 16px;">变量名中可能会出现量词，我们需要创建统一的量词，它们更容易理解，也更容易搜索。</span></p>
+<p><span style="font-size: 16px;">例如：<code>mFirstBook</code>、<code>mPreBook</code>、<code>curBook</code>。</span></p>
+<table>
+<thead>
+<tr><th><span style="font-size: 16px;">量词列表</span></th><th><span style="font-size: 16px;">量词后缀说明</span></th></tr>
+</thead>
+<tbody>
+<tr>
+<td><span style="font-size: 16px;"><code>First</code></span></td>
+<td><span style="font-size: 16px;">一组变量中的第一个</span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;"><code>Last</code></span></td>
+<td><span style="font-size: 16px;">一组变量中的最后一个</span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;"><code>Next</code></span></td>
+<td><span style="font-size: 16px;">一组变量中的下一个</span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;"><code>Pre</code></span></td>
+<td><span style="font-size: 16px;">一组变量中的上一个</span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;"><code>Cur</code></span></td>
+<td><span style="font-size: 16px;">一组变量中的当前变量</span></td>
+</tr>
+</tbody>
+</table>
+<h5><span style="font-size: 16px;"><a id="user-content-354-type1数据类型" class="anchor" href="https://github.com/Blankj/AndroidStandardDevelop/blob/master/README.md#354-type1%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"></a>3.5.4 Type1（数据类型）</span></h5>
+<p><span style="font-size: 16px;">对于表示集合或者数组的非常量字段名，我们可以添加后缀来增强字段的可读性，比如：</span></p>
+<p><span style="font-size: 16px;">集合添加如下后缀：List、Map、Set。</span></p>
+<p><span style="font-size: 16px;">数组添加如下后缀：Arr。</span></p>
+<p><span style="font-size: 16px;">例如：<code>mIvAvatarList</code>、<code>userArr</code>、<code>firstNameSet</code>。</span></p>
+<blockquote>
+<p><span style="font-size: 16px;">注意：如果数据类型不确定的话，比如表示的是很多书，那么使用其复数形式来表示也可，例如 <code>mBooks</code>。</span></p>
+</blockquote>
+<h4><span style="font-size: 16px;"><a id="user-content-36-参数名" class="anchor" href="https://github.com/Blankj/AndroidStandardDevelop/blob/master/README.md#36-%E5%8F%82%E6%95%B0%E5%90%8D"></a>3.6 参数名</span></h4>
+<p><span style="font-size: 16px;">参数名以 <code>lowerCamelCase</code> 风格编写，参数应该避免用单个字符命名。</span></p>
+<h4><span style="font-size: 16px;"><a id="user-content-37-局部变量名" class="anchor" href="https://github.com/Blankj/AndroidStandardDevelop/blob/master/README.md#37-%E5%B1%80%E9%83%A8%E5%8F%98%E9%87%8F%E5%90%8D"></a>3.7 局部变量名</span></h4>
+<p><span style="font-size: 16px;">局部变量名以 <code>lowerCamelCase</code> 风格编写，比起其它类型的名称，局部变量名可以有更为宽松的缩写。</span></p>
+<p><span style="font-size: 16px;">虽然缩写更宽松，但还是要避免用单字符进行命名，除了临时变量和循环变量。</span></p>
+<p><span style="font-size: 16px;">即使局部变量是 <code>final</code> 和不可改变的，也不应该把它示为常量，自然也不能用常量的规则去命名它。</span></p>
+<h4><span style="font-size: 16px;"><a id="user-content-38-临时变量" class="anchor" href="https://github.com/Blankj/AndroidStandardDevelop/blob/master/README.md#38-%E4%B8%B4%E6%97%B6%E5%8F%98%E9%87%8F"></a>3.8 临时变量</span></h4>
+<p><span style="font-size: 16px;">临时变量通常被取名为 <code>i</code>、<code>j</code>、<code>k</code>、<code>m</code> 和 <code>n</code>，它们一般用于整型；<code>c</code>、<code>d</code>、<code>e</code>，它们一般用于字符型。 如：<code>for (int i = 0; i &lt; len; i++)</code>。</span></p>
+<h4><span style="font-size: 16px;"><a id="user-content-39-类型变量名" class="anchor" href="https://github.com/Blankj/AndroidStandardDevelop/blob/master/README.md#39-%E7%B1%BB%E5%9E%8B%E5%8F%98%E9%87%8F%E5%90%8D"></a>3.9 类型变量名</span></h4>
+<p><span style="font-size: 16px;">类型变量可用以下两种风格之一进行命名：</span></p>
+<ol>
+<li><span style="font-size: 16px;">单个的大写字母，后面可以跟一个数字（如：<code>E</code>, <code>T</code>, <code>X</code>, <code>T2</code>）。</span></li>
+<li><span style="font-size: 16px;">以类命名方式（参考<a href="https://github.com/Blankj/AndroidStandardDevelop/blob/master/README.md#32-%E7%B1%BB%E5%90%8D">3.2 类名</a>），后面加个大写的 T（如：<code>RequestT</code>, <code>FooBarT</code>）。</span></li>
+</ol>
+<p><span style="font-size: 16px;">更多还可参考：<strong><a href="https://github.com/alibaba/p3c/blob/master/%E9%98%BF%E9%87%8C%E5%B7%B4%E5%B7%B4Java%E5%BC%80%E5%8F%91%E6%89%8B%E5%86%8C%EF%BC%88%E7%BA%AA%E5%BF%B5%E7%89%88%EF%BC%89.pdf">阿里巴巴 Java 开发手册</a></strong></span></p>
+<h3><span style="font-size: 16px;"><a id="user-content-4-代码样式规范" class="anchor" href="https://github.com/Blankj/AndroidStandardDevelop/blob/master/README.md#4-%E4%BB%A3%E7%A0%81%E6%A0%B7%E5%BC%8F%E8%A7%84%E8%8C%83"></a>4 代码样式规范</span></h3>
+<h4><span style="font-size: 16px;"><a id="user-content-41-使用标准大括号样式" class="anchor" href="https://github.com/Blankj/AndroidStandardDevelop/blob/master/README.md#41-%E4%BD%BF%E7%94%A8%E6%A0%87%E5%87%86%E5%A4%A7%E6%8B%AC%E5%8F%B7%E6%A0%B7%E5%BC%8F"></a>4.1 使用标准大括号样式</span></h4>
+<p><span style="font-size: 16px;">左大括号不单独占一行，与其前面的代码位于同一行：</span></p>
+<div class="highlight highlight-source-java">
+<pre><span class="pl-k" style="font-size: 16px;">class <span class="pl-en">MyClass {
+    <span class="pl-k">int <span class="pl-en">func() {
+        <span class="pl-k">if (something) {
+            <span class="pl-c"><span class="pl-c">// ...
+        } <span class="pl-k">else <span class="pl-k">if (somethingElse) {
+            <span class="pl-c"><span class="pl-c">// ...
+        } <span class="pl-k">else {
+            <span class="pl-c"><span class="pl-c">// ...
+        }
+    }
+}</span></span></span></span></span></span></span></span></span></span></span></span></span></span></pre>
+</div>
+<p><span style="font-size: 16px;">我们需要在条件语句周围添加大括号。例外情况：如果整个条件语句（条件和主体）适合放在同一行，那么您可以（但不是必须）将其全部放在一行上。例如，我们接受以下样式：</span></p>
+<div class="highlight highlight-source-java">
+<pre><span class="pl-k" style="font-size: 16px;">if (condition) {
+    body();
+}</span></pre>
+</div>
+<p><span style="font-size: 16px;">同样也接受以下样式：</span></p>
+<div class="highlight highlight-source-java">
+<pre><span class="pl-k" style="font-size: 16px;">if (condition) body();</span></pre>
+</div>
+<p><span style="font-size: 16px;">但不接受以下样式：</span></p>
+<div class="highlight highlight-source-java">
+<pre><span class="pl-k" style="font-size: 16px;">if (condition)
+    body();  <span class="pl-c"><span class="pl-c">// bad!</span></span></span></pre>
+</div>
+<h4><span style="font-size: 16px;"><a id="user-content-42-编写简短方法" class="anchor" href="https://github.com/Blankj/AndroidStandardDevelop/blob/master/README.md#42-%E7%BC%96%E5%86%99%E7%AE%80%E7%9F%AD%E6%96%B9%E6%B3%95"></a>4.2 编写简短方法</span></h4>
+<p><span style="font-size: 16px;">在可行的情况下，尽量编写短小精炼的方法。我们了解，有些情况下较长的方法是恰当的，因此对方法的代码长度没有做出硬性限制。如果某个方法的代码超出 40 行，请考虑是否可以在不破坏程序结构的前提下对其拆解。</span></p>
+<h4><span style="font-size: 16px;"><a id="user-content-43-类成员的顺序" class="anchor" href="https://github.com/Blankj/AndroidStandardDevelop/blob/master/README.md#43-%E7%B1%BB%E6%88%90%E5%91%98%E7%9A%84%E9%A1%BA%E5%BA%8F"></a>4.3 类成员的顺序</span></h4>
+<p><span style="font-size: 16px;">这并没有唯一的正确解决方案，但如果都使用一致的顺序将会提高代码的可读性，推荐使用如下排序：</span></p>
+<ol>
+<li><span style="font-size: 16px;">常量</span></li>
+<li><span style="font-size: 16px;">字段</span></li>
+<li><span style="font-size: 16px;">构造函数</span></li>
+<li><span style="font-size: 16px;">重写函数和回调</span></li>
+<li><span style="font-size: 16px;">公有函数</span></li>
+<li><span style="font-size: 16px;">私有函数</span></li>
+<li><span style="font-size: 16px;">内部类或接口</span></li>
+</ol>
+<p><span style="font-size: 16px;">例如：</span></p>
+<div class="highlight highlight-source-java">
+<pre><span class="pl-k" style="font-size: 16px;">public <span class="pl-k">class <span class="pl-en">MainActivity <span class="pl-k">extends <span class="pl-e">Activity {
+
+    <span class="pl-k">private <span class="pl-k">static <span class="pl-k">final <span class="pl-smi">String <span class="pl-c1">TAG <span class="pl-k">= <span class="pl-smi">MainActivity<span class="pl-k">.class<span class="pl-k">.getSimpleName();
+
+    <span class="pl-k">private <span class="pl-smi">String mTitle;
+    <span class="pl-k">private <span class="pl-smi">TextView mTextViewTitle;
+
+    <span class="pl-k">@Override
+    <span class="pl-k">public <span class="pl-k">void <span class="pl-en">onCreate() {
+        <span class="pl-c1">...
+    }
+
+    <span class="pl-k">public <span class="pl-k">void <span class="pl-en">setTitle(<span class="pl-smi">String <span class="pl-v">title) {
+    	mTitle <span class="pl-k">= title;
+    }
+
+    <span class="pl-k">private <span class="pl-k">void <span class="pl-en">setUpView() {
+        <span class="pl-c1">...
+    }
+
+    <span class="pl-k">static <span class="pl-k">class <span class="pl-en">AnInnerClass {
+
+    }
+}</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></pre>
+</div>
+<p><span style="font-size: 16px;">如果类继承于 Android 组件（例如 <code>Activity</code> 或 <code>Fragment</code>），那么把重写函数按照他们的生命周期进行排序是一个非常好的习惯，例如，<code>Activity</code> 实现了 <code>onCreate()</code>、<code>onDestroy()</code>、<code>onPause()</code>、<code>onResume()</code>，它的正确排序如下所示：</span></p>
+<div class="highlight highlight-source-java">
+<pre><span class="pl-k" style="font-size: 16px;">public <span class="pl-k">class <span class="pl-en">MainActivity <span class="pl-k">extends <span class="pl-e">Activity {
+    <span class="pl-c"><span class="pl-c">//Order matches Activity lifecycle
+    <span class="pl-k">@Override
+    <span class="pl-k">public <span class="pl-k">void <span class="pl-en">onCreate() {}
+
+    <span class="pl-k">@Override
+    <span class="pl-k">public <span class="pl-k">void <span class="pl-en">onResume() {}
+
+    <span class="pl-k">@Override
+    <span class="pl-k">public <span class="pl-k">void <span class="pl-en">onPause() {}
+
+    <span class="pl-k">@Override
+    <span class="pl-k">public <span class="pl-k">void <span class="pl-en">onDestroy() {}
+}</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></pre>
+</div>
+<h4><span style="font-size: 16px;"><a id="user-content-44-函数参数的排序" class="anchor" href="https://github.com/Blankj/AndroidStandardDevelop/blob/master/README.md#44-%E5%87%BD%E6%95%B0%E5%8F%82%E6%95%B0%E7%9A%84%E6%8E%92%E5%BA%8F"></a>4.4 函数参数的排序</span></h4>
+<p><span style="font-size: 16px;">在 Android 开发过程中，<code>Context</code> 在函数参数中是再常见不过的了，我们最好把 <code>Context</code> 作为其第一个参数。</span></p>
+<p><span style="font-size: 16px;">正相反，我们把回调接口应该作为其最后一个参数。</span></p>
+<p><span style="font-size: 16px;">例如：</span></p>
+<div class="highlight highlight-source-java">
+<pre><span class="pl-c" style="font-size: 16px;"><span class="pl-c">// Context always goes first
+<span class="pl-k">public <span class="pl-smi">User loadUser(<span class="pl-smi">Context context, <span class="pl-k">int userId);
+
+<span class="pl-c"><span class="pl-c">// Callbacks always go last
+<span class="pl-k">public <span class="pl-k">void loadUserAsync(<span class="pl-smi">Context context, <span class="pl-k">int userId, <span class="pl-smi">UserCallback callback);</span></span></span></span></span></span></span></span></span></span></span></span></span></pre>
+</div>
+<h4><span style="font-size: 16px;"><a id="user-content-45-字符串常量的命名和值" class="anchor" href="https://github.com/Blankj/AndroidStandardDevelop/blob/master/README.md#45-%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%B8%B8%E9%87%8F%E7%9A%84%E5%91%BD%E5%90%8D%E5%92%8C%E5%80%BC"></a>4.5 字符串常量的命名和值</span></h4>
+<p><span style="font-size: 16px;">Android SDK 中的很多类都用到了键值对函数，比如 <code>SharedPreferences</code>、<code>Bundle</code>、<code>Intent</code>，所以，即便是一个小应用，我们最终也不得不编写大量的字符串常量。</span></p>
+<p><span style="font-size: 16px;">当时用到这些类的时候，我们 <strong>必须</strong> 将它们的键定义为 <code>static final</code> 字段，并遵循以下指示作为前缀。</span></p>
+<table>
+<thead>
+<tr><th><span style="font-size: 16px;">类</span></th><th><span style="font-size: 16px;">字段名前缀</span></th></tr>
+</thead>
+<tbody>
+<tr>
+<td><span style="font-size: 16px;">SharedPreferences</span></td>
+<td><span style="font-size: 16px;"><code>PREF_</code></span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;">Bundle</span></td>
+<td><span style="font-size: 16px;"><code>BUNDLE_</code></span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;">Fragment Arguments</span></td>
+<td><span style="font-size: 16px;"><code>ARGUMENT_</code></span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;">Intent Extra</span></td>
+<td><span style="font-size: 16px;"><code>EXTRA_</code></span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;">Intent Action</span></td>
+<td><span style="font-size: 16px;"><code>ACTION_</code></span></td>
+</tr>
+</tbody>
+</table>
+<p><span style="font-size: 16px;">说明：虽然 <code>Fragment.getArguments()</code> 得到的也是 <code>Bundle</code> ，但因为这是 <code>Bundle</code> 的常用用法，所以特意为此定义一个不同的前缀。</span></p>
+<p><span style="font-size: 16px;">例如：</span></p>
+<div class="highlight highlight-source-java">
+<pre><span class="pl-c" style="font-size: 16px;"><span class="pl-c">// 注意：字段的值与名称相同以避免重复问题
+<span class="pl-k">static <span class="pl-k">final <span class="pl-smi">String <span class="pl-c1">PREF_EMAIL <span class="pl-k">= <span class="pl-s"><span class="pl-pds">"PREF_EMAIL<span class="pl-pds">";
+<span class="pl-k">static <span class="pl-k">final <span class="pl-smi">String <span class="pl-c1">BUNDLE_AGE <span class="pl-k">= <span class="pl-s"><span class="pl-pds">"BUNDLE_AGE<span class="pl-pds">";
+<span class="pl-k">static <span class="pl-k">final <span class="pl-smi">String <span class="pl-c1">ARGUMENT_USER_ID <span class="pl-k">= <span class="pl-s"><span class="pl-pds">"ARGUMENT_USER_ID<span class="pl-pds">";
+
+<span class="pl-c"><span class="pl-c">// 与意图相关的项使用完整的包名作为值的前缀
+<span class="pl-k">static <span class="pl-k">final <span class="pl-smi">String <span class="pl-c1">EXTRA_SURNAME <span class="pl-k">= <span class="pl-s"><span class="pl-pds">"com.myapp.extras.EXTRA_SURNAME<span class="pl-pds">";
+<span class="pl-k">static <span class="pl-k">final <span class="pl-smi">String <span class="pl-c1">ACTION_OPEN_USER <span class="pl-k">= <span class="pl-s"><span class="pl-pds">"com.myapp.action.ACTION_OPEN_USER<span class="pl-pds">";</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></pre>
+</div>
+<h4><span style="font-size: 16px;"><a id="user-content-46-activities-和-fragments-的传参" class="anchor" href="https://github.com/Blankj/AndroidStandardDevelop/blob/master/README.md#46-activities-%E5%92%8C-fragments-%E7%9A%84%E4%BC%A0%E5%8F%82"></a>4.6 Activities 和 Fragments 的传参</span></h4>
+<p><span style="font-size: 16px;">当 <code>Activity</code> 或 <code>Fragment</code> 传递数据通过 <code>Intent</code> 或 <code>Bundle</code> 时，不同值的键须遵循上一条所提及到的。</span></p>
+<p><span style="font-size: 16px;">当 <code>Activity</code> 或 <code>Fragment</code> 启动需要传递参数时，那么它需要提供一个 <code>public static</code> 的函数来帮助启动或创建它。</span></p>
+<p><span style="font-size: 16px;">这方面，AS 已帮你写好了相关的 Live Templates，启动相关 <code>Activity</code> 的只需要在其内部输入 <code>starter</code> 即可生成它的启动器，如下所示：</span></p>
+<div class="highlight highlight-source-java">
+<pre><span class="pl-k" style="font-size: 16px;">public <span class="pl-k">static <span class="pl-k">void start(<span class="pl-smi">Context context, <span class="pl-smi">User user) {
+      <span class="pl-smi">Intent starter <span class="pl-k">= <span class="pl-k">new <span class="pl-smi">Intent(context, <span class="pl-smi">MainActivity<span class="pl-k">.class);
+      starter<span class="pl-k">.putParcelableExtra(<span class="pl-c1">EXTRA_USER, user);
+      context<span class="pl-k">.startActivity(starter);
+}</span></span></span></span></span></span></span></span></span></span></span></span></span></span></pre>
+</div>
+<p><span style="font-size: 16px;">同理，启动相关 <code>Fragment</code> 在其内部输入 <code>newInstance</code> 即可，如下所示：</span></p>
+<div class="highlight highlight-source-java">
+<pre><span class="pl-k" style="font-size: 16px;">public <span class="pl-k">static <span class="pl-smi">MainFragment newInstance(<span class="pl-smi">User user) {
+      <span class="pl-smi">Bundle args <span class="pl-k">= <span class="pl-k">new <span class="pl-smi">Bundle();
+      args<span class="pl-k">.putParcelable(<span class="pl-c1">ARGUMENT_USER, user);
+      <span class="pl-smi">MainFragment fragment <span class="pl-k">= <span class="pl-k">new <span class="pl-smi">MainFragment();
+      fragment<span class="pl-k">.setArguments(args);
+      <span class="pl-k">return fragment;
+}</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></pre>
+</div>
+<blockquote>
+<p><span style="font-size: 16px;">注意：这些函数需要放在 <code>onCreate()</code> 之前的类的顶部；如果我们使用了这种方式，那么 <code>extras</code> 和 <code>arguments</code> 的键应该是 <code>private</code> 的，因为它们不再需要暴露给其他类来使用。</span></p>
+</blockquote>
+<h4><span style="font-size: 16px;"><a id="user-content-47-行长限制" class="anchor" href="https://github.com/Blankj/AndroidStandardDevelop/blob/master/README.md#47-%E8%A1%8C%E9%95%BF%E9%99%90%E5%88%B6"></a>4.7 行长限制</span></h4>
+<p><span style="font-size: 16px;">代码中每一行文本的长度都应该不超过 100 个字符。虽然关于此规则存在很多争论，但最终决定仍是以 100 个字符为上限，如果行长超过了 100（AS 窗口右侧的竖线就是设置的行宽末尾 ），我们通常有两种方法来缩减行长。</span></p>
+<ul>
+<li><span style="font-size: 16px;">提取一个局部变量或方法（最好）。</span></li>
+<li><span style="font-size: 16px;">使用换行符将一行换成多行。</span></li>
+</ul>
+<p><span style="font-size: 16px;">不过存在以下例外情况：</span></p>
+<ul>
+<li><span style="font-size: 16px;">如果备注行包含长度超过 100 个字符的示例命令或文字网址，那么为了便于剪切和粘贴，该行可以超过 100 个字符。</span></li>
+<li><span style="font-size: 16px;">导入语句行可以超出此限制，因为用户很少会看到它们（这也简化了工具编写流程）。</span></li>
+</ul>
+<h5><span style="font-size: 16px;"><a id="user-content-471-换行策略" class="anchor" href="https://github.com/Blankj/AndroidStandardDevelop/blob/master/README.md#471-%E6%8D%A2%E8%A1%8C%E7%AD%96%E7%95%A5"></a>4.7.1 换行策略</span></h5>
+<p><span style="font-size: 16px;">这没有一个准确的解决方案来决定如何换行，通常不同的解决方案都是有效的，但是有一些规则可以应用于常见的情况。</span></p>
+<h5><span style="font-size: 16px;"><a id="user-content-4711-操作符的换行" class="anchor" href="https://github.com/Blankj/AndroidStandardDevelop/blob/master/README.md#4711-%E6%93%8D%E4%BD%9C%E7%AC%A6%E7%9A%84%E6%8D%A2%E8%A1%8C"></a>4.7.1.1 操作符的换行</span></h5>
+<p><span style="font-size: 16px;">除赋值操作符之外，我们把换行符放在操作符之前，例如：</span></p>
+<div class="highlight highlight-source-java">
+<pre><span class="pl-k" style="font-size: 16px;">int longName <span class="pl-k">= anotherVeryLongVariable <span class="pl-k">+ anEvenLongerOne <span class="pl-k">- thisRidiculousLongOne
+        <span class="pl-k">+ theFinalOne;</span></span></span></span></span></pre>
+</div>
+<p><span style="font-size: 16px;">赋值操作符的换行我们放在其后，例如：</span></p>
+<div class="highlight highlight-source-java">
+<pre><span class="pl-k" style="font-size: 16px;">int longName <span class="pl-k">=
+        anotherVeryLongVariable <span class="pl-k">+ anEvenLongerOne <span class="pl-k">- thisRidiculousLongOne <span class="pl-k">+ theFinalOne;</span></span></span></span></span></pre>
+</div>
+<h5><span style="font-size: 16px;"><a id="user-content-4712-函数链的换行" class="anchor" href="https://github.com/Blankj/AndroidStandardDevelop/blob/master/README.md#4712-%E5%87%BD%E6%95%B0%E9%93%BE%E7%9A%84%E6%8D%A2%E8%A1%8C"></a>4.7.1.2 函数链的换行</span></h5>
+<p><span style="font-size: 16px;">当同一行中调用多个函数时（比如使用构建器时），对每个函数的调用应该在新的一行中，我们把换行符插入在 <code>.</code> 之前。</span></p>
+<p><span style="font-size: 16px;">例如：</span></p>
+<div class="highlight highlight-source-java">
+<pre><span class="pl-smi" style="font-size: 16px;">Picasso<span class="pl-k">.with(context)<span class="pl-k">.load(<span class="pl-s"><span class="pl-pds">"https://blankj.com/images/avatar.jpg<span class="pl-pds">")<span class="pl-k">.into(ivAvatar);</span></span></span></span></span></span></span></pre>
+</div>
+<p><span style="font-size: 16px;">我们应该使用如下规则：</span></p>
+<div class="highlight highlight-source-java">
+<pre><span class="pl-smi" style="font-size: 16px;">Picasso<span class="pl-k">.with(context)
+        .load(<span class="pl-s"><span class="pl-pds">"https://blankj.com/images/avatar.jpg<span class="pl-pds">")
+        .into(ivAvatar);</span></span></span></span></span></pre>
+</div>
+<h5><span style="font-size: 16px;"><a id="user-content-4713-多参数的换行" class="anchor" href="https://github.com/Blankj/AndroidStandardDevelop/blob/master/README.md#4713-%E5%A4%9A%E5%8F%82%E6%95%B0%E7%9A%84%E6%8D%A2%E8%A1%8C"></a>4.7.1.3 多参数的换行</span></h5>
+<p><span style="font-size: 16px;">当一个方法有很多参数或者参数很长的时候，我们应该在每个 <code>,</code> 后面进行换行。</span></p>
+<p><span style="font-size: 16px;">比如：</span></p>
+<div class="highlight highlight-source-java">
+<pre><span style="font-size: 16px;">loadPicture(context, <span class="pl-s"><span class="pl-pds">"https://blankj.com/images/avatar.jpg<span class="pl-pds">", ivAvatar, <span class="pl-s"><span class="pl-pds">"Avatar of the user<span class="pl-pds">", clickListener);</span></span></span></span></span></span></span></pre>
+</div>
+<p><span style="font-size: 16px;">我们应该使用如下规则：</span></p>
+<div class="highlight highlight-source-java">
+<pre><span style="font-size: 16px;">loadPicture(context,
+        <span class="pl-s"><span class="pl-pds">"https://blankj.com/images/avatar.jpg<span class="pl-pds">",
+        ivAvatar,
+        <span class="pl-s"><span class="pl-pds">"Avatar of the user<span class="pl-pds">",
+        clickListener);</span></span></span></span></span></span></span></pre>
+</div>
+<h5><span style="font-size: 16px;"><a id="user-content-4714-rxjava-链式的换行" class="anchor" href="https://github.com/Blankj/AndroidStandardDevelop/blob/master/README.md#4714-rxjava-%E9%93%BE%E5%BC%8F%E7%9A%84%E6%8D%A2%E8%A1%8C"></a>4.7.1.4 RxJava 链式的换行</span></h5>
+<p><span style="font-size: 16px;">RxJava 的每个操作符都需要换新行，并且把换行符插入在 <code>.</code> 之前。</span></p>
+<p><span style="font-size: 16px;">例如：</span></p>
+<div class="highlight highlight-source-java">
+<pre><span class="pl-k" style="font-size: 16px;">public <span class="pl-k">Observable&lt;<span class="pl-smi">Location&gt; syncLocations() {
+    <span class="pl-k">return mDatabaseHelper<span class="pl-k">.getAllLocations()
+            .concatMap(<span class="pl-k">new <span class="pl-k">Func1&lt;<span class="pl-smi">Location, <span class="pl-k">Observable&lt;? extends <span class="pl-smi">Location&gt;&gt;() {
+                <span class="pl-k">@Override
+                 <span class="pl-k">public <span class="pl-k">Observable&lt;? extends <span class="pl-smi">Location&gt; <span class="pl-en">call(<span class="pl-smi">Location <span class="pl-v">location) {
+                     <span class="pl-k">return mRetrofitService<span class="pl-k">.getLocation(location<span class="pl-k">.id);
+                 }
+            })
+            .retry(<span class="pl-k">new <span class="pl-k">Func2&lt;<span class="pl-smi">Integer, <span class="pl-smi">Throwable, <span class="pl-smi">Boolean&gt;() {
+                 <span class="pl-k">@Override
+                 <span class="pl-k">public <span class="pl-smi">Boolean <span class="pl-en">call(<span class="pl-smi">Integer <span class="pl-v">numRetries, <span class="pl-smi">Throwable <span class="pl-v">throwable) {
+                     <span class="pl-k">return throwable <span class="pl-k">instanceof <span class="pl-smi">RetrofitError;
+                 }
+            });
+}</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></pre>
+</div>
+<h3><span style="font-size: 16px;"><a id="user-content-5-资源文件规范" class="anchor" href="https://github.com/Blankj/AndroidStandardDevelop/blob/master/README.md#5-%E8%B5%84%E6%BA%90%E6%96%87%E4%BB%B6%E8%A7%84%E8%8C%83"></a>5 资源文件规范</span></h3>
+<p><span style="font-size: 16px;">资源文件命名为全部小写，采用下划线命名法。</span></p>
+<p><span style="font-size: 16px;">如果是组件化开发，我们可以在组件和公共模块间创建一个 ui 模块来专门存放资源文件，然后让每个组件都依赖 ui 模块。这样做的好处是如果老项目要实现组件化的话，只需把资源文件都放入 ui 模块即可，如果想对资源文件进行分包，可以参考我这篇文章：<strong><a href="https://blankj.com/2016/09/21/android-studio-classify-src-package/" rel="nofollow">Android Studio 下对资源进行分包</a></strong>；还避免了多个模块间资源不能复用的问题。</span></p>
+<p><span style="font-size: 16px;">如果是三方库开发，其使用到的资源文件及相关的 <code>name</code> 都应该使用库名作为前缀，这样做可以避免三方库资源和实际应用资源重名的冲突。</span></p>
+<h4><span style="font-size: 16px;"><a id="user-content-51-动画资源文件anim-和-animator" class="anchor" href="https://github.com/Blankj/AndroidStandardDevelop/blob/master/README.md#51-%E5%8A%A8%E7%94%BB%E8%B5%84%E6%BA%90%E6%96%87%E4%BB%B6anim-%E5%92%8C-animator"></a>5.1 动画资源文件（anim/ 和 animator/）</span></h4>
+<p><span style="font-size: 16px;">安卓主要包含属性动画和视图动画，其视图动画包括补间动画和逐帧动画。属性动画文件需要放在 <code>res/animator/</code> 目录下，视图动画文件需放在 <code>res/anim/</code> 目录下。</span></p>
+<p><span style="font-size: 16px;">命名规则：<code>{模块名_}逻辑名称</code>。</span></p>
+<p><span style="font-size: 16px;">说明：<code>{}</code> 中的内容为可选，<code>逻辑名称</code> 可由多个单词加下划线组成。</span></p>
+<p><span style="font-size: 16px;">例如：<code>refresh_progress.xml</code>、<code>market_cart_add.xml</code>、<code>market_cart_remove.xml</code>。</span></p>
+<p><span style="font-size: 16px;">如果是普通的补间动画或者属性动画，可采用：<code>动画类型_方向</code> 的命名方式。</span></p>
+<p><span style="font-size: 16px;">例如：</span></p>
+<table>
+<thead>
+<tr><th><span style="font-size: 16px;">名称</span></th><th><span style="font-size: 16px;">说明</span></th></tr>
+</thead>
+<tbody>
+<tr>
+<td><span style="font-size: 16px;"><code>fade_in</code></span></td>
+<td><span style="font-size: 16px;">淡入</span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;"><code>fade_out</code></span></td>
+<td><span style="font-size: 16px;">淡出</span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;"><code>push_down_in</code></span></td>
+<td><span style="font-size: 16px;">从下方推入</span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;"><code>push_down_out</code></span></td>
+<td><span style="font-size: 16px;">从下方推出</span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;"><code>push_left</code></span></td>
+<td><span style="font-size: 16px;">推向左方</span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;"><code>slide_in_from_top</code></span></td>
+<td><span style="font-size: 16px;">从头部滑动进入</span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;"><code>zoom_enter</code></span></td>
+<td><span style="font-size: 16px;">变形进入</span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;"><code>slide_in</code></span></td>
+<td><span style="font-size: 16px;">滑动进入</span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;"><code>shrink_to_middle</code></span></td>
+<td><span style="font-size: 16px;">中间缩小</span></td>
+</tr>
+</tbody>
+</table>
+<h4><span style="font-size: 16px;"><a id="user-content-52-颜色资源文件color" class="anchor" href="https://github.com/Blankj/AndroidStandardDevelop/blob/master/README.md#52-%E9%A2%9C%E8%89%B2%E8%B5%84%E6%BA%90%E6%96%87%E4%BB%B6color"></a>5.2 颜色资源文件（color/）</span></h4>
+<p><span style="font-size: 16px;">专门存放颜色相关的资源文件。</span></p>
+<p><span style="font-size: 16px;">命名规则：<code>类型{_模块名}_逻辑名称</code>。</span></p>
+<p><span style="font-size: 16px;">说明：<code>{}</code> 中的内容为可选。</span></p>
+<p><span style="font-size: 16px;">例如：<code>sel_btn_font.xml</code>。</span></p>
+<p><span style="font-size: 16px;">颜色资源也可以放于 <code>res/drawable/</code> 目录，引用时则用 <code>@drawable</code> 来引用，但不推荐这么做，最好还是把两者分开。</span></p>
+<h4><span style="font-size: 16px;"><a id="user-content-53-图片资源文件drawable-和-mipmap" class="anchor" href="https://github.com/Blankj/AndroidStandardDevelop/blob/master/README.md#53-%E5%9B%BE%E7%89%87%E8%B5%84%E6%BA%90%E6%96%87%E4%BB%B6drawable-%E5%92%8C-mipmap"></a>5.3 图片资源文件（drawable/ 和 mipmap/）</span></h4>
+<p><span style="font-size: 16px;"><code>res/drawable/</code> 目录下放的是位图文件（.png、.9.png、.jpg、.gif）或编译为可绘制对象资源子类型的 XML 文件，而 <code>res/mipmap/</code> 目录下放的是不同密度的启动图标，所以 <code>res/mipmap/</code> 只用于存放启动图标，其余图片资源文件都应该放到 <code>res/drawable/</code> 目录下。</span></p>
+<p><span style="font-size: 16px;">命名规则：<code>类型{_模块名}_逻辑名称</code>、<code>类型{_模块名}_颜色</code>。</span></p>
+<p><span style="font-size: 16px;">说明：<code>{}</code> 中的内容为可选；<code>类型</code> 可以是<a href="https://github.com/Blankj/AndroidStandardDevelop/blob/master/%E5%8F%AF%E7%BB%98%E5%88%B6%E5%AF%B9%E8%B1%A1%E8%B5%84%E6%BA%90%E7%B1%BB%E5%9E%8B">可绘制对象资源类型</a>，也可以是控件类型（具体见附录<a href="https://github.com/Blankj/AndroidStandardDevelop/blob/master/README.md#ui-%E6%8E%A7%E4%BB%B6%E7%BC%A9%E5%86%99%E8%A1%A8">UI 控件缩写表</a>）；最后可加后缀&nbsp;<code>_small</code>&nbsp;表示小图，<code>_big</code>&nbsp;表示大图。</span></p>
+<p><span style="font-size: 16px;">例如：</span></p>
+<table>
+<thead>
+<tr><th><span style="font-size: 16px;">名称</span></th><th><span style="font-size: 16px;">说明</span></th></tr>
+</thead>
+<tbody>
+<tr>
+<td><span style="font-size: 16px;"><code>btn_main_about.png</code></span></td>
+<td><span style="font-size: 16px;">主页关于按键 <code>类型_模块名_逻辑名称</code></span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;"><code>btn_back.png</code></span></td>
+<td><span style="font-size: 16px;">返回按键 <code>类型_逻辑名称</code></span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;"><code>divider_maket_white.png</code></span></td>
+<td><span style="font-size: 16px;">商城白色分割线 <code>类型_模块名_颜色</code></span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;"><code>ic_edit.png</code></span></td>
+<td><span style="font-size: 16px;">编辑图标 <code>类型_逻辑名称</code></span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;"><code>bg_main.png</code></span></td>
+<td><span style="font-size: 16px;">主页背景 <code>类型_逻辑名称</code></span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;"><code>btn_red.png</code></span></td>
+<td><span style="font-size: 16px;">红色按键 <code>类型_颜色</code></span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;"><code>btn_red_big.png</code></span></td>
+<td><span style="font-size: 16px;">红色大按键 <code>类型_颜色</code></span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;"><code>ic_head_small.png</code></span></td>
+<td><span style="font-size: 16px;">小头像图标 <code>类型_逻辑名称</code></span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;"><code>bg_input.png</code></span></td>
+<td><span style="font-size: 16px;">输入框背景 <code>类型_逻辑名称</code></span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;"><code>divider_white.png</code></span></td>
+<td><span style="font-size: 16px;">白色分割线 <code>类型_颜色</code></span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;"><code>bg_main_head.png</code></span></td>
+<td><span style="font-size: 16px;">主页头部背景 <code>类型_模块名_逻辑名称</code></span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;"><code>def_search_cell.png</code></span></td>
+<td><span style="font-size: 16px;">搜索页面默认单元图片 <code>类型_模块名_逻辑名称</code></span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;"><code>ic_more_help.png</code></span></td>
+<td><span style="font-size: 16px;">更多帮助图标 <code>类型_逻辑名称</code></span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;"><code>divider_list_line.png</code></span></td>
+<td><span style="font-size: 16px;">列表分割线 <code>类型_逻辑名称</code></span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;"><code>sel_search_ok.xml</code></span></td>
+<td><span style="font-size: 16px;">搜索界面确认选择器 <code>类型_模块名_逻辑名称</code></span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;"><code>shape_music_ring.xml</code></span></td>
+<td><span style="font-size: 16px;">音乐界面环形形状 <code>类型_模块名_逻辑名称</code></span></td>
+</tr>
+</tbody>
+</table>
+<p><span style="font-size: 16px;">如果有多种形态，如按钮选择器：<code>sel_btn_xx.xml</code>，采用如下命名：</span></p>
+<table>
+<thead>
+<tr><th><span style="font-size: 16px;">名称</span></th><th><span style="font-size: 16px;">说明</span></th></tr>
+</thead>
+<tbody>
+<tr>
+<td><span style="font-size: 16px;"><code>sel_btn_xx</code></span></td>
+<td><span style="font-size: 16px;">作用在 <code>btn_xx</code> 上的 <code>selector</code></span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;"><code>btn_xx_normal</code></span></td>
+<td><span style="font-size: 16px;">默认状态效果</span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;"><code>btn_xx_pressed</code></span></td>
+<td><span style="font-size: 16px;"><code>state_pressed</code> 点击效果</span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;"><code>btn_xx_focused</code></span></td>
+<td><span style="font-size: 16px;"><code>state_focused</code> 聚焦效果</span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;"><code>btn_xx_disabled</code></span></td>
+<td><span style="font-size: 16px;"><code>state_enabled</code> 不可用效果</span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;"><code>btn_xx_checked</code></span></td>
+<td><span style="font-size: 16px;"><code>state_checked</code> 选中效果</span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;"><code>btn_xx_selected</code></span></td>
+<td><span style="font-size: 16px;"><code>state_selected</code> 选中效果</span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;"><code>btn_xx_hovered</code></span></td>
+<td><span style="font-size: 16px;"><code>state_hovered</code> 悬停效果</span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;"><code>btn_xx_checkable</code></span></td>
+<td><span style="font-size: 16px;"><code>state_checkable</code> 可选效果</span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;"><code>btn_xx_activated</code></span></td>
+<td><span style="font-size: 16px;"><code>state_activated</code> 激活效果</span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;"><code>btn_xx_window_focused</code></span></td>
+<td><span style="font-size: 16px;"><code>state_window_focused</code> 窗口聚焦效果</span></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><span style="font-size: 16px;">注意：使用 Android Studio 的插件 SelectorChapek 可以快速生成 selector，前提是命名要规范。</span></p>
+</blockquote>
+<h4><span style="font-size: 16px;"><a id="user-content-54-布局资源文件layout" class="anchor" href="https://github.com/Blankj/AndroidStandardDevelop/blob/master/README.md#54-%E5%B8%83%E5%B1%80%E8%B5%84%E6%BA%90%E6%96%87%E4%BB%B6layout"></a>5.4 布局资源文件（layout/）</span></h4>
+<p><span style="font-size: 16px;">命名规则：<code>类型_模块名</code>、<code>类型{_模块名}_逻辑名称</code>。</span></p>
+<p><span style="font-size: 16px;">说明：<code>{}</code> 中的内容为可选。</span></p>
+<p><span style="font-size: 16px;">例如：</span></p>
+<table>
+<thead>
+<tr><th><span style="font-size: 16px;">名称</span></th><th><span style="font-size: 16px;">说明</span></th></tr>
+</thead>
+<tbody>
+<tr>
+<td><span style="font-size: 16px;"><code>activity_main.xml</code></span></td>
+<td><span style="font-size: 16px;">主窗体 <code>类型_模块名</code></span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;"><code>activity_main_head.xml</code></span></td>
+<td><span style="font-size: 16px;">主窗体头部 <code>类型_模块名_逻辑名称</code></span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;"><code>fragment_music.xml</code></span></td>
+<td><span style="font-size: 16px;">音乐片段 <code>类型_模块名</code></span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;"><code>fragment_music_player.xml</code></span></td>
+<td><span style="font-size: 16px;">音乐片段的播放器 <code>类型_模块名_逻辑名称</code></span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;"><code>dialog_loading.xml</code></span></td>
+<td><span style="font-size: 16px;">加载对话框 <code>类型_逻辑名称</code></span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;"><code>ppw_info.xml</code></span></td>
+<td><span style="font-size: 16px;">信息弹窗（PopupWindow） <code>类型_逻辑名称</code></span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;"><code>item_main_song.xml</code></span></td>
+<td><span style="font-size: 16px;">主页歌曲列表项 <code>类型_模块名_逻辑名称</code></span></td>
+</tr>
+</tbody>
+</table>
+<h4><span style="font-size: 16px;"><a id="user-content-55-菜单资源文件menu" class="anchor" href="https://github.com/Blankj/AndroidStandardDevelop/blob/master/README.md#55-%E8%8F%9C%E5%8D%95%E8%B5%84%E6%BA%90%E6%96%87%E4%BB%B6menu"></a>5.5 菜单资源文件（menu/）</span></h4>
+<p><span style="font-size: 16px;">菜单相关的资源文件应放在该目录下。</span></p>
+<p><span style="font-size: 16px;">命名规则：<code>{模块名_}逻辑名称</code></span></p>
+<p><span style="font-size: 16px;">说明：<code>{}</code> 中的内容为可选。</span></p>
+<p><span style="font-size: 16px;">例如：<code>main_drawer.xml</code>、<code>navigation.xml</code>。</span></p>
+<h4><span style="font-size: 16px;"><a id="user-content-56-values-资源文件values" class="anchor" href="https://github.com/Blankj/AndroidStandardDevelop/blob/master/README.md#56-values-%E8%B5%84%E6%BA%90%E6%96%87%E4%BB%B6values"></a>5.6 values 资源文件（values/）</span></h4>
+<p><span style="font-size: 16px;"><code>values/</code> 资源文件下的文件都以 <code>s</code> 结尾，如 <code>attrs.xml</code>、<code>colors.xml</code>、<code>dimens.xml</code>，起作用的不是文件名称，而是 <code>&lt;resources&gt;</code> 标签下的各种标签，比如 <code>&lt;style&gt;</code> 决定样式，<code>&lt;color&gt;</code> 决定颜色，所以，可以把一个大的 <code>xml</code> 文件分割成多个小的文件，比如可以有多个 <code>style</code> 文件，如 <code>styles.xml</code>、<code>styles_home.xml</code>、<code>styles_item_details.xml</code>、<code>styles_forms.xml</code>。</span></p>
+<h5><span style="font-size: 16px;"><a id="user-content-561-colorsxml" class="anchor" href="https://github.com/Blankj/AndroidStandardDevelop/blob/master/README.md#561-colorsxml"></a>5.6.1 colors.xml</span></h5>
+<p><span style="font-size: 16px;"><code>&lt;color&gt;</code> 的 <code>name</code> 命名使用下划线命名法，在你的 <code>colors.xml</code> 文件中应该只是映射颜色的名称一个 ARGB 值，而没有其它的。不要使用它为不同的按钮来定义 ARGB 值。</span></p>
+<p><span style="font-size: 16px;">例如，不要像下面这样做：</span></p>
+<div class="highlight highlight-text-xml">
+<pre><span style="font-size: 16px;">  &lt;<span class="pl-ent">resources&gt;
+      &lt;<span class="pl-ent">color <span class="pl-e">name=<span class="pl-s"><span class="pl-pds">"button_foreground<span class="pl-pds">"&gt;#FFFFFF&lt;/<span class="pl-ent">color&gt;
+      &lt;<span class="pl-ent">color <span class="pl-e">name=<span class="pl-s"><span class="pl-pds">"button_background<span class="pl-pds">"&gt;#2A91BD&lt;/<span class="pl-ent">color&gt;
+      &lt;<span class="pl-ent">color <span class="pl-e">name=<span class="pl-s"><span class="pl-pds">"comment_background_inactive<span class="pl-pds">"&gt;#5F5F5F&lt;/<span class="pl-ent">color&gt;
+      &lt;<span class="pl-ent">color <span class="pl-e">name=<span class="pl-s"><span class="pl-pds">"comment_background_active<span class="pl-pds">"&gt;#939393&lt;/<span class="pl-ent">color&gt;
+      &lt;<span class="pl-ent">color <span class="pl-e">name=<span class="pl-s"><span class="pl-pds">"comment_foreground<span class="pl-pds">"&gt;#FFFFFF&lt;/<span class="pl-ent">color&gt;
+      &lt;<span class="pl-ent">color <span class="pl-e">name=<span class="pl-s"><span class="pl-pds">"comment_foreground_important<span class="pl-pds">"&gt;#FF9D2F&lt;/<span class="pl-ent">color&gt;
+      ...
+      &lt;<span class="pl-ent">color <span class="pl-e">name=<span class="pl-s"><span class="pl-pds">"comment_shadow<span class="pl-pds">"&gt;#323232&lt;/<span class="pl-ent">color&gt;</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></pre>
+</div>
+<p><span style="font-size: 16px;">使用这种格式，会非常容易重复定义 ARGB 值，而且如果应用要改变基色的话会非常困难。同时，这些定义是跟一些环境关联起来的，如 <code>button</code> 或者 <code>comment</code>，应该放到一个按钮风格中，而不是在 <code>colors.xml</code> 文件中。</span></p>
+<p><span style="font-size: 16px;">相反，应该这样做：</span></p>
+<div class="highlight highlight-text-xml">
+<pre><span style="font-size: 16px;">  &lt;<span class="pl-ent">resources&gt;
+
+      <span class="pl-c"><span class="pl-c">&lt;!-- grayscale <span class="pl-c">--&gt;
+      &lt;<span class="pl-ent">color <span class="pl-e">name=<span class="pl-s"><span class="pl-pds">"white<span class="pl-pds">"     &gt;#FFFFFF&lt;/<span class="pl-ent">color&gt;
+      &lt;<span class="pl-ent">color <span class="pl-e">name=<span class="pl-s"><span class="pl-pds">"gray_light<span class="pl-pds">"&gt;#DBDBDB&lt;/<span class="pl-ent">color&gt;
+      &lt;<span class="pl-ent">color <span class="pl-e">name=<span class="pl-s"><span class="pl-pds">"gray<span class="pl-pds">"      &gt;#939393&lt;/<span class="pl-ent">color&gt;
+      &lt;<span class="pl-ent">color <span class="pl-e">name=<span class="pl-s"><span class="pl-pds">"gray_dark<span class="pl-pds">" &gt;#5F5F5F&lt;/<span class="pl-ent">color&gt;
+      &lt;<span class="pl-ent">color <span class="pl-e">name=<span class="pl-s"><span class="pl-pds">"black<span class="pl-pds">"     &gt;#323232&lt;/<span class="pl-ent">color&gt;
+
+      <span class="pl-c"><span class="pl-c">&lt;!-- basic colors <span class="pl-c">--&gt;
+      &lt;<span class="pl-ent">color <span class="pl-e">name=<span class="pl-s"><span class="pl-pds">"green<span class="pl-pds">"&gt;#27D34D&lt;/<span class="pl-ent">color&gt;
+      &lt;<span class="pl-ent">color <span class="pl-e">name=<span class="pl-s"><span class="pl-pds">"blue<span class="pl-pds">"&gt;#2A91BD&lt;/<span class="pl-ent">color&gt;
+      &lt;<span class="pl-ent">color <span class="pl-e">name=<span class="pl-s"><span class="pl-pds">"orange<span class="pl-pds">"&gt;#FF9D2F&lt;/<span class="pl-ent">color&gt;
+      &lt;<span class="pl-ent">color <span class="pl-e">name=<span class="pl-s"><span class="pl-pds">"red<span class="pl-pds">"&gt;#FF432F&lt;/<span class="pl-ent">color&gt;
+
+  &lt;/<span class="pl-ent">resources&gt;</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></pre>
+</div>
+<p><span style="font-size: 16px;">向应用设计者那里要这个调色板，名称不需要跟 <code>"green"</code>、<code>"blue"</code> 等等相同。<code>"brand_primary"</code>、<code>"brand_secondary"</code>、<code>"brand_negative"</code> 这样的名字也是完全可以接受的。像这样规范的颜色很容易修改或重构，会使应用一共使用了多少种不同的颜色变得非常清晰。通常一个具有审美价值的 UI 来说，减少使用颜色的种类是非常重要的。</span></p>
+<blockquote>
+<p><span style="font-size: 16px;">注意：如果某些颜色和主题有关，那就单独写一个 <code>colors_theme.xml</code>。</span></p>
+</blockquote>
+<h5><span style="font-size: 16px;"><a id="user-content-562-dimensxml" class="anchor" href="https://github.com/Blankj/AndroidStandardDevelop/blob/master/README.md#562-dimensxml"></a>5.6.2 dimens.xml</span></h5>
+<p><span style="font-size: 16px;">像对待 <code>colors.xml</code> 一样对待 <code>dimens.xml</code> 文件，与定义颜色调色板一样，你同时也应该定义一个空隙间隔和字体大小的&ldquo;调色板&rdquo;。 一个好的例子，如下所示：</span></p>
+<div class="highlight highlight-text-xml">
+<pre><span style="font-size: 16px;">&lt;<span class="pl-ent">resources&gt;
+
+    <span class="pl-c"><span class="pl-c">&lt;!-- font sizes <span class="pl-c">--&gt;
+    &lt;<span class="pl-ent">dimen <span class="pl-e">name=<span class="pl-s"><span class="pl-pds">"font_22<span class="pl-pds">"&gt;22sp&lt;/<span class="pl-ent">dimen&gt;
+    &lt;<span class="pl-ent">dimen <span class="pl-e">name=<span class="pl-s"><span class="pl-pds">"font_18<span class="pl-pds">"&gt;18sp&lt;/<span class="pl-ent">dimen&gt;
+    &lt;<span class="pl-ent">dimen <span class="pl-e">name=<span class="pl-s"><span class="pl-pds">"font_15<span class="pl-pds">"&gt;15sp&lt;/<span class="pl-ent">dimen&gt;
+    &lt;<span class="pl-ent">dimen <span class="pl-e">name=<span class="pl-s"><span class="pl-pds">"font_12<span class="pl-pds">"&gt;12sp&lt;/<span class="pl-ent">dimen&gt;
+
+    <span class="pl-c"><span class="pl-c">&lt;!-- typical spacing between two views <span class="pl-c">--&gt;
+    &lt;<span class="pl-ent">dimen <span class="pl-e">name=<span class="pl-s"><span class="pl-pds">"spacing_40<span class="pl-pds">"&gt;40dp&lt;/<span class="pl-ent">dimen&gt;
+    &lt;<span class="pl-ent">dimen <span class="pl-e">name=<span class="pl-s"><span class="pl-pds">"spacing_24<span class="pl-pds">"&gt;24dp&lt;/<span class="pl-ent">dimen&gt;
+    &lt;<span class="pl-ent">dimen <span class="pl-e">name=<span class="pl-s"><span class="pl-pds">"spacing_14<span class="pl-pds">"&gt;14dp&lt;/<span class="pl-ent">dimen&gt;
+    &lt;<span class="pl-ent">dimen <span class="pl-e">name=<span class="pl-s"><span class="pl-pds">"spacing_10<span class="pl-pds">"&gt;10dp&lt;/<span class="pl-ent">dimen&gt;
+    &lt;<span class="pl-ent">dimen <span class="pl-e">name=<span class="pl-s"><span class="pl-pds">"spacing_4<span class="pl-pds">"&gt;4dp&lt;/<span class="pl-ent">dimen&gt;
+
+    <span class="pl-c"><span class="pl-c">&lt;!-- typical sizes of views <span class="pl-c">--&gt;
+    &lt;<span class="pl-ent">dimen <span class="pl-e">name=<span class="pl-s"><span class="pl-pds">"button_height_60<span class="pl-pds">"&gt;60dp&lt;/<span class="pl-ent">dimen&gt;
+    &lt;<span class="pl-ent">dimen <span class="pl-e">name=<span class="pl-s"><span class="pl-pds">"button_height_40<span class="pl-pds">"&gt;40dp&lt;/<span class="pl-ent">dimen&gt;
+    &lt;<span class="pl-ent">dimen <span class="pl-e">name=<span class="pl-s"><span class="pl-pds">"button_height_32<span class="pl-pds">"&gt;32dp&lt;/<span class="pl-ent">dimen&gt;
+
+&lt;/<span class="pl-ent">resources&gt;</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></pre>
+</div>
+<p><span style="font-size: 16px;">布局时在写 <code>margins</code> 和 <code>paddings</code> 时，你应该使用 <code>spacing_xx</code> 尺寸格式来布局，而不是像对待 <code>string</code> 字符串一样直接写值，像这样规范的尺寸很容易修改或重构，会使应用所有用到的尺寸一目了然。 这样写会非常有感觉，会使组织和改变风格或布局非常容易。</span></p>
+<h5><span style="font-size: 16px;"><a id="user-content-563-stringsxml" class="anchor" href="https://github.com/Blankj/AndroidStandardDevelop/blob/master/README.md#563-stringsxml"></a>5.6.3 strings.xml</span></h5>
+<p><span style="font-size: 16px;"><code>&lt;string&gt;</code> 的 <code>name</code> 命名使用下划线命名法，采用以下规则：<code>{模块名_}逻辑名称</code>，这样方便同一个界面的所有 <code>string</code> 都放到一起，方便查找。</span></p>
+<table>
+<thead>
+<tr><th><span style="font-size: 16px;">名称</span></th><th><span style="font-size: 16px;">说明</span></th></tr>
+</thead>
+<tbody>
+<tr>
+<td><span style="font-size: 16px;"><code>main_menu_about</code></span></td>
+<td><span style="font-size: 16px;">主菜单按键文字</span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;"><code>friend_title</code></span></td>
+<td><span style="font-size: 16px;">好友模块标题栏</span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;"><code>friend_dialog_del</code></span></td>
+<td><span style="font-size: 16px;">好友删除提示</span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;"><code>login_check_email</code></span></td>
+<td><span style="font-size: 16px;">登录验证</span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;"><code>dialog_title</code></span></td>
+<td><span style="font-size: 16px;">弹出框标题</span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;"><code>button_ok</code></span></td>
+<td><span style="font-size: 16px;">确认键</span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;"><code>loading</code></span></td>
+<td><span style="font-size: 16px;">加载文字</span></td>
+</tr>
+</tbody>
+</table>
+<h5><span style="font-size: 16px;"><a id="user-content-564-stylesxml" class="anchor" href="https://github.com/Blankj/AndroidStandardDevelop/blob/master/README.md#564-stylesxml"></a>5.6.4 styles.xml</span></h5>
+<p><span style="font-size: 16px;"><code>&lt;style&gt;</code> 的 <code>name</code> 命名使用大驼峰命名法，几乎每个项目都需要适当的使用 <code>styles.xml</code> 文件，因为对于一个视图来说，有一个重复的外观是很常见的，将所有的外观细节属性（<code>colors</code>、<code>padding</code>、<code>font</code>）放在 <code>styles.xml</code> 文件中。 在应用中对于大多数文本内容，最起码你应该有一个通用的 <code>styles.xml</code> 文件，例如：</span></p>
+<pre><span style="font-size: 16px;"><code>&lt;style name="ContentText"&gt;
+    &lt;item name="android:textSize"&gt;@dimen/font_normal&lt;/item&gt;
+    &lt;item name="android:textColor"&gt;@color/basic_black&lt;/item&gt;
+&lt;/style&gt;
+</code></span></pre>
+<p><span style="font-size: 16px;">应用到 <code>TextView</code> 中：</span></p>
+<pre><span style="font-size: 16px;"><code>&lt;TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="@string/price"
+    style="@style/ContentText"
+    /&gt;
+</code></span></pre>
+<p><span style="font-size: 16px;">或许你需要为按钮控件做同样的事情，不要停止在那里，将一组相关的和重复 <code>android:xxxx</code> 的属性放到一个通用的 <code>&lt;style&gt;</code> 中。</span></p>
+<h4><span style="font-size: 16px;"><a id="user-content-57-id-命名" class="anchor" href="https://github.com/Blankj/AndroidStandardDevelop/blob/master/README.md#57-id-%E5%91%BD%E5%90%8D"></a>5.7 id 命名</span></h4>
+<p><span style="font-size: 16px;">命名规则：<code>view 缩写{_模块名}_逻辑名</code>，例如： <code>btn_main_search</code>、<code>btn_back</code>。</span></p>
+<p><span style="font-size: 16px;">如果在项目中有用黄油刀的话，使用 AS 的插件：ButterKnife Zelezny，可以非常方便帮助你生成注解；没用黄油刀的话可以使用 Android Code Generator 插件。</span></p>
+<h3><span style="font-size: 16px;"><a id="user-content-6-版本统一规范" class="anchor" href="https://github.com/Blankj/AndroidStandardDevelop/blob/master/README.md#6-%E7%89%88%E6%9C%AC%E7%BB%9F%E4%B8%80%E8%A7%84%E8%8C%83"></a>6 版本统一规范</span></h3>
+<p><span style="font-size: 16px;">Android 开发存在着众多版本的不同，比如 <code>compileSdkVersion</code>、<code>minSdkVersion</code>、<code>targetSdkVersion</code> 以及项目中依赖第三方库的版本，不同的 module 及不同的开发人员都有不同的版本，所以需要一个统一版本规范的文件。</span></p>
+<p><span style="font-size: 16px;">具体可以参考我写的这篇博文：<strong><a href="https://blankj.com/2016/09/21/android-keep-version-unity/" rel="nofollow">Android 开发之版本统一规范</a></strong>。</span></p>
+<p><span style="font-size: 16px;">如果是开发多个系统级别的应用，当多个应用同时用到相同的 <code>so</code> 库时，一定要确保 <code>so</code> 库的版本一致，否则可能会引发应用崩溃。</span></p>
+<h3><span style="font-size: 16px;"><a id="user-content-7-第三方库规范" class="anchor" href="https://github.com/Blankj/AndroidStandardDevelop/blob/master/README.md#7-%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93%E8%A7%84%E8%8C%83"></a>7 第三方库规范</span></h3>
+<p><span style="font-size: 16px;">别再闭门造车了，用用最新最火的技术吧，安利一波：<strong><a href="http://www.ctolib.com/cheatsheets-Android-ch.html" rel="nofollow">Android 流行框架查速表</a></strong>，顺便带上自己的干货：<strong><a href="https://github.com/Blankj/AndroidUtilCode">Android 开发人员不得不收集的代码</a></strong>。</span></p>
+<p><span style="font-size: 16px;">希望 Team 能用时下较新的技术，对开源库的选取，一般都需要选择比较稳定的版本，作者在维护的项目，要考虑作者对 issue 的解决，以及开发者的知名度等各方面。选取之后，一定的封装是必要的。</span></p>
+<p><span style="font-size: 16px;">个人推荐 Team 可使用如下优秀轮子：</span></p>
+<ul>
+<li><span style="font-size: 16px;"><strong><a href="https://github.com/square/retrofit">Retrofit</a></strong></span></li>
+<li><span style="font-size: 16px;"><strong><a href="https://github.com/ReactiveX/RxAndroid">RxAndroid</a></strong></span></li>
+<li><span style="font-size: 16px;"><strong><a href="https://github.com/square/okhttp">OkHttp</a></strong></span></li>
+<li><span style="font-size: 16px;"><strong><a href="https://github.com/bumptech/glide">Glide</a></strong>/<strong><a href="https://github.com/facebook/fresco">Fresco</a></strong></span></li>
+<li><span style="font-size: 16px;"><strong><a href="https://github.com/google/gson">Gson</a></strong>/<strong><a href="https://github.com/alibaba/fastjson">Fastjson</a></strong></span></li>
+<li><span style="font-size: 16px;"><strong><a href="https://github.com/greenrobot/EventBus">EventBus</a></strong>/<strong><a href="https://github.com/bboyfeiyu/AndroidEventBus">AndroidEventBus</a></strong></span></li>
+<li><span style="font-size: 16px;"><strong><a href="https://github.com/greenrobot/greenDAO">GreenDao</a></strong></span></li>
+<li><span style="font-size: 16px;"><strong><a href="https://github.com/google/dagger">Dagger2</a></strong>（选用）</span></li>
+<li><span style="font-size: 16px;"><strong><a href="https://github.com/Tencent/tinker">Tinker</a></strong>（选用）</span></li>
+</ul>
+<h3><span style="font-size: 16px;"><a id="user-content-8-注释规范" class="anchor" href="https://github.com/Blankj/AndroidStandardDevelop/blob/master/README.md#8-%E6%B3%A8%E9%87%8A%E8%A7%84%E8%8C%83"></a>8 注释规范</span></h3>
+<p><span style="font-size: 16px;">为了减少他人阅读你代码的痛苦值，请在关键地方做好注释。</span></p>
+<h4><span style="font-size: 16px;"><a id="user-content-81-类注释" class="anchor" href="https://github.com/Blankj/AndroidStandardDevelop/blob/master/README.md#81-%E7%B1%BB%E6%B3%A8%E9%87%8A"></a>8.1 类注释</span></h4>
+<p><span style="font-size: 16px;">每个类完成后应该有作者姓名和联系方式的注释，对自己的代码负责。</span></p>
+<div class="highlight highlight-source-java">
+<pre><span class="pl-c" style="font-size: 16px;"><span class="pl-c">/**
+<span class="pl-c"> * &lt;pre&gt;
+<span class="pl-c"> *     author : Blankj
+<span class="pl-c"> *     e-mail : xxx@xx
+<span class="pl-c"> *     time   : 2017/03/07
+<span class="pl-c"> *     desc   : xxxx 描述
+<span class="pl-c"> *     version: 1.0
+<span class="pl-c"> * &lt;/pre&gt;
+<span class="pl-c"> <span class="pl-c">*/
+<span class="pl-k">public <span class="pl-k">class <span class="pl-en">WelcomeActivity {
+    <span class="pl-c1">...
+}</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></pre>
+</div>
+<p><span style="font-size: 16px;">具体可以在 AS 中自己配制，进入 Settings -&gt; Editor -&gt; File and Code Templates -&gt; Includes -&gt; File Header，输入</span></p>
+<div class="highlight highlight-source-java">
+<pre><span class="pl-c" style="font-size: 16px;"><span class="pl-c">/**
+<span class="pl-c"> * &lt;pre&gt;
+<span class="pl-c"> *     author : ${USER}
+<span class="pl-c"> *     e-mail : xxx@xx
+<span class="pl-c"> *     time   : ${YEAR}/${MONTH}/${DAY}
+<span class="pl-c"> *     desc   :
+<span class="pl-c"> *     version: 1.0
+<span class="pl-c"> * &lt;/pre&gt;
+<span class="pl-c"> <span class="pl-c">*/</span></span></span></span></span></span></span></span></span></span></span></pre>
+</div>
+<p><span style="font-size: 16px;">这样便可在每次新建类的时候自动加上该头注释。</span></p>
+<h4><span style="font-size: 16px;"><a id="user-content-82-方法注释" class="anchor" href="https://github.com/Blankj/AndroidStandardDevelop/blob/master/README.md#82-%E6%96%B9%E6%B3%95%E6%B3%A8%E9%87%8A"></a>8.2 方法注释</span></h4>
+<p><span style="font-size: 16px;">每一个成员方法（包括自定义成员方法、覆盖方法、属性方法）的方法头都必须做方法头注释，在方法前一行输入 <code>/** + 回车</code> 或者设置 <code>Fix doc comment</code>（Settings -&gt; Keymap -&gt; Fix doc comment）快捷键，AS 便会帮你生成模板，我们只需要补全参数即可，如下所示。</span></p>
+<div class="highlight highlight-source-java">
+<pre><span class="pl-c" style="font-size: 16px;"><span class="pl-c">/**
+<span class="pl-c"> * bitmap 转 byteArr
+<span class="pl-c"> *
+<span class="pl-c"> * @param bitmap bitmap 对象
+<span class="pl-c"> * @param format 格式
+<span class="pl-c"> * @return 字节数组
+<span class="pl-c"> <span class="pl-c">*/
+<span class="pl-k">public <span class="pl-k">static <span class="pl-k">byte[] bitmap2Bytes(<span class="pl-smi">Bitmap bitmap, <span class="pl-smi">CompressFormat format) {
+    <span class="pl-k">if (bitmap <span class="pl-k">== <span class="pl-c1">null) <span class="pl-k">return <span class="pl-c1">null;
+    <span class="pl-smi">ByteArrayOutputStream baos <span class="pl-k">= <span class="pl-k">new <span class="pl-smi">ByteArrayOutputStream();
+    bitmap<span class="pl-k">.compress(format, <span class="pl-c1">100, baos);
+    <span class="pl-k">return baos<span class="pl-k">.toByteArray();
+}</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></pre>
+</div>
+<h4><span style="font-size: 16px;"><a id="user-content-83-块注释" class="anchor" href="https://github.com/Blankj/AndroidStandardDevelop/blob/master/README.md#83-%E5%9D%97%E6%B3%A8%E9%87%8A"></a>8.3 块注释</span></h4>
+<p><span style="font-size: 16px;">块注释与其周围的代码在同一缩进级别。它们可以是 <code>/* ... */</code> 风格，也可以是 <code>// ...</code> 风格（<strong><code>//</code> 后最好带一个空格</strong>）。对于多行的 <code>/* ... */</code> 注释，后续行必须从 <code>*</code> 开始， 并且与前一行的 <code>*</code> 对齐。以下示例注释都是 OK 的。</span></p>
+<div class="highlight highlight-source-java">
+<pre><span class="pl-c" style="font-size: 16px;"><span class="pl-c">/*
+<span class="pl-c"> * This is
+<span class="pl-c"> * okay.
+<span class="pl-c"> <span class="pl-c">*/
+
+<span class="pl-c"><span class="pl-c">// And so
+<span class="pl-c"><span class="pl-c">// is this.
+
+<span class="pl-c"><span class="pl-c">/* Or you can
+<span class="pl-c">* even do this. <span class="pl-c">*/</span></span></span></span></span></span></span></span></span></span></span></span></span></span></pre>
+</div>
+<p><span style="font-size: 16px;">注释不要封闭在由星号或其它字符绘制的框架里。</span></p>
+<blockquote>
+<p><span style="font-size: 16px;">Tip：在写多行注释时，如果你希望在必要时能重新换行（即注释像段落风格一样），那么使用 <code>/* ... */</code>。</span></p>
+</blockquote>
+<h4><span style="font-size: 16px;"><a id="user-content-84-其他一些注释" class="anchor" href="https://github.com/Blankj/AndroidStandardDevelop/blob/master/README.md#84-%E5%85%B6%E4%BB%96%E4%B8%80%E4%BA%9B%E6%B3%A8%E9%87%8A"></a>8.4 其他一些注释</span></h4>
+<p><span style="font-size: 16px;">AS 已帮你集成了一些注释模板，我们只需要直接使用即可，在代码中输入 <code>todo</code>、<code>fixme</code> 等这些注释模板，回车后便会出现如下注释。</span></p>
+<div class="highlight highlight-source-java">
+<pre><span class="pl-c" style="font-size: 16px;"><span class="pl-c">// TODO: 17/3/14 需要实现，但目前还未实现的功能的说明
+<span class="pl-c"><span class="pl-c">// FIXME: 17/3/14 需要修正，甚至代码是错误的，不能工作，需要修复的说明</span></span></span></span></pre>
+</div>
+<h3><span style="font-size: 16px;"><a id="user-content-9-测试规范" class="anchor" href="https://github.com/Blankj/AndroidStandardDevelop/blob/master/README.md#9-%E6%B5%8B%E8%AF%95%E8%A7%84%E8%8C%83"></a>9 测试规范</span></h3>
+<p><span style="font-size: 16px;">业务开发完成之后，开发人员做单元测试，单元测试完成之后，保证单元测试全部通过，同时单元测试代码覆盖率达到一定程度（这个需要开发和测试约定，理论上越高越好），开发提测。</span></p>
+<h4><span style="font-size: 16px;"><a id="user-content-91-单元测试" class="anchor" href="https://github.com/Blankj/AndroidStandardDevelop/blob/master/README.md#91-%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95"></a>9.1 单元测试</span></h4>
+<p><span style="font-size: 16px;">测试类的名称应该是所测试类的名称加 <code>Test</code>，我们创建 <code>DatabaseHelper</code> 的测试类，其名应该叫 <code>DatabaseHelperTest</code>。</span></p>
+<p><span style="font-size: 16px;">测试函数被 <code>@Test</code> 所注解，函数名通常以被测试的方法为前缀，然后跟随是前提条件和预期的结果。</span></p>
+<ul>
+<li><span style="font-size: 16px;">模板：<code>void methodName 前提条件和预期结果()</code></span></li>
+<li><span style="font-size: 16px;">例子：<code>void signInWithEmptyEmailFails()</code></span></li>
+</ul>
+<blockquote>
+<p><span style="font-size: 16px;">注意：如果函数足够清晰，那么前提条件和预期的结果是可以省略的。</span></p>
+</blockquote>
+<p><span style="font-size: 16px;">有时一个类可能包含大量的方法，同时需要对每个方法进行几次测试。在这种情况下，建议将测试类分成多个类。例如，如果 <code>DataManager</code> 包含很多方法，我们可能要把它分成 <code>DataManagerSignInTest</code>、<code>DataManagerLoadUsersTest</code> 等等。</span></p>
+<h4><span style="font-size: 16px;"><a id="user-content-92-espresso-测试" class="anchor" href="https://github.com/Blankj/AndroidStandardDevelop/blob/master/README.md#92-espresso-%E6%B5%8B%E8%AF%95"></a>9.2 Espresso 测试</span></h4>
+<p><span style="font-size: 16px;">每个 Espresso 测试通常是针对 <code>Activity</code>，所以其测试名就是其被测的 <code>Activity</code> 的名称加 <code>Test</code>，比如 <code>SignInActivityTest</code>。</span></p>
+<h3><span style="font-size: 16px;"><a id="user-content-10-其他的一些规范" class="anchor" href="https://github.com/Blankj/AndroidStandardDevelop/blob/master/README.md#10-%E5%85%B6%E4%BB%96%E7%9A%84%E4%B8%80%E4%BA%9B%E8%A7%84%E8%8C%83"></a>10 其他的一些规范</span></h3>
+<ol>
+<li>
+<p><span style="font-size: 16px;">合理布局，有效运用 <code>&lt;merge&gt;</code>、<code>&lt;ViewStub&gt;</code>、<code>&lt;include&gt;</code> 标签；</span></p>
+</li>
+<li>
+<p><span style="font-size: 16px;"><code>Activity</code> 和 <code>Fragment</code> 里面有许多重复的操作以及操作步骤，所以我们都需要提供一个 <code>BaseActivity</code> 和 <code>BaseFragment</code>，让所有的 <code>Activity</code> 和 <code>Fragment</code> 都继承这个基类。</span></p>
+</li>
+<li>
+<p><span style="font-size: 16px;">方法基本上都按照调用的先后顺序在各自区块中排列；</span></p>
+</li>
+<li>
+<p><span style="font-size: 16px;">相关功能作为小区块放在一起（或者封装掉）；</span></p>
+</li>
+<li>
+<p><span style="font-size: 16px;">当一个类有多个构造函数，或是多个同名函数，这些函数应该按顺序出现在一起，中间不要放进其它函数；</span></p>
+</li>
+<li>
+<p><span style="font-size: 16px;">数据提供统一的入口。无论是在 MVP、MVC 还是 MVVM 中，提供一个统一的数据入口，都可以让代码变得更加易于维护。比如可使用一个 <code>DataManager</code>，把 <code>http</code>、<code>preference</code>、<code>eventpost</code>、<code>database</code> 都放在 <code>DataManager</code> 里面进行操作，我们只需要与 <code>DataManager</code> 打交道；</span></p>
+</li>
+<li>
+<p><span style="font-size: 16px;">多用组合，少用继承；</span></p>
+</li>
+<li>
+<p><span style="font-size: 16px;">提取方法，去除重复代码。对于必要的工具类抽取也很重要，这在以后的项目中是可以重用的。</span></p>
+</li>
+<li>
+<p><span style="font-size: 16px;">可引入 <code>Dagger2</code> 减少模块之间的耦合性。<code>Dagger2</code> 是一个依赖注入框架，使用代码自动生成创建依赖关系需要的代码。减少很多模板化的代码，更易于测试，降低耦合，创建可复用可互换的模块；</span></p>
+</li>
+<li>
+<p><span style="font-size: 16px;">项目引入 <code>RxAndroid</code> 响应式编程，可以极大的减少逻辑代码；</span></p>
+</li>
+<li>
+<p><span style="font-size: 16px;">通过引入事件总线，如：<code>EventBus</code>、<code>AndroidEventBus</code>、<code>RxBus</code>，它允许我们在 <code>DataLayer</code> 中发送事件，以便 <code>ViewLayer</code> 中的多个组件都能够订阅到这些事件，减少回调；</span></p>
+</li>
+<li>
+<p><span style="font-size: 16px;">尽可能使用局部变量；</span></p>
+</li>
+<li>
+<p><span style="font-size: 16px;">及时关闭流；</span></p>
+</li>
+<li>
+<p><span style="font-size: 16px;">尽量减少对变量的重复计算；</span></p>
+<p><span style="font-size: 16px;">如下面的操作：</span></p>
+<div class="highlight highlight-source-java">
+<pre><span class="pl-k" style="font-size: 16px;">for (<span class="pl-k">int i <span class="pl-k">= <span class="pl-c1">0; i <span class="pl-k">&lt; list<span class="pl-k">.size(); i<span class="pl-k">++) {
+      <span class="pl-c1">...
+}</span></span></span></span></span></span></span></span></pre>
+</div>
+<p><span style="font-size: 16px;">建议替换为：</span></p>
+<div class="highlight highlight-source-java">
+<pre><span class="pl-k" style="font-size: 16px;">for (<span class="pl-k">int i <span class="pl-k">= <span class="pl-c1">0, len <span class="pl-k">= list<span class="pl-k">.size(); i <span class="pl-k">&lt; len; i<span class="pl-k">++) {
+      <span class="pl-c1">...
+}</span></span></span></span></span></span></span></span></span></pre>
+</div>
+</li>
+<li>
+<p><span style="font-size: 16px;">尽量采用懒加载的策略，即在需要的时候才创建；</span></p>
+<p><span style="font-size: 16px;">例如：</span></p>
+<div class="highlight highlight-source-java">
+<pre><span class="pl-smi" style="font-size: 16px;">String str <span class="pl-k">= <span class="pl-s"><span class="pl-pds">"aaa<span class="pl-pds">";
+<span class="pl-k">if (i <span class="pl-k">== <span class="pl-c1">1) {
+      list<span class="pl-k">.add(str);
+}</span></span></span></span></span></span></span></span></span></pre>
+</div>
+<p><span style="font-size: 16px;">建议替换为：</span></p>
+<div class="highlight highlight-source-java">
+<pre><span class="pl-k" style="font-size: 16px;">if (i <span class="pl-k">== <span class="pl-c1">1) {
+      <span class="pl-smi">String str <span class="pl-k">= <span class="pl-s"><span class="pl-pds">"aaa<span class="pl-pds">";
+      list<span class="pl-k">.add(str);
+}</span></span></span></span></span></span></span></span></span></pre>
+</div>
+</li>
+<li>
+<p><span style="font-size: 16px;">不要在循环中使用 <code>try&hellip;catch&hellip;</code>，应该把其放在最外层；</span></p>
+</li>
+<li>
+<p><span style="font-size: 16px;">使用带缓冲的输入输出流进行 IO 操作；</span></p>
+</li>
+<li>
+<p><span style="font-size: 16px;">尽量使用 <code>HashMap</code>、<code>ArrayList</code>、<code>StringBuilder</code>，除非线程安全需要，否则不推荐使用 <code>HashTable</code>、<code>Vector</code>、<code>StringBuffer</code>，后三者由于使用同步机制而导致了性能开销；</span></p>
+</li>
+<li>
+<p>尽量在合适的场合使用单例；</p>
+<p>使用单例可以减轻加载的负担、缩短加载的时间、提高加载的效率，但并不是所有地方都适用于单例，简单来说，单例主要适用于以下三个方面：</p>
+<ol>
+<li>
+<p>控制资源的使用，通过线程同步来控制资源的并发访问。</p>
+</li>
+<li>
+<p>控制实例的产生，以达到节约资源的目的。</p>
+</li>
+<li>
+<p>控制数据的共享，在不建立直接关联的条件下，让多个不相关的进程或线程之间实现通信。</p>
+</li>
+</ol></li>
+<li>
+<p><span style="font-size: 16px;">把一个基本数据类型转为字符串，<code>基本数据类型.toString()</code> 是最快的方式，<code>String.valueOf(数据)</code> 次之，<code>数据 + ""</code> 最慢；</span></p>
+</li>
+<li>
+<p><span style="font-size: 16px;">使用 AS 自带的 Lint 来优化代码结构（什么，你不会？右键 module、目录或者文件，选择 Analyze -&gt; Inspect Code）；</span></p>
+</li>
+<li>
+<p><span style="font-size: 16px;">最后不要忘了内存泄漏的检测；</span></p>
+</li>
+</ol><hr />
+<p><span style="font-size: 16px;">最后啰嗦几句：</span></p>
+<ul>
+<li><span style="font-size: 16px;">好的命名规则能够提高代码质量，使得新人加入项目的时候降低理解代码的难度；</span></li>
+<li><span style="font-size: 16px;">规矩终究是死的，适合团队的才是最好的；</span></li>
+<li><span style="font-size: 16px;">命名规范需要团队一起齐心协力来维护执行，在团队生活里，谁都不可能独善其身；</span></li>
+<li><span style="font-size: 16px;">一开始可能会有些不习惯，持之以恒，总会成功的。</span></li>
+</ul>
+<h2><span style="font-size: 16px;"><a id="user-content-附录" class="anchor" href="https://github.com/Blankj/AndroidStandardDevelop/blob/master/README.md#%E9%99%84%E5%BD%95"></a>附录</span></h2>
+<h3><span style="font-size: 16px;"><a id="user-content-ui-控件缩写表" class="anchor" href="https://github.com/Blankj/AndroidStandardDevelop/blob/master/README.md#ui-%E6%8E%A7%E4%BB%B6%E7%BC%A9%E5%86%99%E8%A1%A8"></a>UI 控件缩写表</span></h3>
+<table>
+<thead>
+<tr><th><span style="font-size: 16px;">名称</span></th><th><span style="font-size: 16px;">缩写</span></th></tr>
+</thead>
+<tbody>
+<tr>
+<td><span style="font-size: 16px;">Button</span></td>
+<td><span style="font-size: 16px;">btn</span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;">CheckBox</span></td>
+<td><span style="font-size: 16px;">cb</span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;">EditText</span></td>
+<td><span style="font-size: 16px;">et</span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;">FrameLayout</span></td>
+<td><span style="font-size: 16px;">fl</span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;">GridView</span></td>
+<td><span style="font-size: 16px;">gv</span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;">ImageButton</span></td>
+<td><span style="font-size: 16px;">ib</span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;">ImageView</span></td>
+<td><span style="font-size: 16px;">iv</span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;">LinearLayout</span></td>
+<td><span style="font-size: 16px;">ll</span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;">ListView</span></td>
+<td><span style="font-size: 16px;">lv</span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;">ProgressBar</span></td>
+<td><span style="font-size: 16px;">pb</span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;">RadioButtion</span></td>
+<td><span style="font-size: 16px;">rb</span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;">RecyclerView</span></td>
+<td><span style="font-size: 16px;">rv</span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;">RelativeLayout</span></td>
+<td><span style="font-size: 16px;">rl</span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;">ScrollView</span></td>
+<td><span style="font-size: 16px;">sv</span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;">SeekBar</span></td>
+<td><span style="font-size: 16px;">sb</span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;">Spinner</span></td>
+<td><span style="font-size: 16px;">spn</span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;">TextView</span></td>
+<td><span style="font-size: 16px;">tv</span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;">ToggleButton</span></td>
+<td><span style="font-size: 16px;">tb</span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;">VideoView</span></td>
+<td><span style="font-size: 16px;">vv</span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;">WebView</span></td>
+<td><span style="font-size: 16px;">wv</span></td>
+</tr>
+</tbody>
+</table>
+<h3><span style="font-size: 16px;"><a id="user-content-常见的英文单词缩写表" class="anchor" href="https://github.com/Blankj/AndroidStandardDevelop/blob/master/README.md#%E5%B8%B8%E8%A7%81%E7%9A%84%E8%8B%B1%E6%96%87%E5%8D%95%E8%AF%8D%E7%BC%A9%E5%86%99%E8%A1%A8"></a>常见的英文单词缩写表</span></h3>
+<table>
+<thead>
+<tr><th><span style="font-size: 16px;">名称</span></th><th><span style="font-size: 16px;">缩写</span></th></tr>
+</thead>
+<tbody>
+<tr>
+<td><span style="font-size: 16px;">average</span></td>
+<td><span style="font-size: 16px;">avg</span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;">background</span></td>
+<td><span style="font-size: 16px;">bg（主要用于布局和子布局的背景）</span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;">buffer</span></td>
+<td><span style="font-size: 16px;">buf</span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;">control</span></td>
+<td><span style="font-size: 16px;">ctrl</span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;">current</span></td>
+<td><span style="font-size: 16px;">cur</span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;">default</span></td>
+<td><span style="font-size: 16px;">def</span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;">delete</span></td>
+<td><span style="font-size: 16px;">del</span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;">document</span></td>
+<td><span style="font-size: 16px;">doc</span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;">error</span></td>
+<td><span style="font-size: 16px;">err</span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;">escape</span></td>
+<td><span style="font-size: 16px;">esc</span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;">icon</span></td>
+<td><span style="font-size: 16px;">ic（主要用在 App 的图标）</span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;">increment</span></td>
+<td><span style="font-size: 16px;">inc</span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;">information</span></td>
+<td><span style="font-size: 16px;">info</span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;">initial</span></td>
+<td><span style="font-size: 16px;">init</span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;">image</span></td>
+<td><span style="font-size: 16px;">img</span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;">Internationalization</span></td>
+<td><span style="font-size: 16px;">I18N</span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;">length</span></td>
+<td><span style="font-size: 16px;">len</span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;">library</span></td>
+<td><span style="font-size: 16px;">lib</span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;">message</span></td>
+<td><span style="font-size: 16px;">msg</span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;">password</span></td>
+<td><span style="font-size: 16px;">pwd</span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;">position</span></td>
+<td><span style="font-size: 16px;">pos</span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;">previous</span></td>
+<td><span style="font-size: 16px;">pre</span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;">selector</span></td>
+<td><span style="font-size: 16px;">sel（主要用于某一 view 多种状态，不仅包括 ListView 中的 selector，还包括按钮的 selector）</span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;">server</span></td>
+<td><span style="font-size: 16px;">srv</span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;">string</span></td>
+<td><span style="font-size: 16px;">str</span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;">temporary</span></td>
+<td><span style="font-size: 16px;">tmp</span></td>
+</tr>
+<tr>
+<td><span style="font-size: 16px;">window</span></td>
+<td><span style="font-size: 16px;">win</span></td>
+</tr>
+</tbody>
+</table>
+<p><span style="font-size: 16px;">程序中使用单词缩写原则：不要用缩写，除非该缩写是约定俗成的。</span></p>

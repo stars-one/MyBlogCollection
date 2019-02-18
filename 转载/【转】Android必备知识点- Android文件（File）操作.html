@@ -1,0 +1,182 @@
+原文链接：http://www.cnblogs.com/kexing/archive/2018/01/31/8394813.html
+<div class="detail-content "> <strong style="display: block; font-size: 22px; margin: 22px 0 10px;">Android 使用与其他平台上基于磁盘的文件系统类似的文件系统。</strong>
+<p>本文讲述如何使用 Android 文件系统通过 File API 读取和写入文件。</p>
+<p>File 对象适合按照从开始到结束的顺序不跳过地读取或写入大量数据。 例如，它适合于图片文件或通过网络交换的任何内容。</p>
+<div class="anchor-list"><a class="lemma-anchor para-title" name="parent_1"></a></div>
+<strong style="display: block; font-size: 25px; padding-bottom: 8px;">本文展示如何在您的应用中执行基本的文件相关任务。</strong>
+<p>假定您熟悉 Linux 文件系统的基础知识和 java.io 中的标准文件输入/输出 API。</p>
+<div class="anchor-list"><a class="lemma-anchor para-title" name="parent_2"></a></div>
+<strong style="display: block; font-size: 25px; padding-bottom: 8px;">选择内部或外部存储</strong>
+<p>所有 Android 设备都有两个文件存储区域：&ldquo;内部&rdquo;和&ldquo;外部&rdquo;存储。这些名称在 Android 早期产生，当时大多数设备都提供内置的非易失性内存（内部存储），以及移动存储介质，比如微型 SD 卡（外部存储）。一些设备将永久性存储空间划分为&ldquo;内部&rdquo;和&ldquo;外部&rdquo;分区，即便没有移动存储介质，也始终有两个存储空间，并且无论外部存储设备是否可移动，API 的行为均一致。以下列表汇总了关于各个存储空间的实际信息。</p>
+<div class="anchor-list"><a class="lemma-anchor para-title" name="parent_3"></a></div>
+<strong style="display: block; font-size: 25px; padding-bottom: 8px;">内部存储：</strong>
+<p>它始终可用。<br />
+只有您的应用可以访问此处保存的文件。<br />
+当用户卸载您的应用时，系统会从内部存储中移除您的应用的所有文件。<br />
+当您希望确保用户或其他应用均无法访问您的文件时，内部存储是最佳选择。</p>
+<div class="anchor-list"> <a class="lemma-anchor para-title" name="parent_4"></a></div>
+
+ <strong style="display: block; font-size: 25px; padding-bottom: 8px;">外部存储：</strong>
+<p>它并非始终可用，因为用户可采用 USB 存储设备的形式装载外部存储，并在某些情况下会从设备中将其移除。<br />
+它是全局可读的，因此此处保存的文件可能不受您控制地被读取。<br />
+当用户卸载您的应用时，只有在您通过 getExternalFilesDir() 将您的应用的文件保存在目录中时，系统才会从此处移除您的应用的文件。<br />
+对于无需访问限制以及您希望与其他应用共享或允许用户使用计算机访问的文件，外部存储是最佳位置。</p>
+<div class="anchor-list"> <a class="lemma-anchor para-title" name="child_4_1"></a></div>
+
+ <strong style="display: block; font-size: 22px; margin: 22px 0 10px;">注：</strong>
+<p>在 Android N 之前，内部文件可以通过放宽文件系统权限让其他应用访问。而如今不再是这种情况。如果您希望让其他应用访问私有文件的内容，则您的应用可使用 FileProvider。 </p>
+<div class="anchor-list"> <a class="lemma-anchor para-title" name="child_4_2"></a></div>
+
+ <strong style="display: block; font-size: 22px; margin: 22px 0 10px;">提示：</strong>
+<p>尽管应用默认安装在内部存储中，但您可在您的清单文件中指定 android:installLocation 
+属性，这样您的应用便可安装在在外部存储中。当 APK 非常大且它们的外部存储空间大于内部存储时，用户更青睐这个选择。 
+如需了解详细信息，请参阅应用安装位置。</p>
+<div class="anchor-list"> <a class="lemma-anchor para-title" name="child_4_3"></a></div>
+
+ <strong style="display: block; font-size: 22px; margin: 22px 0 10px;">获取外部存储的权限</strong>
+<p>要向外部存储写入信息，您必须在您的清单文件中请求 WRITE_EXTERNAL_STORAGE 权限。</p>
+<p>&lt;manifest ...&gt;<br />
+&lt;uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /&gt;<br />
+...<br />
+&lt;/manifest&gt;</p>
+<div class="anchor-list"> <a class="lemma-anchor para-title" name="child_4_4"></a></div>
+
+ <strong style="display: block; font-size: 22px; margin: 22px 0 10px;">注意：</strong>
+<p>目前，所有应用都可以读取外部存储，而无需特别的权限。 但这在将来版本中会进行更改。如果您的应用需要读取外部存储（但不向其写入信息），那么您将需要声明 READ_EXTERNAL_STORAGE 权限。要确保您的应用继续正常工作，您应在更改生效前声明此权限。</p>
+<p>&lt;manifest ...&gt;<br />
+&lt;uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /&gt;<br />
+...<br />
+&lt;/manifest&gt;</p>
+<p>但是，如果您的应用使用 WRITE_EXTERNAL_STORAGE 权限，那么它也隐含读取外部存储的权限。<br />
+您无需任何权限，即可在内部存储中保存文件。 您的应用始终具有在其内部存储目录中进行读写的权限。</p>
+<div class="anchor-list"> <a class="lemma-anchor para-title" name="parent_5"></a></div>
+
+ <strong style="display: block; font-size: 25px; padding-bottom: 8px;">将文件保存在内部存储中</strong>
+<p>在内部存储中保存文件时，您可以通过调用以下两种方法之一获取作为 File 的相应目录：</p>
+<p>1.getFilesDir()<br />
+返回表示您的应用的内部目录的 File 。<br />
+2.getCacheDir()<br />
+返回表示您的应用临时缓存文件的内部目录的 File。 务必删除所有不再需要的文件并对在指定时间您使用的内存量实现合理大小限制，比如，1MB。 如果在系统即将耗尽存储，它会在不进行警告的情况下删除您的缓存文件。</p>
+<div class="anchor-list"> <a class="lemma-anchor para-title" name="child_5_1"></a></div>
+
+ <strong style="display: block; font-size: 22px; margin: 22px 0 10px;">要在这些目录之一中新建文件</strong>
+<p>1.您可以使用 File() 构造函数，传递指定您的内部存储目录的上述方法之一所提供的 File。例如：</p>
+<p>File file = new File(context.getFilesDir(), filename);<br />
+2.或者，您可以调用 openFileOutput() 获取写入到内部目录中的文件的 FileOutputStream。例如，下面显示如何向文件写入一些文本：</p>
+<pre class="prettyprint"><code><span class="typ">String<span class="pln"> filename <span class="pun">=<span class="pln"> <span class="str">"myfile"<span class="pun">;<span class="pln">
+<span class="typ">String<span class="pln"> <span class="kwd">string<span class="pln"> <span class="pun">=<span class="pln"> <span class="str">"Hello world!"<span class="pun">;<span class="pln">
+<span class="typ">FileOutputStream<span class="pln"> outputStream<span class="pun">;<span class="pln">
+
+<span class="kwd">try<span class="pln"> <span class="pun">{<span class="pln">
+  outputStream <span class="pun">=<span class="pln"> openFileOutput<span class="pun">(<span class="pln">filename<span class="pun">,<span class="pln"> <span class="typ">Context<span class="pun">.<span class="pln">MODE_PRIVATE<span class="pun">);<span class="pln">
+  outputStream<span class="pun">.<span class="pln">write<span class="pun">(<span class="kwd">string<span class="pun">.<span class="pln">getBytes<span class="pun">());<span class="pln">
+  outputStream<span class="pun">.<span class="pln">close<span class="pun">();<span class="pln">
+<span class="pun">}<span class="pln"> <span class="kwd">catch<span class="pln"> <span class="pun">(<span class="typ">Exception<span class="pln"> e<span class="pun">)<span class="pln"> <span class="pun">{<span class="pln">
+  e<span class="pun">.<span class="pln">printStackTrace<span class="pun">();<span class="pln">
+<span class="pun">}</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></code></pre>
+<p>3.或者，如果您需要缓存某些文件，您应改用 createTempFile()。例如，以下方法从 URL 提取文件名并正在您的应用的内部缓存目录中以该名称创建文件：</p>
+<pre class="prettyprint"><code><span class="kwd">public<span class="pln"> <span class="typ">File<span class="pln"> getTempFile<span class="pun">(<span class="typ">Context<span class="pln"> context<span class="pun">,<span class="pln"> <span class="typ">String<span class="pln"> url<span class="pun">)<span class="pln"> <span class="pun">{<span class="pln">
+    <span class="typ">File<span class="pln"> file<span class="pun">;<span class="pln">
+    <span class="kwd">try<span class="pln"> <span class="pun">{<span class="pln">
+        <span class="typ">String<span class="pln"> fileName <span class="pun">=<span class="pln"> <span class="typ">Uri<span class="pun">.<span class="pln">parse<span class="pun">(<span class="pln">url<span class="pun">).<span class="pln">getLastPathSegment<span class="pun">();<span class="pln">
+        file <span class="pun">=<span class="pln"> <span class="typ">File<span class="pun">.<span class="pln">createTempFile<span class="pun">(<span class="pln">fileName<span class="pun">,<span class="pln"> <span class="kwd">null<span class="pun">,<span class="pln"> context<span class="pun">.<span class="pln">getCacheDir<span class="pun">());<span class="pln">
+    <span class="pun">}<span class="pln"> <span class="kwd">catch<span class="pln"> <span class="pun">(<span class="typ">IOException<span class="pln"> e<span class="pun">)<span class="pln"> <span class="pun">{<span class="pln">
+        <span class="com">// Error while creating file<span class="pln">
+    <span class="pun">}<span class="pln">
+    <span class="kwd">return<span class="pln"> file<span class="pun">;<span class="pln">
+<span class="pun">}</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></code></pre>
+<p>注：您的应用的内部存储设备目录由您的应用在 Android 文件系统特定位置中的软件包名称指定。从技术上讲，如果您将文件模式设置为可读，那么，另一应用也可以读取您的内部文件。 但是，此应用也需要知道您的应用的软件包名称和文件名。 其他应用无法浏览您的内部目录并且没有读写权限，除非您明确将文件设置为可读或可写。 只要您为内部存储上的文件使用 MODE_PRIVATE，其他应用便从不会访问它们。</p>
+<div class="anchor-list"><a class="lemma-anchor para-title" name="parent_6"></a></div>
+<strong style="display: block; font-size: 25px; padding-bottom: 8px;">将文件保存在外部存储中</strong>
+<p>由于外部存储可能不可用&mdash;比如，当用户已将存储装载到电脑或已移除提供外部存储的 SD 卡时&mdash;因此，在访问它之前，您应始终确认其容量。 您可以通过调用 getExternalStorageState() 查询外部存储状态。 如果返回的状态为 MEDIA_MOUNTED，那么您可以对您的文件进行读写。 例如，以下方法对于确定存储可用性非常有用：</p>
+<p>/</p>
+<pre class="prettyprint"><code><span class="pun">*<span class="pln"> <span class="typ">Checks<span class="pln"> <span class="kwd">if<span class="pln"> external storage <span class="kwd">is<span class="pln"> available <span class="kwd">for<span class="pln"> read <span class="kwd">and<span class="pln"> write <span class="pun">*/<span class="pln">
+<span class="kwd">public<span class="pln"> <span class="kwd">boolean<span class="pln"> isExternalStorageWritable<span class="pun">()<span class="pln"> <span class="pun">{<span class="pln">
+    <span class="typ">String<span class="pln"> state <span class="pun">=<span class="pln"> <span class="typ">Environment<span class="pun">.<span class="pln">getExternalStorageState<span class="pun">();<span class="pln">
+    <span class="kwd">if<span class="pln"> <span class="pun">(<span class="typ">Environment<span class="pun">.<span class="pln">MEDIA_MOUNTED<span class="pun">.<span class="pln">equals<span class="pun">(<span class="pln">state<span class="pun">))<span class="pln"> <span class="pun">{<span class="pln">
+        <span class="kwd">return<span class="pln"> <span class="kwd">true<span class="pun">;<span class="pln">
+    <span class="pun">}<span class="pln">
+    <span class="kwd">return<span class="pln"> <span class="kwd">false<span class="pun">;<span class="pln">
+<span class="pun">}</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></code></pre>
+<pre class="prettyprint"><code><span class="com">/* Checks if external storage is available to at least read */<span class="pln">
+<span class="kwd">public<span class="pln"> <span class="kwd">boolean<span class="pln"> isExternalStorageReadable<span class="pun">()<span class="pln"> <span class="pun">{<span class="pln">
+    <span class="typ">String<span class="pln"> state <span class="pun">=<span class="pln"> <span class="typ">Environment<span class="pun">.<span class="pln">getExternalStorageState<span class="pun">();<span class="pln">
+    <span class="kwd">if<span class="pln"> <span class="pun">(<span class="typ">Environment<span class="pun">.<span class="pln">MEDIA_MOUNTED<span class="pun">.<span class="pln">equals<span class="pun">(<span class="pln">state<span class="pun">)<span class="pln"> <span class="pun">||<span class="pln">
+        <span class="typ">Environment<span class="pun">.<span class="pln">MEDIA_MOUNTED_READ_ONLY<span class="pun">.<span class="pln">equals<span class="pun">(<span class="pln">state<span class="pun">))<span class="pln"> <span class="pun">{<span class="pln">
+        <span class="kwd">return<span class="pln"> <span class="kwd">true<span class="pun">;<span class="pln">
+    <span class="pun">}<span class="pln">
+    <span class="kwd">return<span class="pln"> <span class="kwd">false<span class="pun">;<span class="pln">
+<span class="pun">}</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></code></pre>
+<div class="anchor-list"><a class="lemma-anchor para-title" name="child_6_1"></a></div>
+<strong style="display: block; font-size: 22px; margin: 22px 0 10px;">尽管外部存储可被用户和其他应用进行修改，但您可在此处保存两类文件：</strong>
+<div class="anchor-list"><a class="lemma-anchor para-title" name="child_6_2"></a></div>
+<strong style="display: block; font-size: 22px; margin: 22px 0 10px;">公共文件</strong>
+<p>应供其他应用和用户自由使用的文件。 当用户卸载您的应用时，用户应仍可以使用这些文件。<br />
+例如，您的应用拍摄的照片或其他已下载的文件。</p>
+<div class="anchor-list"> <a class="lemma-anchor para-title" name="child_6_3"></a></div>
+
+ <strong style="display: block; font-size: 22px; margin: 22px 0 10px;">私有文件</strong>
+<p>属于您的应用且在用户卸载您的应用时应予删除的文件。 尽管这些文件在技术上可被用户和其他应用访问（因为它们存储在外部存储中）， 但它们实际上不向您的应用之外的用户提供任何输出值。 当用户卸载您的应用时，系统会删除应用外部私有目录中的所有文件。<br />
+例如，您的应用下载的其他资源或临时介质文件。</p>
+<p>如果您要将公共文件保存在外部存储设备上，请使用 getExternalStoragePublicDirectory() 
+方法获取表示外部存储设备上相应目录的 File。 该方法使用指定您想要保存以便它们可以与其他公共文件在逻辑上组织在一起的文件类型的参数，比如 
+DIRECTORY_MUSIC 或 DIRECTORY_PICTURES。例如：</p>
+<p>public File getAlbumStorageDir(String albumName) {<br />
+// Get the directory for the user's public pictures directory.<br />
+File file = new File(Environment.getExternalStoragePublicDirectory(<br />
+Environment.DIRECTORY_PICTURES), albumName);<br />
+if (!file.mkdirs()) {<br />
+Log.e(LOG_TAG, "Directory not created");<br />
+}<br />
+return file;<br />
+}<br />
+如果您要保存您的应用专用文件，您可以通过调用 getExternalFilesDir() 
+并向其传递指示您想要的目录类型的名称，从而获取相应的目录。通过这种方法创建的各个目录将添加至封装您的应用的所有外部存储文件的父目录，当用户卸载您的应用时，系统会删除这些文件。</p>
+<p>例如，您可以使用以下方法来创建个人相册的目录：</p>
+<p>public File getAlbumStorageDir(Context context, String albumName) {<br />
+// Get the directory for the app's private pictures directory.<br />
+File file = new File(context.getExternalFilesDir(<br />
+Environment.DIRECTORY_PICTURES), albumName);<br />
+if (!file.mkdirs()) {<br />
+Log.e(LOG_TAG, "Directory not created");<br />
+}<br />
+return file;<br />
+}</p>
+<div class="anchor-list"> <a class="lemma-anchor para-title" name="child_6_4"></a></div>
+
+ <strong style="display: block; font-size: 22px; margin: 22px 0 10px;">如果没有适合您文件的预定义子目录名称，您可以改为调用 getExternalFilesDir() 并传递 null。这将返回外部存储上您的应用的专用目录的根目录。</strong>
+<p>切记，getExternalFilesDir() 
+在用户卸载您的应用时删除的目录内创建目录。如果您正保存的文件应在用户卸载您的应用后仍然可用&mdash;比如，当您的应用是照相机并且用户要保留照片时&mdash;您应改用
+ getExternalStoragePublicDirectory()。</p>
+<p>无论您对于共享的文件使用 
+{@linkandroid.os.Environment#getExternalStoragePublicDirectory 
+getExternalStoragePublicDirectory()} 还是对您的应用专用文件使用 
+getExternalFilesDir()，您使用诸如 DIRECTORY_PICTURES 的 API 
+常数提供的目录名称非常重要。这些目录名称可确保系统正确处理文件。 例如，保存在 DIRECTORY_RINGTONES 
+中的文件由系统媒体扫描程序归类为铃声，而不是音乐。</p>
+<div class="anchor-list"> <a class="lemma-anchor para-title" name="parent_7"></a></div>
+
+ <strong style="display: block; font-size: 25px; padding-bottom: 8px;">查询可用空间</strong>
+<p>如果您事先知道您将保存的数据量，您可以查出是否有足够的可用空间，而无需调用 getFreeSpace() 或 
+getTotalSpace() 引起 IOException。这些方法分别提供目前的可用空间和存储卷中的总空间。 
+此信息也可用来避免填充存储卷以致超出特定阈值。</p>
+<p>但是，系统并不保证您可以写入与 getFreeSpace() 指示的一样多的字节。如果返回的数字比您要保存的数据大小大出几 MB，或如果文件系统所占空间不到 90%，则可安全继续操作。否则，您可能不应写入存储。</p>
+<p>注：保存您的文件之前，您无需检查可用空间量。 您可以尝试立刻写入文件，然后在 IOException 出现时将其捕获。 
+如果您不知道所需的确切空间量，您可能需要这样做。 例如，如果在保存文件之前通过将 PNG 图像转换成 JPEG 
+更改了文件的编码，您事先将不知道文件的大小。</p>
+<div class="anchor-list"> <a class="lemma-anchor para-title" name="child_7_1"></a></div>
+
+ <strong style="display: block; font-size: 22px; margin: 22px 0 10px;">删除文件</strong>
+<p>您应始终删除不再需要的文件。删除文件最直接的方法是让打开的文件参考自行调用 delete()。</p>
+<p>myFile.delete();<br />
+如果文件保存在内部存储中，您还可以请求 Context 通过调用 deleteFile() 来定位和删除文件：</p>
+<p>myContext.deleteFile(fileName);</p>
+<div class="anchor-list"> <a class="lemma-anchor para-title" name="child_7_2"></a></div>
+
+ <strong style="display: block; font-size: 22px; margin: 22px 0 10px;">注：当用户卸载您的应用时，Android 系统会删除以下各项：</strong>
+<p>您保存在内部存储中的所有文件<br />
+您使用 getExternalFilesDir() 保存在外部存储中的所有文件。<br />
+但是，您应手动删除使用 getCacheDir() 定期创建的所有缓存文件并且定期删除不再需要的其他文件。</p>
+
+
+        </div>

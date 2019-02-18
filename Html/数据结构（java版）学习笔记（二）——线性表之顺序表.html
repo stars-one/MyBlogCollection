@@ -1,0 +1,155 @@
+原文链接：http://www.cnblogs.com/kexing/archive/2018/08/05/9387708.html
+<h2>顺序表的优点：</h2>
+<ol>
+<li><span style="font-size: 16px;">随机存取元素方便，根据定位公式容易确定表中每个元素的存储位置，所以要指定第i个结点很方便</span></li>
+<li><span style="font-size: 16px;">简单，直观</span></li>
+</ol>
+<h2>顺序表的缺点：</h2>
+<ol>
+<li><span style="font-size: 16px;">插入和删除结点困难</span></li>
+<li><span style="font-size: 16px;">扩展不灵活，难以确定分配的空间</span></li>
+<li><span style="font-size: 16px;">容易造成浪费</span></li>
+</ol>
+<h2>顺序表的实现：</h2>
+<p><span style="font-size: 16px;">这里我简单说一下吧，Sqlist类实现了ListIntf接口，也就是我们上一节中所提到的接口，之后eclipse中就会提示我们复写ListIntf中的方法，我们根据顺序表的特点，逐一复写即可</span></p>
+<p><span style="font-size: 16px;">详情看注释吧~</span></p>
+<p><span style="color: #ff0000;"><strong><span style="font-size: 16px;">PS：所有的参数i都是序号，从1开始</span></strong></span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.Scanner;
+
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> SqList <span style="color: #0000ff;">implements</span><span style="color: #000000;"> ListIntf{
+    </span><span style="color: #0000ff;">final</span> <span style="color: #0000ff;">int</span> maxlen = 1000; <span style="color: #008000;">//</span><span style="color: #008000;">线性表中可容纳最多数据元素数目</span>
+    String v[] = <span style="color: #0000ff;">new</span><span style="color: #000000;"> String[maxlen];
+    </span><span style="color: #0000ff;">int</span> len =0;<span style="color: #008000;">//</span><span style="color: #008000;">len是长度，1开始，是位序号</span>
+    <span style="color: #008000;">/**</span><span style="color: #008000;">
+     * 
+     * </span><span style="color: #808080;">@return</span><span style="color: #008000;"> 返回线性表中可容纳最多数据元素数目
+     </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">int</span><span style="color: #000000;"> getmaxlen(){
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> maxlen;
+    }
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> SqList(){
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">构造方法中实现相关的接收数据操作</span>
+        Scanner sc = <span style="color: #0000ff;">new</span><span style="color: #000000;"> Scanner(System.in);
+        </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> n;
+        String[] a </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> String[maxlen];
+        System.out.println(</span>"请输入需要的数据个数："<span style="color: #000000;">);
+        n</span>=<span style="color: #000000;">sc.nextInt();
+        sc.close();
+        </span><span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">int</span> i=0;i&lt;n;i++<span style="color: #000000;">){
+            a[i] </span>= "a"+i;<span style="color: #008000;">//</span><span style="color: #008000;">a[0]的数值是 a0,a[1]的数值是a1，以此类推&hellip;&hellip;</span>
+<span style="color: #000000;">            
+        }
+        setData(a);
+    }
+    </span><span style="color: #008000;">/**</span><span style="color: #008000;">
+     * 将String数组a赋值给String数组v
+     * </span><span style="color: #808080;">@param</span><span style="color: #008000;"> String数组
+     </span><span style="color: #008000;">*/</span>
+    
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> setData(String[] a){
+        v </span>=<span style="color: #000000;"> a;
+    }
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> size() {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> len;
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> clear() {
+        v </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> String[maxlen];
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">boolean</span><span style="color: #000000;"> isEmpty() {
+        </span><span style="color: #0000ff;">return</span> len==0<span style="color: #000000;">;
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> String get(<span style="color: #0000ff;">int</span><span style="color: #000000;"> i) {
+        </span><span style="color: #0000ff;">return</span> v[i-1<span style="color: #000000;">];
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> indexOf(String s) {
+        </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> i;
+        </span><span style="color: #0000ff;">for</span>(i=0;i&lt;len;i++<span style="color: #000000;">){
+            </span><span style="color: #0000ff;">if</span><span style="color: #000000;">(v[i].equals(s)){
+                </span><span style="color: #0000ff;">return</span> i+1<span style="color: #000000;">;
+            }
+        }
+        System.out.println(</span>"顺序表中不存在该元素！！"<span style="color: #000000;">);
+        </span><span style="color: #0000ff;">return</span> 0<span style="color: #000000;">;
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> String getPre(String s) {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">当前是顺序表，是顺序存储结构，无需实现此方法</span>
+        <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> String getNext(String s) {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">当前是顺序表，是顺序存储结构，无需实现此方法</span>
+        <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span> insertElementAt(String s, <span style="color: #0000ff;">int</span><span style="color: #000000;"> i) {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">首先判断顺序表是否已满，其次判断i是否合法，之后再进行插入操作</span>
+        <span style="color: #0000ff;">if</span>(len==<span style="color: #000000;">maxlen){
+            System.out.println(</span>"顺序表已满！"<span style="color: #000000;">);
+            </span><span style="color: #0000ff;">return</span>;<span style="color: #008000;">//</span><span style="color: #008000;">结束判断，跳出判断语句</span>
+        }<span style="color: #0000ff;">else</span><span style="color: #000000;">{
+            </span><span style="color: #0000ff;">if</span>(i&lt;1||i&gt;<span style="color: #000000;">len){
+                System.out.println(</span>"输入的序号不合法！"<span style="color: #000000;">);
+                </span><span style="color: #0000ff;">return</span><span style="color: #000000;">;
+            }</span><span style="color: #0000ff;">else</span><span style="color: #000000;">{
+                </span><span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">int</span> j=len-1;j&gt;=i-1;j--<span style="color: #000000;">){
+                    v[j</span>+1]=<span style="color: #000000;">v[j];
+                }
+                v[i</span>-1] =<span style="color: #000000;">s;  
+                len</span>++<span style="color: #000000;">;
+                </span><span style="color: #0000ff;">return</span><span style="color: #000000;">;
+            }
+        }
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> String remove(<span style="color: #0000ff;">int</span><span style="color: #000000;"> i) {<br />
+        String string;
+        </span><span style="color: #0000ff;">if</span>(i&lt;1||i&gt;<span style="color: #000000;">len){
+            
+            System.out.println(</span>"输入序号不合法！"<span style="color: #000000;">);
+            </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        }</span><span style="color: #0000ff;">else</span><span style="color: #000000;">{
+            string </span>= v[i-1<span style="color: #000000;">];
+            </span><span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">int</span> j=i-1;j&lt;len;j++<span style="color: #000000;">){
+                
+                v[j</span>-1] =<span style="color: #000000;"> v[j];
+            }
+            len</span>--<span style="color: #000000;">;
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> string;
+        }
+        
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> String remove(String s) {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> TODO Auto-generated method stub</span>
+<span style="color: #000000;">        String string;
+        </span><span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">int</span> i=0;i&lt;len;i++<span style="color: #000000;">){
+            </span><span style="color: #0000ff;">if</span><span style="color: #000000;">(v[i].equals(s)){
+                string </span>=<span style="color: #000000;"> v[i];
+                remove(i</span>+1);<span style="color: #008000;">//</span><span style="color: #008000;">这里的i是索引（下标）,索引（下标）加1成为序号</span>
+                <span style="color: #0000ff;">return</span><span style="color: #000000;"> string;
+            }
+        }
+        System.err.println(</span>"当前顺序表中没有该元素"<span style="color: #000000;">);
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+    }
+    
+}</span></pre>
+</div>
+<p>&nbsp;</p>

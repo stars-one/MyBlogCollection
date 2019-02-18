@@ -1,0 +1,65 @@
+原文链接：http://www.cnblogs.com/kexing/archive/2017/08/26/7435990.html
+<p style="text-align: center;">　　使用SoundPool播放音效</p>
+<p align="left"><span style="font-size: 15px;">如果应用程序经常播放密集、急促而又短暂的音效（如游戏音效）那么使用MediaPlayer显得有些不太适合了。因为MediaPlayer存在如下缺点：</span></p>
+<p align="left"><span style="font-size: 15px;">1) 延时时间较长，且资源占用率高。</span></p>
+<p align="left"><span style="font-size: 15px;">2) 不支持多个音频同时播放。</span></p>
+<p align="left"><span style="font-size: 15px;"><a class="keylink" href="http://www.2cto.com/kf/yidong/Android/" target="_blank">Android</a>中除了MediaPlayer播放音频之外还提供了SoundPool来播放音效，SoundPool使用音效池的概念来管理多个短促的音效，例如它可以开始就加载20个音效，以后在程序中按音效的ID进行播放。</span></p>
+<p align="left"><span style="font-size: 15px;">SoundPool主要用于播放一些较短的声音片段，与MediaPlayer相比，SoundPool的优势在于CPU资源占用量低和反应延迟小。另外，SoundPool还支持自行设置声音的品质、音量、 播放比率等参数。</span></p>
+<p><span style="font-size: 15px;">SoundPool提供了一个构造器，该构造器可以指定它总共支持多少个声音（也就是池的大小）、声音的品质</span></p>
+<p><span style="font-size: 15px;">&nbsp;</span></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 15px;">构造器如下：</span></p>
+<p align="left"><span style="color: #000000;">SoundPool(<span style="color: #3366ff;">int maxStreams, int streamType, int srcQuality</span>)：</span><span style="color: #ff0000;"><span style="color: #000000;">第一个参数</span>指定支持多少个声音；<span style="color: #000000;">第二个参数</span>指定声音类型：<span style="color: #000000;">第三个参数</span>指定声音品质。</span></p>
+<p align="left">&nbsp;</p>
+<p><strong>int &nbsp;maxStreams：</strong>在声音池中允许同时存在的声音数量。当池子中的声音超过这个数量时，优先级（后面会提到）最低、或者最早（Oldest，原谅我可怜的翻译水平）放进池中的，将被移除。这个数值不是越大越好，因为越大也就意味着，Android会给你预分配一个更大的空间，如果不需要使用会造成浪费。</p>
+<p align="left">&nbsp;</p>
+<p><strong>int &nbsp;streamType：</strong>声音流的类型，有STREAM_RING、STREAM_MUSIC等等，一般都是使用后者，即AudioManager.STREAM_MUSIC。</p>
+<p align="left">&nbsp;</p>
+<p><strong>int srcQuality：</strong>官网解释为&ldquo;采样速率转化器的质量&rdquo;（再次原谅我的翻译)，这个参数目前没有什么实际意义（可能还没实现这个功能），所以设置什么数值都无所谓，官方建议用0；</p>
+<p>&nbsp;</p>
+<p>例：</p>
+<p align="left">&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">public</span> SoundPool luozisound = <span style="color: #0000ff;">new</span> SoundPool(5, AudioManager.STREAM_SYSTEM, 0);</pre>
+</div>
+<p align="left">&nbsp;</p>
+<p>&nbsp;</p>
+<p align="left">一旦得到了SoundPool对象之后，接下来就可调用SoundPool的多个重载的load方法来加载声音了。</p>
+<p align="left">SoundPool提供了如下4个load方法：</p>
+<p align="left">int load(<span style="color: #3366ff;">Context context, int resld, int priority</span>)：<span style="color: #ff0000;">从 resld 所对应的资源加载声音</span></p>
+<p align="left">int load(<span style="color: #3366ff;">FileDescriptor fd, long offset, long length, int priority</span>)：<span style="color: #ff0000;">加载 fd 所对应的文件的offset开始、长度为length的声音</span></p>
+<p align="left">int load(<span style="color: #3366ff;">AssetFileDescriptor afd, int priority</span>)：<span style="color: #ff0000;">从afd 所对应的文件中加载声音</span></p>
+<p align="left">int load(<span style="color: #3366ff;">String path, int priority</span>)：<span style="color: #ff0000;">从path 对应的文件去加载声音</span></p>
+<p align="left">上面4个方法中都有一个<span style="color: #ff0000;">priority参数</span>，该参数目前还没有任何作用，<span style="color: #ff0000;">Android建议将该 参数设为1，保持和未来的兼容性</span>。</p>
+<p align="left">一般来说用第一个，</p>
+<p><strong>Context &nbsp;context：</strong>这个不必多解释，一般都是设置为getApplicationContext()获取</p>
+<p><strong>int resId：</strong>想要加载的音效资源ID，我用的是R.raw.XXX</p>
+<p align="left"><strong>int priority：</strong>音效播放时的优先级，官方解释这个参数在这个方法中不起作用，建议用1暂时代替</p>
+<p align="left">例：</p>
+<div class="cnblogs_code">
+<pre>luozisound.load(getContext(), R.raw.luozi, 1);<span style="color: #008000;">//</span><span style="color: #008000;">加载音效文件资源</span></pre>
+</div>
+<p align="left">上面4个方法加载声音之后，都会返回该声音的的ID，以后程序就可以通过该声音的ID 来播放指定声音。</p>
+<p align="left">&nbsp;</p>
+<p align="left">SoundPool提供的播放指定声音的方法：</p>
+<p align="left">int play(int soundID, float leftVolume, float rightVolume, int priority, int loop, float rate);</p>
+<p align="left"><strong>soundID</strong>指定<span style="color: #ff0000;">播放哪个声音</span>；</p>
+<p><strong>float &nbsp;leftVolume：</strong><span style="color: #ff0000;">左声道音量大小，这是一个相对值，大小在0.0f - 1.0f之间，具体计算方法为：你想要的声音大小 / 最大音量，比如取值0.8f表示最大音量的80%</span></p>
+<p><strong>float &nbsp;rightVolume：</strong><span style="color: #ff0000;">右声道音量大小，具体如上</span></p>
+<p><strong>int &nbsp;priority：</strong><span style="color: #ff0000;">优先级，值越大优先级越高，0的优先级最低。之前在第3步中也有一个优先级参数，但是那里无效，而现在这里的这个参数是正儿八经有效果的。</span></p>
+<p><strong>int loop：</strong>是否需要循环播放，取值不限。其中负数表示无穷循环（官方建议，如果无穷循环，用-1，当然-2、-3等也行），非负数表示循环次数，比如0表示循环0次，也就是播放一次就不再循环了，总共就只播放一次；1则表示循环1次（总共播放2次）。</p>
+<p align="left"><span style="color: #ff0000;"><strong><span style="color: #000000;">float &nbsp;rate</span>：</strong>这个参数有点意思，可以理解为播放速率（就是快进、快退啥的），取值0.5f - 2.0f，其中0.5表示播放速度为正常的0.5倍。1表示正常速率播放<br /></span></p>
+<p align="left"><span style="color: #ff0000;"><br /><span style="color: #000000;">例：<br /></span></span></p>
+<p align="left"><span style="color: #ff0000;"><span style="color: #000000;">&nbsp;</span></span></p>
+<div class="cnblogs_code">
+<pre>luozisound.play(1,1, 1, 0, 0, 1);</pre>
+</div>
+<p align="left">&nbsp;</p>
+<p>&nbsp;</p>
+<p align="left">&nbsp;</p>
+<p align="left"><span style="color: #ff0000;"><span style="font-size: 18px; color: #ff0000;">在load声音资源后，并不能立即调用play，否则无法播放声音，因为声音资源还没加载完成，应该给足够时间让它加载完成，比如在onCreate中load，在onclick中play</span></span></p>
+<p align="left">&nbsp;</p>
+<p align="left">&nbsp;</p>
+<p align="left">为了更好地管理SoundPool所加载的每个声音的1D，程序一般会使用一个HashMap对象来管理声音。</p>
+<p><span style="font-size: 15px;">HashMap用到，我在补充<br /></span></p>
+<p>&nbsp;</p>

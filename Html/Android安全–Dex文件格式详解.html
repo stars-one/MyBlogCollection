@@ -1,0 +1,287 @@
+原文链接：http://www.cnblogs.com/kexing/archive/2018/04/20/8890162.html
+<p>Dex文件是手机上类似Windows上的EXE文件，dex文件是可以直接在Dalvik虚拟机中加载运行的文件。</p>
+<p>首先我们来生成一个Dex文件。</p>
+<p>新建文件Hello.java内容如下：</p>
+<p>class Hello{<br />&nbsp;&nbsp;&nbsp; public static void main(String[] argc){<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; System.out.println(&ldquo;Hello!&rdquo;);<br />&nbsp;&nbsp;&nbsp; }<br />}</p>
+<p>javac Hello.java</p>
+<p>dx &ndash;dex &ndash;output=Hello.dex Hello.class</p>
+<p>这样就在当前目录下面生成了一个dex文件。</p>
+<p>编译的时候注意Java和Android默认的jdk版本要一致，否则会出错。</p>
+<p>Dex总体文件结构图如下：</p>
+<p><a class="img-hyperlink" href="http://www.blogfshare.com/wp-content/uploads/images/Android--_11DA9/clip_image001.png"><img style="background-image: none; padding-left: 0px; padding-right: 0px; display: block; float: none; margin-left: auto; margin-right: auto; padding-top: 0px; border-width: 0px;" title="clip_image001" src="http://www.blogfshare.com/wp-content/uploads/images/Android--_11DA9/clip_image001_thumb.png" alt="clip_image001" width="324" height="552" border="0" /></a></p>
+<p>下面 ，对应到刚刚生成的dex文件来分析：</p>
+<p>首先是文件头：</p>
+<p>Dex文件头主要包括校验和以及其他结构的偏移地址和长度信息。</p>
+<p><a class="img-hyperlink" href="http://www.blogfshare.com/wp-content/uploads/images/Android--_11DA9/image.png"><img style="background-image: none; padding-left: 0px; padding-right: 0px; display: block; float: none; margin-left: auto; margin-right: auto; padding-top: 0px; border-width: 0px;" title="image" src="http://www.blogfshare.com/wp-content/uploads/images/Android--_11DA9/image_thumb.png" alt="image" width="618" height="480" border="0" /></a></p>
+<p>为了方便查看，使用010 Editor打开刚刚生成的Dex文件，在官网下载一个Dex模板的脚本，然后运行。</p>
+<p><a class="img-hyperlink" href="http://www.blogfshare.com/wp-content/uploads/images/Android--_11DA9/image_3.png"><img style="background-image: none; padding-left: 0px; padding-right: 0px; display: block; float: none; margin-left: auto; margin-right: auto; padding-top: 0px; border-width: 0px;" title="image" src="http://www.blogfshare.com/wp-content/uploads/images/Android--_11DA9/image_thumb_3.png" alt="image" width="743" height="632" border="0" /></a></p>
+<h4 class="font-headlines">魔数字段：</h4>
+<p>Dex文件标志符&rsquo;dex\n&rsquo; ,它的作用主要是用来标志dex文件的。跟在dex后面的是版本号，目前支持的版本号为035\0 。</p>
+<h4 class="font-headlines">校验码：</h4>
+<p>主要用来检查这个字段开始到文件结尾，这段数据是否完整。使用zlib 的adler32 所计算的32-bitsCheckSum . 
+计算的范围为DEX 文件的长度（Header-&gt;fileSize) 减去8bytes Magic Code 与4bytes 
+CheckSum 的范围. 用来确保DEX 文件内容没有损毁.</p>
+<h4 class="font-headlines">SHA-1签名字段：</h4>
+<p>dex文件头里，前面已经有了面有一个4字节的检验字段码了，为什么还会有SHA-1签名字段呢？不是重复了吗？可是仔细考虑一下，这样设计自有道理。因
+ 
+为dex文件一般都不是很小，简单的应用程序都有几十K，这么多数据使用一个4字节的检验码，重复的机率还是有的，也就是说当文件里的数据修改了，还是很
+ 
+有可能检验不出来的。这时检验码就失去了作用，需要使用更加强大的检验码，这就是SHA-1。SHA-1校验码有20个字节，比前面的检验码多了16个字
+ 
+节，几乎不会不同的文件计算出来的检验是一样的。设计两个检验码的目的，就是先使用第一个检验码进行快速检查，这样可以先把简单出错的dex文件丢掉了，
+ 接着再使用第二个复杂的检验码进行复杂计算，验证文件是否完整，这样确保执行的文件完整和安全。</p>
+<h4 class="font-headlines">file_size：</h4>
+<p>文件的总大小<br />
+</p>
+<h4 class="font-headlines">header_size：</h4>
+<p>DexHeader的大小，0x70bytes。<br />
+</p>
+<h4 class="font-headlines">endian_tag：</h4>
+<p>预设值为Little-Endian, 在这栏位会显示32bits 值&rdquo;0&times;12345678。
+</p>
+<p>在Big-Endian 处理器上, 会转为&ldquo; 0&times;78563412。
+</p>
+<p>是link_size和link_off字段，主要用在文件的静态链接上，该dex不是静态链接文件，所有为0。<br />
+</p>
+<h4 class="font-headlines">map_off字段：</h4>
+<p>这个字段主要保存map开始位置，就是从文件头开始到map数据的长度，通过这个索引就可以找到map数据。
+</p>
+<p><a class="img-hyperlink" href="http://www.blogfshare.com/wp-content/uploads/images/Android--_11DA9/image_4.png"><img style="background-image: none; padding-left: 0px; padding-right: 0px; display: block; float: none; margin-left: auto; margin-right: auto; padding-top: 0px; border-width: 0px;" title="image" src="http://www.blogfshare.com/wp-content/uploads/images/Android--_11DA9/image_thumb_4.png" alt="image" width="536" height="115" border="0" /></a>
+</p>
+<p>map数据排列结构定义如下：</p>
+<pre>/*
+*Direct-mapped "map_list".
+*/&nbsp;&nbsp; typedef struct DexMapList {
+    u4 size; /* #of entries inlist */
+    DexMapItem list[1]; /* entries */
+}DexMapList;</pre>
+<p>每一个map项的结构定义如下：</p>
+<pre>/*
+*Direct-mapped "map_item".
+*/&nbsp;&nbsp; typedef struct DexMapItem {
+    u2 type; /* type code (seekDexType* above) */
+    u2 unused;
+    u4 size; /* count of items ofthe indicated type */
+    u4 offset; /* file offset tothe start of data */
+}DexMapItem;</pre>
+<p>DexMapItem结构定义每一项的数据意义：类型、类型个数、类型开始位置。</p>
+<p>其中的类型定义如下：</p>
+<pre>/*map item type codes */
+enum{
+    kDexTypeHeaderItem = 0x0000,
+    kDexTypeStringIdItem = 0x0001,
+    kDexTypeTypeIdItem = 0x0002,
+    kDexTypeProtoIdItem = 0x0003,
+    kDexTypeFieldIdItem = 0x0004,
+    kDexTypeMethodIdItem = 0x0005,
+    kDexTypeClassDefItem = 0x0006,
+    kDexTypeMapList = 0x1000,
+    kDexTypeTypeList = 0x1001,
+    kDexTypeAnnotationSetRefList = 0x1002,
+    kDexTypeAnnotationSetItem = 0x1003,
+    kDexTypeClassDataItem = 0x2000,
+    kDexTypeCodeItem = 0x2001,
+    kDexTypeStringDataItem = 0x2002,
+    kDexTypeDebugInfoItem = 0x2003,
+    kDexTypeAnnotationItem = 0x2004,
+    kDexTypeEncodedArrayItem = 0x2005,
+    kDexTypeAnnotationsDirectoryItem = 0x2006,
+};</pre>
+<p>从上面的类型可知，它包括了在dex文件里可能出现的所有类型。可以看出这里的类型与文件头里定义的类型有很多是一样的，这里的类型其实就是文件头里定义 的类型。其实这个map的数据，就是头里类型的重复，完全是为了检验作用而存在的。当Android系统加载dex文件时，如果比较文件头类型个数与 map里类型不一致时，就会停止使用这个dex文件。</p>
+<p>该dex文件的map_off = 0x24c，而便宜为0x24c的位置值为0x00d。也就是有13项！每项12个字节，所以整个map_list所占空间为12*13+4 = 160 = 0x00a0，范围为0x24c &ndash; 0x2ec.也就是到文件结尾的位置。</p>
+<h4 class="font-headlines">string_ids_size/off字段：</h4>
+<p>这两个字段主要用来标识字符串资源。源程序编译后，程序里用到的字符串都保存在这个数据段里，以便解释执行这个dex文件使用。其中包括调用库函数里的类名称描述，用于输出显示的字符串等。</p>
+<p>string_ids_size标识了有多少个字符串，string_ids_off标识字符串数据区的开始位置。字符串的存储结构如下：</p>
+<p>/* * Direct-mapped "string_id_item". */ typedef struct DexStringId { u4 stringDataOff; /* file offset to string_data_item */ } DexStringId;</p>
+<p>可以看出这个数据区保存的只是字符串表的地址索引。如果要找到字符串的实际数据，还需要通过个地址索引找到文件的相应开始位置，然后才能得到字符串数据。 每一个字符串项的索引占用4个字节，因此这个数据区的大小就为4*string_ids_size。实际数据区中的字符串采用UTF8格式保存。</p>
+<p>上面我们看到size为0&times;10，off为0&times;70。&nbsp; 也就是有16个字符串，每个索引占4个字节，也就是从0&times;70开始的16*4=64个字节是字符串的索引。</p>
+<p>来到0&times;70处，看到第一个索引为0x17E，来到0x17E处。</p>
+<p><a class="img-hyperlink" href="http://www.blogfshare.com/wp-content/uploads/images/Android--_11DA9/image_5.png"><img style="background-image: none; padding-left: 0px; padding-right: 0px; display: block; float: none; margin-left: auto; margin-right: auto; padding-top: 0px; border-width: 0px;" title="image" src="http://www.blogfshare.com/wp-content/uploads/images/Android--_11DA9/image_thumb_5.png" alt="image" width="702" height="248" border="0" /></a></p>
+<p>16进制显示出来内容如下：<br />063c 696e 6974 3e00<br />其实际数据则是&rdquo;&lt;init&gt;\0&rdquo; </p>
+<p>另外这段数据中不仅包括字符串的字符串的内容和结束标志，在最开头的位置还标明了字符串的长度。上例中第一个字节06就是表示这个字符串有6个字符。</p>
+<p>关于字符串的长度有两点需要注意的地方： </p>
+<p>1、关于长度的编码格式 </p>
+<p>dex文件里采用了变长方式表示字符串长度。一个字符串的长度可能是一个字节（小于256）或者4个字节（1G大小以上）。字符串的长度大多数都是小于
+ 
+256个字节，因此需要使用一种编码，既可以表示一个字节的长度，也可以表示4个字节的长度，并且1个字节的长度占绝大多数。能满足这种表示的编码方式有很多，但dex文件里采用的是uleb128方式。leb128编码是一种变长编码，每个字节采用７位来表达原来的数据，最高位用来表示是否有后继字节。若第一个
+ Byte 的最高位为 1 ，则表示还需要下一个 Byte 来描述 ，直至最后一个 Byte 的最高位为 0 。每个 Byte 的其余 Bit 
+用来表示数据 ，如下表所示 。 </p>
+<p><a class="img-hyperlink" href="http://www.blogfshare.com/wp-content/uploads/images/Android--_11DA9/image_6.png"><img style="background-image: none; padding-left: 0px; padding-right: 0px; display: block; float: none; margin-left: auto; margin-right: auto; padding-top: 0px; border-width: 0px;" title="image" src="http://www.blogfshare.com/wp-content/uploads/images/Android--_11DA9/image_thumb_6.png" alt="image" width="725" height="61" border="0" /></a> </p>
+<p>它的编码算法如下：</p>
+<pre>/*
+ * Writes a 32-bit value in unsigned ULEB128 format.
+ * Returns the updated pointer.
+ */
+DEX_INLINE u1* writeUnsignedLeb128(u1* ptr, u4 data)
+{
+    while (true) {
+        u1 out = data &amp; 0x7f;
+        if (out != data) {
+            *ptr++ = out | 0x80;
+            data &gt;&gt;= 7;
+        } else {
+            *ptr++ = out;
+            break;
+        }
+    }
+    return ptr;
+}</pre>
+<p>它的解码算法如下：</p>
+<pre>/*
+ * Reads an unsigned LEB128 value, updating the given pointer to point
+ * just past the end of the read value. This function tolerates
+ * non-zero high-order bits in the fifth encoded byte.
+ */
+DEX_INLINE int readUnsignedLeb128(const u1** pStream) {
+    const u1* ptr = *pStream;
+    int result = *(ptr++);
+   if (result &gt; 0x7f) {
+        int cur = *(ptr++);
+        result = (result &amp; 0x7f) | ((cur &amp; 0x7f) &lt;&lt; 7);
+        if (cur &gt; 0x7f) {
+            cur = *(ptr++);
+            result |= (cur &amp; 0x7f) &lt;&lt; 14;
+            if (cur &gt; 0x7f) {
+                cur = *(ptr++);
+                result |= (cur &amp; 0x7f) &lt;&lt; 21;
+                if (cur &gt; 0x7f) {
+                    /*
+                     * Note: We don't check to see if cur is out of
+                     * range here, meaning we tolerate garbage in the
+                     * high four-order bits.
+                     */
+                    cur = *(ptr++);
+                    result |= cur &lt;&lt; 28;
+                }
+            }
+        }
+    }
+    *pStream = ptr;
+    return result;
+}</pre>
+<p>根据上面的算法分析上面例子字符串，取得第一个字节是06，最高位为0，因此没有后继字节，那么取出这个字节里7位有效数据，就是6，也就是说这个字符串是6个字节，但不包括结束字符&ldquo;\0&rdquo;。</p>
+<p>2、关于长度的意义</p>
+<p>由于字符串内容采用的是UTF-8格式编码，表示一个字符的字节数是不定的。即有时是一个字节表示一个字符，有时是两个、三个甚至四个字节表示一个字符。 而这里的长度代表的并不是整个字符串所占用的字节数，表示这个字符串包含的字符个数。所以在读取时需要注意，尤其是在包含中文字符时，往往会因为读取的长 度不正确导致字符串被截断。</p>
+<h4 class="font-headlines">type_ids_size/off字段：</h4>
+<p>type_ids 区索引了 .dex 文件里的所有数据类型 ，包括 class 类型 ，数组类型（array types）和基本类型(primitive types) 。 本区域里的元素格式为type_ids_item , 结构描述如下 ：<br />struct type_ids_item<br />{<br />uint descriptor_idx;<br />}<br />type_ids_item 里面 descriptor_idx 的值的意思 ，是 string_ids 里的 index 序号 ，是用来描述此type 的字符串 。<br />根据 header 里 type_ids_size = 0&times;07 , type_ids_off = 0xb0 , 找到对应的二进制描述区 。</p>
+<p>03 00 00 00 04 00 00 00&nbsp; 05 00 00 00 06 00 00 00<br />07 00 00 00 08 00 00 00&nbsp; 0A 00 00 00 </p>
+<p>分别对应：</p>
+<p><a class="img-hyperlink" href="http://www.blogfshare.com/wp-content/uploads/images/Android--_11DA9/image_7.png"><img style="background-image: none; padding-left: 0px; padding-right: 0px; display: block; float: none; margin-left: auto; margin-right: auto; padding-top: 0px; border-width: 0px;" title="image" src="http://www.blogfshare.com/wp-content/uploads/images/Android--_11DA9/image_thumb_7.png" alt="image" width="275" height="123" border="0" /></a></p>
+<h4 class="font-headlines">proto_ids_size/off字段：</h4>
+<p>proto 的意思是 method prototype 代表 java 语言里的一个 method 的原型 。proto_ids 里元素为 proto_id_item , 结构如下 。<br />uint 32-bit unsigned int, little-endian<br />struct proto_id_item<br />{<br />uint shorty_idx;<br />uint return_type_idx;<br />uint parameters_off;<br />}</p>
+<p>shorty_idx , 跟 type_ids 一样 ，它的值是一个 string_ids 的 index 号 ，最终是一个简短的字符串描述 ，用来说明该 method 原型 。</p>
+<p>return_type_idx , 它的值是一个 type_ids 的 index 号 ，表示该 method 原型的返回值类型 。<br />parameters_off , 后缀 off 是 offset , 指向 method 原型的参数列表 type_list ; 若 method 没有参数 ，值为0 。参数列表的格式是 type_list ，结构从逻辑上如下描述 。</p>
+<p>size 表示参数的个数 ；type_idx 是对应参数的类型 ，它的值是一个 type_ids 的 index 号 ，跟 return_type_idx 是同一个品种的东西 。<br />uint 32-bit unsigned int, little-endian<br />ushort 16-bit unsigned int, little-endian<br />struct type_list<br />{<br />uint size;<br />ushort type_idx[size];<br />}<br />header 里 proto_ids_size = 0&times;03 , proto_ids_off = 0xcc , 它的二进制描述区如下 ：</p>
+<p>08 00 00 00 05 00 00 00 00 00 00 00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; V V 无参数</p>
+<p>09 00 00 00 05 00 00 00 70 01 00 00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VL V 参数偏移0&times;170</p>
+<p>09 00 00 00&nbsp; 05 00 00 00 78 01 00 00&nbsp;&nbsp;&nbsp;&nbsp; VL V 参数偏移0&times;178</p>
+<p>&nbsp;</p>
+<p>0&times;170: </p>
+<p>01 00 00 00 03 00&nbsp;&nbsp;&nbsp;&nbsp; 一个参数&nbsp;&nbsp; Ljava/lang/String;</p>
+<p>0&times;178</p>
+<p>01 00 00 00 06 00&nbsp;&nbsp;&nbsp;&nbsp; 一个参数&nbsp;&nbsp; [Ljava/lang/String;</p>
+<p>&nbsp;</p>
+<h4 class="font-headlines">field_ids_size/off字段：</h4>
+<p>filed_ids 区里面有被本 .dex 文件引用的所有的 field 。本区的元素格式是 field_id_item ，逻辑结构描述如下：</p>
+<p>ushort 16-bit unsigned int, little-endian<br />uint 32-bit unsigned int, little-endian<br />struct filed_id_item<br />{<br />ushort class_idx;<br />ushort type_idx;<br />uint name_idx;<br />}</p>
+<p>class_idx , 表示本 field 所属的 class 类型 , class_idx 的值是 type_ids 的一个 index ， 并且必须指向一个class 类型 。<br />type_idx , 表示本 field 的类型 ，它的值也是 type_ids 的一个 index 。<br />name_idx , 表示本 field 的名称 ，它的值是 string_ids 的一个 index 。</p>
+<p>header 里 field_ids_size = 1 , field_ids_off = 0xf0 。说明本 .dex 只有一个 field ，这部分的二进制描述如下 ：</p>
+<p>04 00 01 00 0D 00 00 00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Ljava/lang/System;&nbsp;&nbsp;&nbsp;&nbsp; Ljava/io/PrintStram;&nbsp;&nbsp;&nbsp;&nbsp; out</p>
+<p><strong>method_ids_size/off字段：</strong></p>
+<p>method_ids 是索引区的最后一个条目,它索引了 .dex 文件里的所有的 method.<br />method_ids 的元素格式是 method_id_item ， 结构跟 fields_ids 很相似：<br />ushort 16-bit unsigned int, little-endian<br />uint 32-bit unsigned int, little-endian<br />struct filed_id_item<br />{<br />ushort class_idx;<br />ushort proto_idx;<br />uint name_idx;<br />}</p>
+<p>class_idx , 表示本 method 所属的 class 类型 , class_idx 的值是 type_ids 的一个 index ， 并且必须指向一个 class 类型 。<br />name_idx , 表示本 method 的名称 ，它的值是 string_ids 的一个 index 。<br />proto_idx 描述该 method 的原型 ，指向 proto_ids 的一个 index 。</p>
+<p>header 里 method_ids_size = 0&times;04 , method_ids_off = 0xf8 。本部分的二进制描述如下 ：</p>
+<p>00 00 00 00 00 00 00 00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LHello;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; V()V&nbsp;&nbsp;&nbsp; &lt;init&gt;<br />00 00 02 00 0C 00 00 00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LHello;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VL([Ljava/lang/String;)V&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; main</p>
+<p>01 00 01 00 0E 00 00 00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Ljava/io/PrintStram;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VL(Ljava/lang/String;)V&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; println<br />02 00 00 00 00 00 00 00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Ljava/lang/Object;&nbsp;&nbsp;&nbsp; V()V&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;init&gt;</p>
+<p>&nbsp;</p>
+<p>对 .dex 反汇编的时候 ，常用的 method 表示方法是这种形式 :<br />Lpackage/name/ObjectName;-&gt;MethodName(III)Z</p>
+<p>&nbsp;</p>
+<p>将上面可整理为：</p>
+<p>LHello;-&gt;&lt;init&gt;()V</p>
+<p>LHello;-&gt;main([Ljava/lang/String;)V</p>
+<p>Ljava/io/PrintStram;-&gt;println(Ljava/lang/String;)V</p>
+<p>Ljava/lang/Object;-&gt;init()V</p>
+<p>&nbsp;</p>
+<p>至此 ，索引区的内容描述完毕 ，包括 string_ids , type_ids，proto_ids , field_ids , method_ids 。每个索引<br />区域里存放着指向具体数据的偏移地址 （如 string_ids ) ， 或者存放的数据是其它索引区域里面的 index 号。</p>
+<p>&nbsp;</p>
+<h4 class="font-headlines">class_def_size/off字段：</h4>
+<p>从字面意思解释 ，class_defs 区域里存放着 class definitions , class 的定义 。它的结构较 .dex 区都要复杂些 ,<br />因为有些数据都直接指向了 data 区里面 。<br />class_defs 的数据格式为 class_def_item ， 结构描述如下 ：<br />uint 32-bit unsigned int, little-endian<br />struct class_def_item<br />{<br />uint class_idx;<br />uint access_flags;<br />uint superclass_idx;<br />uint interfaces_off;</p>
+<p>uint source_file_idx;<br />uint annotations_off;<br />uint class_data_off;<br />uint static_value_off;<br />}</p>
+<p>(1) class_idx 描述具体的 class 类型 ，值是 type_ids 的一个 index 。值必须是一个 class 类型 ，不能是数组类型或者基本类型 。<br />(2) access_flags 描述 class 的访问类型 ，诸如 public , final , static 等 。</p>
+<p>(3) superclass_idx , 描述 supperclass 的类型 ，值的形式跟 class_idx 一样 。<br />(4) interfaces_off , 值为偏移地址 ，指向 class 的 interfaces , 被指向的数据结构为 type_list 。class 若没有<br />interfaces ,值为 0。<br />(5) source_file_idx , 表示源代码文件的信息 ，值是 string_ids 的一个 index 。若此项信息缺失 ，此项值赋值为<br />NO_INDEX=0xffff ffff 。<br />(6) annotions_off , 值是一个偏移地址 ，指向的内容是该 class 的注释 ，位置在 data 区，格式为annotations_direcotry_item 。若没有此项内容 ，值为 0 。<br />(7)
+ class_data_off , 值是一个偏移地址 ，指向的内容是该 class 的使用到的数据 ，位置在 data 
+区，格式为class_data_item 。若没有此项内容 ，值为 0 。该结构里有很多内容 ，详细描述该 class 的 field ， 
+method, method 里的执行代码等信息 。<br />(8) static_value_off , 值是一个偏移地址 ，指向 data 区里的一个列表 ( list ) ，格式为 encoded_array_item。若没有此项内容 ，值为 0 。</p>
+<p>header 里 class_defs_size = 0&times;01 , class_defs_off = 0x 0118 。则此段二进制描述为 ：</p>
+<p>00 00 00 00&nbsp;&nbsp;&nbsp;&nbsp; LHello;</p>
+<p>00 00 00 00&nbsp;&nbsp;&nbsp;&nbsp; 无，默认包访问权限<br />02 00 00 00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Ljava/lang/Object;</p>
+<p>00 00 00 00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 无接口</p>
+<p>02 00 00 00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Hello.java</p>
+<p>00 00 00 00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 无注解<br />3E 02 00 00&nbsp;&nbsp;&nbsp;&nbsp; 0x23E</p>
+<p>00 00 00 00&nbsp;&nbsp;&nbsp;&nbsp; 无</p>
+<h4 class="font-headlines">class_data_item：</h4>
+<p>class_data_off 指向 data 区里的 class_data_item 结构 ,class_data_item 里存放着本 class 使用到的各种数<br />据 ，下面是 class_data_item 的逻辑结构 ：</p>
+<p>uleb128 unsigned little-endian base 128<br />struct class_data_item<br />{<br />uleb128 static_fields_size;<br />uleb128 instance_fields_size;<br />uleb128 direct_methods_size;<br />uleb128 virtual_methods_size;<br />encoded_field static_fields [ static_fields_size ];<br />encoded_field instance_fields [ instance_fields_size ];<br />encoded_method direct_methods [ direct_method_size ];<br />encoded_method virtual_methods [ virtual_methods_size ];<br />}</p>
+<p>encoded_field 的结构如下 ：<br />struct encoded_field<br />{<br />uleb128 filed_idx_diff; // index into filed_ids for ID of this filed<br />uleb128 access_flags; // access flags like public, static etc.<br />}</p>
+<p>encoded_method 的结构如下 ：<br />struct encoded_method<br />{<br />uleb128 method_idx_diff;<br />uleb128 access_flags;<br />uleb128 code_off;</p>
+<p>}</p>
+<p>（1）method_idx_diff , 前缀 methd_idx 表示它的值是 method_ids 的一个 index ，后缀 
+_diff 表示它是于另外一个 method_idx 的一个差值 ，就是相对于 encodeed_method [] 数组里上一个元素的 
+method_idx 的差值 。<br />其实 encoded_filed &ndash; &gt; field_idx_diff 表示的也是相同的意思 ，只是编译出来的 Hello.dex 文件里没有使用到class filed 所以没有仔细讲。</p>
+<p>（2）access_flags ， 访问权限 ， 比如 public、private、static、final 等 。<br />（3）code_off , 一个指向 data 区的偏移地址 ，目标是本 method 的代码实现 。被指向的结构是code_item ，有近 10 项元素 。</p>
+<p>0x23E：</p>
+<p>00&nbsp; static_fields_size</p>
+<p>00&nbsp; instance_fields_size<br />02&nbsp; direct_methods_size</p>
+<p>00&nbsp; virtual_methods_size</p>
+<p>00 80 80 04 B8 02&nbsp; 01 09 D0 02 0D 00 00 00</p>
+<p>名称为 LHello; 的 class 里只有 2 个 directive methods 。 directive_methods 里的值都是 uleb128 的原始二<br />进制值 。按照 directive_methods 的格式 encoded_method 再整理一次这 2 个 method 描述 ，得到结果如下<br />表格所描述 。method 一个是 &lt;init&gt; , 一个是 main 。</p>
+<p>其中两个directive&nbsp; methods为：</p>
+<p>00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LHello;-&gt;&lt;init&gt;()V&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </p>
+<p>80 80 04&nbsp;&nbsp;&nbsp;&nbsp; 0&times;10000&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ACC_CONSTRUCTOR&nbsp; </p>
+<p>B8 02&nbsp;&nbsp;&nbsp; 0&times;0138</p>
+<p>01&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LHello;-&gt;main([Ljava/lang/String;)V</p>
+<p>09&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ACC_PUBLIC|ACC_STATIC</p>
+<p>D0 02&nbsp;&nbsp; 0&times;0150</p>
+<h4 class="font-headlines">class_def_item &ndash;&gt; class_data_item &ndash;&gt; code_item:</h4>
+<p>code_item 结构里描述着某个 method 的具体实现 。它的结构如下描述 ：</p>
+<p>struct code_item<br />{<br />ushort registers_size;<br />ushort ins_size;<br />ushort outs_size;<br />ushort tries_size;<br />uint debug_info_off;<br />uint insns_size;<br />ushort insns [ insns_size ];<br />ushort paddding; // optional<br />try_item tries [ tyies_size ]; // optional<br />encoded_catch_handler_list handlers; // optional<br />}</p>
+<p>末尾的 3 项标志为 optional , 表示可能有 ，也可能没有 ，根据具体的代码来 。<br />(1) registers_size, 本段代码使用到的寄存器数目。<br />(2) ins_size, method 传入参数的数目 。<br />(3) outs_size, 本段代码调用其它method 时需要的参数个数 。<br />(4) tries_size, try_item 结构的个数 。<br />(5) debug_off, 偏移地址 ，指向本段代码的 debug 信息存放位置 ，是一个 debug_info_item 结构。<br />(6) insns_size, 指令列表的大小 ，以 16-bit 为单位 。 insns 是 instructions 的缩写 。</p>
+<p>(7) padding , 值为 0 ，用于对齐字节 。<br />(8) tries 和 handlers ， 用于处理 java 中的 exception , 常见的语法有 try catch 。</p>
+<p>那先来分析下main的执行代码，它的code_off为0&times;150,对应的二进制代码如下：</p>
+<p>03 00&nbsp;&nbsp; registers_size</p>
+<p>01 00&nbsp;&nbsp; ins_size</p>
+<p>02 00&nbsp;&nbsp; outs_size</p>
+<p>00 00&nbsp;&nbsp; tries_size</p>
+<p>37 02 00 00&nbsp;&nbsp;&nbsp; debug_info_off&nbsp;&nbsp; 0&times;0237</p>
+<p>08 00 00 00&nbsp;&nbsp;&nbsp; insns_size&nbsp;&nbsp;&nbsp; 0&times;08</p>
+<p>62 00 00 00 1A 01 01 00&nbsp; 6E 20 02 00 10 00 0E 00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; insns</p>
+<p>0&times;0062 0&times;0000 0x011a 0x 0001 0x 206e 0&times;0002 0&times;0010 0x 000e</p>
+<p>insns 数组里的 8 个二进制原始数据 ， 对这些数据的解析 ，需要对照官网的文档 《Dalvik VM Instruction Format》和《Bytecode for Dalvik VM》。分析</p>
+<p><a title="http://source.android.com/devices/tech/dalvik/instruction-formats.html" href="http://source.android.com/devices/tech/dalvik/instruction-formats.html">http://source.android.com/devices/tech/dalvik/instruction-formats.html</a></p>
+<p><a title="http://source.android.com/devices/tech/dalvik/dalvik-bytecode.html" href="http://source.android.com/devices/tech/dalvik/dalvik-bytecode.html">http://source.android.com/devices/tech/dalvik/dalvik-bytecode.html</a></p>
+<p>分析思路整理如下:</p>
+<p>《Dalvik VM Instruction Format》 里操作符 op 都是位于首个 16bit 数据的低 8 bit ，起始的是 op =0&times;62。</p>
+<p>在 《Bytecode for Dalvik VM》 里找到对应的 Syntax 和 format 。</p>
+<p>syntax = sget_object<br />format = 0x21c 。</p>
+<p>在《Dalvik VM Instruction Format》里查找 21c ， 得知 op = 0&times;62 的指令占据 2 个 16 
+bit 数据 ，格式是 AA|op BBBB ，解释为 op vAA, type@BBBB 。因此这 8 组 16 bit 数据里 ，前 2 
+个是一组 。对比数据得 AA=0&times;00, BBBB = 0&times;0000。</p>
+<p>返回《Bytecode for Dalvik VM》里查阅对 sget_object 的解释， AA 的值表示 Value 
+Register ，即0 号寄存器； BBBB 表示 static field 的 index ，就是之前分析的field_ids 区里 
+Index = 0 指向的那个东西,也就是Ljava/lang/System; -&gt; out:Ljava/io/printStream;</p>
+<p>所以前两个16bit数据解释为：</p>
+<p>前 2 个 16 bit 数据 0x 0062 0000 , 解释为<br />sget_object v0, Ljava/lang/System; -&gt; out:Ljava/io/printStream;</p>
+<p>其余的 6 个 16 bit 数据分析思路跟这个一样 ，依次整理如下 ：<br />0x011a 0&times;0001: const-string v1, &ldquo;Hello!&rdquo;<br />0x206e 0&times;0002 0&times;0010:<br />invoke-virtual {v0, v1}, Ljava/io/PrintStream; -&gt; println(Ljava/lang/String;)V<br />0x000e: return-void</p>
+<p>所以整个main方法为：</p>
+<p>ACC_PUBLIC ACC_STATIC LHello;-&gt;main([Ljava/lang/String;)V<br />{<br />sget_object v0, Ljava/lang/System; -&gt; out:Ljava/io/printStream;<br />const-string v1,Hello, Android!<br />invoke-virtual {v0, v1}, Ljava/io/PrintStream; -&gt; println(Ljava/lang/String;)V<br />return-void<br />}</p>
+<p>然后再使用baksmali.jar反编译成smali。</p>
+<p>.class LHello;<br />.super Ljava/lang/Object;<br />.source &ldquo;Hello.java&rdquo;</p>
+<p># direct methods<br />.method constructor &lt;init&gt;()V<br />&nbsp;&nbsp;&nbsp; .registers 1</p>
+<p>&nbsp;&nbsp;&nbsp; .prologue<br />&nbsp;&nbsp;&nbsp; .line 1<br />&nbsp;&nbsp;&nbsp; invoke-direct {p0}, Ljava/lang/Object;-&gt;&lt;init&gt;()V</p>
+<p>&nbsp;&nbsp;&nbsp; return-void<br />.end method</p>
+<p>.method public static main([Ljava/lang/String;)V<br />&nbsp;&nbsp;&nbsp; .registers 3<br />&nbsp;&nbsp;&nbsp; .parameter &ldquo;argc&rdquo;</p>
+<p>&nbsp;&nbsp;&nbsp; .prologue<br />&nbsp;&nbsp;&nbsp; .line 3<br />&nbsp;&nbsp;&nbsp; sget-object v0, Ljava/lang/System;-&gt;out:Ljava/io/PrintStream;</p>
+<p>&nbsp;&nbsp;&nbsp; const-string v1, &ldquo;Hello!&rdquo;</p>
+<p>&nbsp;&nbsp;&nbsp; invoke-virtual {v0, v1}, Ljava/io/PrintStream;-&gt;println(Ljava/lang/String;)V</p>
+<p>&nbsp;&nbsp;&nbsp; .line 4<br />&nbsp;&nbsp;&nbsp; return-void<br />.end method</p>
+<p>和我们分析的一样。</p>

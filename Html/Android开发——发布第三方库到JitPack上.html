@@ -1,0 +1,28 @@
+原文链接：http://www.cnblogs.com/kexing/archive/2018/04/10/8779000.html
+<h2>前言：</h2>
+<p><span style="font-size: 16px;">看到大神们的写的第三方控件，比较好用，我们使用的时候直接是在gradle上加上代码就可以使用了，现在到我们写了一个第三方控件，想要别人使用的时候也是直接在gradle加上相关的代码就可以用了，我们该如何操作呢？答案很简单，就是在JitPack网站上发布我们的库就可以</span></p>
+<h2>正文：</h2>
+<h3>1.创建一个moudle</h3>
+<p><span style="font-size: 16px;">这里其实就是相当于自定义控件，自定义控件可以参考我这一篇</span></p>
+<h1 class="postTitle"><span style="font-size: 16px;"><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/kexing/p/7760936.html">Android 自定义控件</a></span></h1>
+<h3>2.添加相关的设置</h3>
+<p><span style="font-size: 16px;">我们需要修改两个build文件，一个是工程或者说是项目根build，另外一个则是库的build</span></p>
+<p><img src="https://images2018.cnblogs.com/blog/1210268/201804/1210268-20180410143757098-322022661.png" alt="" /></p>
+<p><span style="font-size: 16px;">工程build加一行<span style="color: #0099ff;">classpath <span style="color: #ff3333;">'com.github.dcendents:android-maven-gradle-plugin:1.4.1'</span></span></span></p>
+<p><span style="font-size: 16px;"><img src="https://images2018.cnblogs.com/blog/1210268/201804/1210268-20180410143910400-241328306.png" alt="" /></span></p>
+<p><span style="font-size: 16px;">库的build则在开头加入下列代码</span></p>
+<p><span style="font-size: 16px;"><span style="color: #0099ff;">apply <span style="color: #ff3333;">plugin: <span style="color: #ff3333;">'com.github.dcendents.android-maven'<br />group=<span style="color: #ff3333;">'com.github.Stars-One'<br /></span></span></span></span></span></p>
+<p><span style="font-size: 16px;">Stars-One是我的GIthub账户名，修改为自己的即可</span></p>
+<p><span style="font-size: 16px;"><img src="https://images2018.cnblogs.com/blog/1210268/201804/1210268-20180410144100457-1649163248.png" alt="" /></span></p>
+<h3>3.将项目上传到github上</h3>
+<p><span style="font-size: 16px;">这里就不多说了，不懂可以看我这一篇<a id="post_title_link_8344413" href="http://www.cnblogs.com/kexing/p/8344413.html">Git的简单的基本使用</a></span></p>
+<h3>4.新建一个release版本</h3>
+<p><img src="https://images2018.cnblogs.com/blog/1210268/201804/1210268-20180410144414413-1148659831.png" alt="" width="1100" height="524" /></p>
+<p><span style="font-size: 16px;">之后新建即可</span></p>
+<h3>5.在JitPack网站上生成</h3>
+<p><span style="font-size: 16px;">在JitPack网站登录自己的Github，左侧就会出现你的Github上的项目，选择要发布的库的那个项目，点击look up，之后选择对应版本，点击get it</span></p>
+<p><span style="font-size: 16px;">之后下面就会出现使用的说明，复制到GIthub上，写在介绍里面，别人就能清楚明了地知道如何导入你的第三方库</span></p>
+<p><img src="https://images2018.cnblogs.com/blog/1210268/201804/1210268-20180410144631826-169517485.png" alt="" width="1014" height="489" /></p>
+<h3>6.在gradle添加代码即可使用</h3>
+<p><img src="https://images2018.cnblogs.com/blog/1210268/201804/1210268-20180410144850565-1585734428.png" alt="" /></p>
+<p>&nbsp;</p>

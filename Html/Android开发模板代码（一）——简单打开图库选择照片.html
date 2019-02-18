@@ -1,0 +1,129 @@
+原文链接：http://www.cnblogs.com/kexing/archive/2018/02/01/8401279.html
+<p><span style="font-size: 16px;">首先，先贴上样本代码</span></p>
+<div class="cnblogs_code">
+<pre><span style="font-size: 16px;"><span style="color: #008000;">//</span><span style="color: #008000;">检查权限</span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> checkPermission() {
+        </span><span style="color: #0000ff;">if</span> (ContextCompat.checkSelfPermission(<span style="color: #0000ff;">this</span>, Manifest.permission.WRITE_EXTERNAL_STORAGE) !=<span style="color: #000000;"> PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(</span><span style="color: #0000ff;">this</span>, <span style="color: #0000ff;">new</span> String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1<span style="color: #000000;">);
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">发现没有权限，调用requestPermissions方法向用户申请权限，requestPermissions接收三个参数，第一个是context，第二个是一个String数组，我们把要申请的权限
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">名放在数组中即可，第三个是请求码，只要是唯一值就行</span>
+        } <span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            openAlbum();</span><span style="color: #008000;">//</span><span style="color: #008000;">有权限就打开相册</span>
+<span style="color: #000000;">        }
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> openAlbum() {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">通过intent打开相册，使用startactivityForResult方法启动actvity，会返回到onActivityResult方法，所以我们还得复写onActivityResult方法</span>
+        Intent intent = <span style="color: #0000ff;">new</span> Intent("android.intent.action.GET_CONTENT"<span style="color: #000000;">);
+        intent.setType(</span>"image/*"<span style="color: #000000;">);
+        startActivityForResult(intent, CHOOSE_PHOTO);
+    }
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">弹出窗口向用户申请权限</span>
+<span style="color: #000000;">
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span> onRequestPermissionsResult(<span style="color: #0000ff;">int</span> requestCode, @NonNull String[] permissions, @NonNull <span style="color: #0000ff;">int</span><span style="color: #000000;">[] grantResults) {
+        </span><span style="color: #0000ff;">super</span>.onRequestPermissionsResult(requestCode, permissions, grantResults);<span style="color: #008000;">//</span><span style="color: #008000;">弹出授权的窗口，这条语句也可以删除，没有影响
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">获得了用户的授权结果，保存在grantResults中，判断grantResult中的结果来决定接下来的操作</span>
+        <span style="color: #0000ff;">switch</span><span style="color: #000000;"> (requestCode) {
+            </span><span style="color: #0000ff;">case</span> 1<span style="color: #000000;">:
+
+                </span><span style="color: #0000ff;">if</span> (grantResults.length &gt; 0 &amp;&amp; grantResults[0] ==<span style="color: #000000;"> PackageManager.PERMISSION_GRANTED) {
+                    openAlbum();
+                } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                    Toast.makeText(</span><span style="color: #0000ff;">this</span>, "授权失败，无法操作"<span style="color: #000000;">, Toast.LENGTH_SHORT).show();
+                }
+                </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">default</span><span style="color: #000000;">:
+                </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+        }
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">protected</span> <span style="color: #0000ff;">void</span> onActivityResult(<span style="color: #0000ff;">int</span> requestCode, <span style="color: #0000ff;">int</span><span style="color: #000000;"> resultCode, Intent data) {
+        </span><span style="color: #0000ff;">super</span><span style="color: #000000;">.onActivityResult(requestCode, resultCode, data);
+        </span><span style="color: #0000ff;">switch</span><span style="color: #000000;"> (requestCode) {
+            </span><span style="color: #0000ff;">case</span><span style="color: #000000;"> CHOOSE_PHOTO:
+                </span><span style="color: #0000ff;">if</span> (resultCode ==<span style="color: #000000;"> RESULT_OK) {
+                    </span><span style="color: #0000ff;">if</span> (Build.VERSION.SDK_INT &gt;= 19<span style="color: #000000;">) {
+                        handleImageOnkitKat(data);</span><span style="color: #008000;">//</span><span style="color: #008000;">高于4.4版本使用此方法处理图片</span>
+                    } <span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                        handleImageBeforeKitKat(data);</span><span style="color: #008000;">//</span><span style="color: #008000;">低于4.4版本使用此方法处理图片</span>
+<span style="color: #000000;">                    }
+                }
+                </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">default</span><span style="color: #000000;">:
+                </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+        }
+    }
+
+    @TargetApi(</span>19<span style="color: #000000;">)
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> handleImageOnkitKat(Intent data) {
+        String imagePath </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        Uri uri </span>=<span style="color: #000000;"> data.getData();
+        </span><span style="color: #0000ff;">if</span> (DocumentsContract.isDocumentUri(<span style="color: #0000ff;">this</span><span style="color: #000000;">, uri)) {
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">如果是document类型的uri，则通过document id处理</span>
+            String docId =<span style="color: #000000;"> DocumentsContract.getDocumentId(uri);
+            </span><span style="color: #0000ff;">if</span> ("com.android.providers.media.documents"<span style="color: #000000;">.equals(uri.getAuthority())) {
+                String id </span>= docId.split(":")[1];<span style="color: #008000;">//</span><span style="color: #008000;">解析出数字格式的id</span>
+                String selection = MediaStore.Images.Media._ID + "=" +<span style="color: #000000;"> id;
+                imagePath </span>=<span style="color: #000000;"> getImagePath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, selection);
+            } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> ("com.android,providers.downloads.documents"<span style="color: #000000;">.equals(uri.getAuthority())) {
+                Uri contentUri </span>= ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"<span style="color: #000000;">), Long.valueOf(docId));
+                imagePath </span>= getImagePath(contentUri, <span style="color: #0000ff;">null</span><span style="color: #000000;">);
+            }
+
+        } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> ("content"<span style="color: #000000;">.equalsIgnoreCase(uri.getScheme())) {
+            imagePath </span>= getImagePath(uri, <span style="color: #0000ff;">null</span><span style="color: #000000;">);
+        }
+        displayImage(imagePath);
+    }
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> handleImageBeforeKitKat(Intent data) {
+        Uri uri </span>=<span style="color: #000000;"> data.getData();
+        String imagePath </span>= getImagePath(uri, <span style="color: #0000ff;">null</span><span style="color: #000000;">);
+        displayImage(imagePath);
+    }
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">获得图片路径</span>
+    <span style="color: #0000ff;">public</span><span style="color: #000000;"> String getImagePath(Uri uri, String selection) {
+        String path </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        Cursor cursor </span>= getContentResolver().query(uri, <span style="color: #0000ff;">null</span>, selection, <span style="color: #0000ff;">null</span>, <span style="color: #0000ff;">null</span>);   <span style="color: #008000;">//</span><span style="color: #008000;">内容提供器</span>
+        <span style="color: #0000ff;">if</span> (cursor != <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+            </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (cursor.moveToFirst()) {
+                path </span>= cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));   <span style="color: #008000;">//</span><span style="color: #008000;">获取路径</span>
+<span style="color: #000000;">            }
+        }
+        cursor.close();
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> path;
+    }
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">展示图片</span>
+    <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> displayImage(String imagePath) {
+        </span><span style="color: #0000ff;">if</span> (imagePath != <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+            Bitmap bitImage </span>= BitmapFactory.decodeFile(imagePath);<span style="color: #008000;">//</span><span style="color: #008000;">格式化图片</span>
+<span style="color: #ff0000;"><strong>
+            mImage.setImageBitmap(bitImage);</strong></span><span style="color: #008000;">//</span><span style="color: #008000;">为imageView设置图片</span>
+<span style="color: #000000;">
+        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            Toast.makeText(MainActivity.</span><span style="color: #0000ff;">this</span>, "获取图片失败"<span style="color: #000000;">, Toast.LENGTH_SHORT).show();
+        }
+    }</span></span></pre>
+</div>
+<h2>使用说明：</h2>
+<h3>一、在AndroidManiFest文件中添加存储卡权限</h3>
+<pre><span style="font-size: 16px;">&lt;<span style="color: #cc0099;">uses-permission <span style="color: #0099ff;">android:name=<span style="color: #ff3333;">"android.permission.WRITE_EXTERNAL_STORAGE"/&gt;</span></span></span></span></pre>
+<h3>二、通过findviewbyid找到Button或者是imageButton，并绑定监听事件</h3>
+<h3>三、复制上述的样本代码放在onClick事件下面,同时，添加一个全局静态变量</h3>
+<p><img src="http://images2017.cnblogs.com/blog/1210268/201802/1210268-20180201205735281-1437393461.png" alt="" /></p>
+<p>&nbsp;</p>
+<h3>四、在button或者是imageButton的点击事件调用checkPermission方法</h3>
+<p><img src="http://images2017.cnblogs.com/blog/1210268/201802/1210268-20180201195347687-1728979997.png" alt="" /></p>
+<h3>五、通过findviewbyid找到ImageView，修改display方法中的调用设置图片的对象名为实际项目中的imageView的对象名，详情可以看代码加红的部分，将mImage修改即可</h3>
+<h2>简单的逻辑介绍：</h2>
+<p>画了一张流程图，逻辑还是比较清晰的，这里就不做过多说明</p>
+<p><img src="http://images2017.cnblogs.com/blog/1210268/201802/1210268-20180201205240531-1898099913.jpg" alt="" /></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px; color: #ff0000;">PS：其实还可以在最后面添加裁剪图片的操作，之后在设置图片，我上度娘搜索了资料，看得还是很懵逼，等研究透彻再做补充了</span></p>
+<p><span style="font-size: 16px;"><a href="https://github.com/Stars-One/ChangePictureFromAlbum" target="_blank">&nbsp;Demo下载</a></span></p>
+<p>&nbsp;</p>

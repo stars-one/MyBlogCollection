@@ -1,0 +1,30 @@
+原文链接：http://www.cnblogs.com/kexing/archive/2018/03/06/8467762.html
+<h2>数据传递：</h2>
+<h3>1.通过数据库进行数据的传递</h3>
+<p><span style="font-size: 16px;">如在fragment中将数据保存在数据库中，之后其他的fragment或者activity直接读取数据库中的数据，数据库使用还算简单，这里就不多说，建议使用litepal，简单的不要不要的</span></p>
+<h3>2.通过Bundle实现两个fragment的数据传递</h3>
+<p><span style="font-size: 16px;">想必大家看到这里，想到的就是使用带参数的构造函数来实现数据的传递吧，我刚开始也是如此，但是，写上代码之后，发现有一个提示，就是建议不要使用此方法来实现数据传递</span></p>
+<p><span style="font-size: 16px;">那我们怎么办呢？我们可以使用Bundle来实现</span></p>
+<p><span style="font-size: 16px; color: #ff0000;">我们在fragment里面新建一个静态方法，其返回值为一个fragment类，其的参数就是代表的需要传递的数据</span></p>
+<p><span style="font-size: 16px; color: #ff0000;">通过bundle的put将数据存放在bundle中，之后调用fragment的setArguments是fragment携带上Bundle</span></p>
+<p><span style="font-size: 16px;"><img src="https://images2018.cnblogs.com/blog/1210268/201803/1210268-20180306103857223-1749020832.png" alt="" /></span></p>
+<p><span style="font-size: 16px;">一个fragment最先开始就是会执行onCreate方法，所以我们在这方法来接收我们传递的数据</span></p>
+<p><span style="font-size: 16px;">先是通过getArguments来获得fragment携带的Bundle，之后调用Bundle的get方法来获得数据，赋值给成员变量，图中isExist和personProperty均是私有全局成员变量</span></p>
+<p>&nbsp;<img src="https://images2018.cnblogs.com/blog/1210268/201803/1210268-20180306104345920-740851769.png" alt="" /></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px;">&nbsp;之后使用就是这样使用</span></p>
+<p><span style="color: #ff0000;">PropertyFragment fragment = PropertyFragment.newInstance(personProperty,true);</span></p>
+<h3>&nbsp;</h3>
+<p>&nbsp;</p>
+<h2>&nbsp;刷新UI：</h2>
+<h3>1.在fragment内部进行更改控件</h3>
+<p><span style="font-size: 16px;">在activity中，要想刷新UI，需要找到控件的实例，之后调用相关的方法更新UI</span></p>
+<p><span style="font-size: 16px;">同样的，在fragment之后也是如此，不过有所不同的是， fragment只能在在onViewCreated方法中才能调用findviewbyid找到控件的实例</span></p>
+<p><span style="font-size: 16px;"><img src="https://images2018.cnblogs.com/blog/1210268/201803/1210268-20180306110145915-1568910621.png" alt="" /></span></p>
+<p>&nbsp;</p>
+<h3>2.在activity中更改控件，需要找到fragment的实例，并且在fragment里面公开一个更改控件的方法</h3>
+<p><span style="font-size: 16px;">&nbsp;如果是使用静态方法（在xml使用name属性使用fragment），可以通过fragmentManger的findfragmentById或者是findfragmentByTag方法找到fragment的实例</span></p>
+<p><span style="font-size: 16px;">如果是使用的动态方法（用java代码new一个fragment），那么就不用那么麻烦，可以直接调用fragment里面定义的那个公开的更改控件的方法</span></p>
+<h3><span style="color: #000000;">3.通过Activity作为中转，在另外一个fragment更改另外一个fragment的UI</span></h3>
+<p><span style="color: #000000;"><img src="https://images2018.cnblogs.com/blog/1210268/201803/1210268-20180306111550108-571036609.png" alt="" /></span></p>
+<p>&nbsp;</p>

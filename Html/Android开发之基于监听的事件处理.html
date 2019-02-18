@@ -1,0 +1,122 @@
+原文链接：http://www.cnblogs.com/kexing/archive/2017/09/30/7616285.html
+<p>&nbsp;</p>
+<div style="margin-left: 60px;"><br /><br />在Android&nbsp;应用开发过程中，常用监听事件如下:<br /><span style="font-size: 15px;"><strong>(1)&nbsp;ListView事件监听</strong><br />setOn&nbsp;ItemSelectedListener:鼠标滚动时触发<br />setOnItemClickListener: 点击时触发<br /><span style="font-size: 15px;"><strong>(2&nbsp;)EditText&nbsp;事件监听</strong><br />setOnKeyListener:&nbsp;获取焦点时触发<br /><span style="font-size: 15px;"><strong>(3)&nbsp;RadioGroup事件监听</strong><br />setOnCheckedChangeListener: 点击时触发<br /><span style="font-size: 15px;"><strong>(4)&nbsp;CheckBox事件监听</strong><br />setOnCheckedChangeListener&nbsp;:点击时触发<br /><span style="font-size: 15px;"><strong>(5&nbsp;)Spinner事件监听</strong><br />setOnltemSelectedListener:点击时触发<br />
+</span></span></span></span></span></div>
+<p style="margin-left: 60px;">&nbsp;</p>
+<p style="margin-left: 60px;"><strong><span style="font-size: 15px;">(6)&nbsp;DatePicker&nbsp;事件监听</span></strong></p>
+<p style="margin-left: 60px;">onDateChangedListener： 日期改变时触发</p>
+<div style="margin-left: 60px;"><strong><span style="font-size: 15px;">(7&nbsp;)DatePickerDialog&nbsp;事件监听</span></strong><br />onDateSetListener:设置日期时触发<br /><span style="font-size: 15px;"><strong>(8)&nbsp;TimePicker&nbsp;事件监听</strong><br />onTimeChangedListener:时间改变时触发<br /><span style="font-size: 15px;"><strong>(9&nbsp;)TimePickerDialog&nbsp;事件监听</strong><br />onTimeSetListener:&nbsp;设置时间时触发<br /><strong><span style="font-size: 15px;">(10)Button.ImageButton&nbsp;事件监听</span></strong><br />setOnClickListener:&nbsp;点击时触发<br /><span style="font-size: 15px;"><strong>(11)Menu&nbsp;事件监听</strong><br />onOptionsltemSelected;&nbsp;点击时触发<br /><span style="font-size: 15px;"><strong>(12&nbsp;)Gallery&nbsp;事件监听</strong><br />setOnItemClickListener: 点击时触发<br /><span style="font-size: 15px;"><strong>(13&nbsp;)GridView&nbsp;事件监听</strong><br />setOnltemClickListener: 点击时触发<br />
+</span></span></span></span></span></div>
+<p><span style="font-size: 18px;"><strong style="font-size: 18px;">&nbsp;</strong></span></p>
+<p><span style="font-size: 18px;"><strong style="font-size: 18px;">实现事件监听器的方法：</strong></span></p>
+<ul>
+<li><span style="font-size: 18px; color: #ff0000;">内部类形式</span></li>
+<li><span style="font-size: 18px; color: #ff0000;">外类类形式</span></li>
+<li><span style="font-size: 18px; color: #ff0000;">Activity本身作为事件监听器类</span></li>
+<li><span style="font-size: 18px; color: #ff0000;">匿名内部类形式</span></li>
+<li><span style="font-size: 18px; color: #ff0000;">直接绑定到标签</span></li>
+
+</ul>
+<p style="margin-left: 30px;">&nbsp;</p>
+<h2><span style="font-size: 18px; color: #000000;">内部类形式</span></h2>
+<p style="margin-left: 30px;"><span style="font-size: 18px; color: #ff0000;"><span style="color: #000000;">将事件监听器类定义在当前类的内部<br /></span></span></p>
+<p><span style="font-size: 18px; color: #ff0000;">　　</span></p>
+<div class="cnblogs_code">
+<pre><span style="font-size: 16px;"><span style="color: #0000ff;">public <span style="color: #0000ff;">class Test <span style="color: #0000ff;">extends<span style="color: #000000;"> Activity{
+    @Override
+    <span style="color: #0000ff;">protected <span style="color: #0000ff;">void<span style="color: #000000;"> onCreate(@Nullable Bundle savedInstanceState) {
+        <span style="color: #0000ff;">super<span style="color: #000000;">.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        Button button =<span style="color: #000000;"> (Button)findViewById(R.id.about);
+        MyButtonlistener listener = <span style="color: #0000ff;">new<span style="color: #000000;"> MyButtonlistener();
+        button.setOnClickListener(listener);
+    }
+    <span style="color: #0000ff;">class MyButtonlistener <span style="color: #0000ff;">implements<span style="color: #000000;"> View.OnClickListener{
+        @Override
+        <span style="color: #0000ff;">public <span style="color: #0000ff;">void<span style="color: #000000;"> onClick(View v) {
+            <span style="color: #008000;">//<span style="color: #008000;">相关事件处理
+<span style="color: #000000;">        }
+    }
+}</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></pre>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h2><span style="font-size: 18px; color: #000000;">外类类形式</span></h2>
+<p style="margin-left: 30px;"><span style="font-size: 18px; color: #000000;"><span style="font-size: 16px;"><strong>Test类</strong><br /></span></span></p>
+<div class="cnblogs_code">
+<pre><span style="font-size: 16px;"><span style="color: #0000ff;">public <span style="color: #0000ff;">class Test <span style="color: #0000ff;">extends<span style="color: #000000;"> Activity{
+    @Override
+    <span style="color: #0000ff;">protected <span style="color: #0000ff;">void<span style="color: #000000;"> onCreate(@Nullable Bundle savedInstanceState) {
+        <span style="color: #0000ff;">super<span style="color: #000000;">.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        Button button =<span style="color: #000000;"> (Button)findViewById(R.id.about);
+        MyButtonlistener listener = <span style="color: #0000ff;">new<span style="color: #000000;"> MyButtonlistener();
+        button.setOnClickListener(listener);
+    }
+
+}</span></span></span></span></span></span></span></span></span></span></span></span></span></pre>
+</div>
+<p style="margin-left: 30px;"><span style="font-size: 16px;"><strong>MyButtonlistener类</strong></span></p>
+<div class="cnblogs_code">
+<pre><span style="font-size: 16px;"><span style="color: #0000ff;">public <span style="color: #0000ff;">class MyButtonlistener <span style="color: #0000ff;">implements<span style="color: #000000;"> View.OnClickListener {
+    @Override
+    <span style="color: #0000ff;">public <span style="color: #0000ff;">void<span style="color: #000000;"> onClick(View v) {
+        <span style="color: #008000;">//<span style="color: #008000;">事件处理
+<span style="color: #000000;">    }
+}</span></span></span></span></span></span></span></span></span></span></span></pre>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h2><span style="font-size: 18px; color: #000000;">Activity本身作为事件监听器类</span></h2>
+<p><span style="font-size: 18px; color: #000000;">　　将Activity本身作为事件监听器类</span></p>
+<p><span style="font-size: 18px; color: #000000;">　　</span></p>
+<div class="cnblogs_code">
+<pre><span style="font-size: 16px;"><span style="color: #0000ff;">public <span style="color: #0000ff;">class Test <span style="color: #0000ff;">extends Activity <span style="color: #0000ff;">implements<span style="color: #000000;"> View.OnClickListener{
+    @Override
+    <span style="color: #0000ff;">protected <span style="color: #0000ff;">void<span style="color: #000000;"> onCreate(@Nullable Bundle savedInstanceState) {
+        <span style="color: #0000ff;">super<span style="color: #000000;">.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        Button button =<span style="color: #000000;"> (Button)findViewById(R.id.about);
+        button.setOnClickListener(<span style="color: #0000ff;">this<span style="color: #000000;">);
+
+    }
+
+    @Override
+    <span style="color: #0000ff;">public <span style="color: #0000ff;">void<span style="color: #000000;"> onClick(View v) {
+        <span style="color: #008000;">//<span style="color: #008000;">事件处理
+<span style="color: #000000;">    }
+}</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></pre>
+</div>
+<p>&nbsp;</p>
+<h2>&nbsp;</h2>
+<h2>&nbsp;</h2>
+<h2><span style="font-size: 18px; color: #000000;">匿名内部类形式</span></h2>
+<div class="cnblogs_code">
+<pre><span style="font-size: 16px;"><span style="color: #0000ff;">public <span style="color: #0000ff;">class Test <span style="color: #0000ff;">extends<span style="color: #000000;"> Activity {
+    @Override
+    <span style="color: #0000ff;">protected <span style="color: #0000ff;">void<span style="color: #000000;"> onCreate(@Nullable Bundle savedInstanceState) {
+        <span style="color: #0000ff;">super<span style="color: #000000;">.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        Button button =<span style="color: #000000;"> (Button)findViewById(R.id.about);
+        button.setOnClickListener(<span style="color: #0000ff;">new<span style="color: #000000;"> View.OnClickListener() {
+            @Override
+            <span style="color: #0000ff;">public <span style="color: #0000ff;">void<span style="color: #000000;"> onClick(View v) {
+                <span style="color: #008000;">//<span style="color: #008000;">事件处理
+<span style="color: #000000;">            }
+        });
+    }
+}</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></pre>
+</div>
+<p>&nbsp;</p>
+<p style="margin-left: 30px;"><span style="font-size: 18px; color: #000000;">&nbsp;</span></p>
+<p>&nbsp;</p>
+<h2><span style="font-size: 18px; color: #000000;">直接绑定到标签</span></h2>
+<p style="margin-left: 30px;"><span style="font-size: 16px;">在xml的布局文件中加入onClick属性，设置相关的方法</span></p>
+<p style="margin-left: 30px;">&nbsp;<img src="http://images2017.cnblogs.com/blog/1210268/201709/1210268-20170930215059434-1405388576.png" alt="" /></p>
+<p style="margin-left: 30px;"><span style="font-size: 16px;">定义一个方法，<span style="color: #ff0000;">记得参数是View</span></span></p>
+<p style="margin-left: 30px;"><img src="http://images2017.cnblogs.com/blog/1210268/201709/1210268-20170930215011575-911361216.png" alt="" /></p>
+<p>&nbsp;</p>

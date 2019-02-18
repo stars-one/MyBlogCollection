@@ -1,0 +1,259 @@
+原文链接：http://www.cnblogs.com/kexing/archive/2018/08/05/9424982.html
+<h2>单链表的优点：</h2>
+<ol>
+<li>
+<p><span style="font-size: 16px;">长度不固定，可以任意增删。</span></p>
+</li>
+</ol>
+<h2>单链表的缺点：</h2>
+<ol>
+<li>
+<p><span style="font-size: 16px;">存储密度小，因为每个数据元素，都需要额外存储一个指向下一元素的指针（双链表则需要两个指针）。</span></p>
+</li>
+<li>
+<p><span style="font-size: 16px;">要访问特定元素，只能从链表头开始，遍历到该元素，时间复杂度为 $O(n)$。在特定的数据元素之后插入或删除元素，不涉及到其他元素的移动，因此时间复杂度为 $O(1)$。双链表还允许在特定的数据元素之前插入或删除元素。</span></p>
+</li>
+<li><span style="font-size: 16px;">存储空间不连续，数据元素之间使用指针相连，每个数据元素只能访问周围的一个元素（根据单链表还是双链表有所不同）。</span></li>
+</ol>
+<h2>单链表基本运算：</h2>
+<p>&nbsp;</p>
+<h3><strong>1.插入算法（核心）</strong></h3>
+<p><span style="font-size: 16px;">插入算法是单链表的核心算法，掌握了这个，后面的头插法，尾插法都是so easy</span></p>
+<p><span style="font-size: 16px;">下图就是显示了如何将p结点插入到q的后面</span></p>
+<p><img src="https://images2018.cnblogs.com/blog/1210268/201808/1210268-20180805125508798-156629928.png" alt="" width="710" height="407" /></p>
+<h3><strong>2.删除算法</strong></h3>
+<p><span style="font-size: 16px;">删除算法其实很简单</span></p>
+<p><span style="font-size: 16px;">下图是删除某个结点的后继的图示</span></p>
+<p><span style="font-size: 16px;"><img src="https://images2018.cnblogs.com/blog/1210268/201808/1210268-20180805134855421-1488152364.png" alt="" width="755" height="339" /></span></p>
+<p>&nbsp;</p>
+<h3><strong>3.建立单链表的两种方法</strong></h3>
+<p><strong>头插法和尾插法</strong></p>
+<p><span style="font-size: 16px;">使用头插法创建出的单链表是逆序的，&nbsp;使用尾插法创建出的单链表则是顺序的，一般都是采用此尾插法来建立单链表<strong><br /></strong></span></p>
+<p><span style="color: #ff0000; font-size: 16px;"><strong><span style="color: #000000;">头插法简单来说，就是每次插入的结点都是在</span>头结点的后继</strong></span></p>
+<p><span style="font-size: 16px;"><strong>尾插法则是每次插入的结点都是在链表的<span style="color: #ff0000;">末尾结点的后继</span></strong></span></p>
+<h3><strong>4.查找算法</strong></h3>
+<p><span style="font-size: 16px;">查找算法的关键在于<strong><span style="color: #ff0000;">结束条件</span></strong></span></p>
+<p><span style="font-size: 16px; color: #000000;">下列代码中的<span style="color: #ff0000;">t！=null<span style="color: #000000;">则是结束的条件</span></span></span></p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre>　　　　　Lnode t =<span style="color: #000000;"> h.next;
+        </span><span style="color: #0000ff;">while</span>(t!=<span style="color: #0000ff;">null</span><span style="color: #000000;">){
+            </span><span style="color: #0000ff;">if</span>(t.data==<span style="color: #000000;">x){
+                System.out.println(</span>"找到"<span style="color: #000000;">);
+                </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> t;
+            }
+            t </span>=<span style="color: #000000;"> t.next;
+        }
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">null</span>;</pre>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h2>单链表的实现：</h2>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.Scanner;
+
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> LinkedList  <span style="color: #0000ff;">implements</span><span style="color: #000000;"> ListIntf{
+    Lnode h </span>=<span style="color: #0000ff;">null</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> String toucha = "头插法"<span style="color: #000000;">;
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> String weicha = "尾插法"<span style="color: #000000;">;
+    
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> LinkedList(String s){
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">如果参数是头插法则使用头插法创建单链表，不是则使用尾插法</span>
+        <span style="color: #0000ff;">if</span><span style="color: #000000;">(s.equals(toucha)){
+            h</span>=<span style="color: #0000ff;">new</span><span style="color: #000000;"> Lnode();
+            h.data </span>= 'f'<span style="color: #000000;">;
+            h.next </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+            Lnode p;
+            Scanner scanner </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Scanner(System.in);
+            String str </span>=<span style="color: #000000;"> scanner.nextLine();
+            </span><span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">int</span> i=0;i&lt;str.length();i++<span style="color: #000000;">){
+                
+                p </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Lnode();
+                p.data </span>=<span style="color: #000000;"> str.charAt(i);
+                
+                p.next </span>=<span style="color: #000000;"> h.next;
+                h.next </span>=<span style="color: #000000;"> p;
+            }
+            scanner.close();
+        }</span><span style="color: #0000ff;">else</span><span style="color: #000000;">{
+            h</span>=<span style="color: #0000ff;">new</span><span style="color: #000000;"> Lnode();
+            h.data </span>= 'f'<span style="color: #000000;">;
+            h.next </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+            
+            Lnode p,t;
+            t</span>=h; <span style="color: #008000;">//</span><span style="color: #008000;">t用来代替头结点，同时，也就是</span>
+            Scanner scanner = <span style="color: #0000ff;">new</span><span style="color: #000000;"> Scanner(System.in);
+            String str </span>=<span style="color: #000000;"> scanner.nextLine();
+            </span><span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">int</span> i=0;i&lt;str.length();i++<span style="color: #000000;">){
+                
+                p </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Lnode();
+                p.data </span>= str.charAt(i); <span style="color: #008000;">//</span><span style="color: #008000;">接收String中的char</span>
+<span style="color: #000000;">                
+                p.next </span>= t.next;<span style="color: #008000;">//</span><span style="color: #008000;">此条语句与p.next =null 等同</span>
+                t.next =<span style="color: #000000;"> p;
+                t </span>= p; <span style="color: #008000;">//</span><span style="color: #008000;"> t结点一直指向链表的末尾</span>
+<span style="color: #000000;">                
+                
+            }
+            scanner.close();
+        }
+    }
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> display(){
+        Lnode p </span>=<span style="color: #000000;"> h.next;
+        </span><span style="color: #0000ff;">while</span>(p!=<span style="color: #0000ff;">null</span><span style="color: #000000;">){
+            System.out.println(p.data);
+            p </span>=<span style="color: #000000;"> p.next;
+        }
+        
+    }
+    </span><span style="color: #008000;">/**</span><span style="color: #008000;">
+     * 设置头结点
+     * </span><span style="color: #808080;">@param</span><span style="color: #008000;"> _h
+     </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> setH(Lnode _h){
+        h</span>=<span style="color: #000000;">_h;
+    }
+    </span><span style="color: #008000;">/**</span><span style="color: #008000;">
+     * 
+     * </span><span style="color: #808080;">@param</span><span style="color: #008000;"> p 结点
+     * </span><span style="color: #808080;">@param</span><span style="color: #008000;"> x 某个结点的值为x
+     * 将值为x的结点插入到p结点的后面
+     </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span> insertElementAfter(Lnode p,<span style="color: #0000ff;">char</span><span style="color: #000000;"> x){
+        Lnode t </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Lnode(x);
+        t.next </span>= p.next; <span style="color: #008000;">//</span><span style="color: #008000;">这里容易忘记</span>
+        p.next=<span style="color: #000000;">t;                            
+    }
+    </span><span style="color: #008000;">/**</span><span style="color: #008000;">
+     * 
+     * </span><span style="color: #808080;">@param</span><span style="color: #008000;"> x 
+     * </span><span style="color: #808080;">@return</span><span style="color: #008000;"> 查找到值为x的结点
+     </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">public</span> Lnode search(<span style="color: #0000ff;">char</span><span style="color: #000000;"> x){
+        Lnode t </span>=<span style="color: #000000;"> h.next;
+        </span><span style="color: #0000ff;">while</span>(t!=<span style="color: #0000ff;">null</span><span style="color: #000000;">){
+            </span><span style="color: #0000ff;">if</span>(t.data==<span style="color: #000000;">x){
+                System.out.println(</span>"找到"<span style="color: #000000;">);
+                </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> t;
+            }
+            t </span>=<span style="color: #000000;"> t.next;
+        }
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+    }
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> size() {
+        </span><span style="color: #0000ff;">int</span> i =0<span style="color: #000000;">;
+        Lnode t </span>=<span style="color: #000000;"> h.next;
+        </span><span style="color: #0000ff;">while</span>(t!=<span style="color: #0000ff;">null</span><span style="color: #000000;">){
+            i</span>++<span style="color: #000000;">;
+            t </span>=<span style="color: #000000;"> t.next; 
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> i;
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> clear() {
+        h.next </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">boolean</span><span style="color: #000000;"> isEmpty() {
+        </span><span style="color: #0000ff;">if</span>(h.next==<span style="color: #0000ff;">null</span><span style="color: #000000;">){
+            </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        }</span><span style="color: #0000ff;">else</span><span style="color: #000000;">{
+            </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        }
+    }
+    </span><span style="color: #008000;">/**</span><span style="color: #008000;">
+     * 
+     * </span><span style="color: #808080;">@param</span><span style="color: #008000;"> i 需要找到的第i个结点
+     * </span><span style="color: #808080;">@return</span><span style="color: #008000;"> 第i个结点
+     </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">public</span> Lnode getLnode(<span style="color: #0000ff;">int</span><span style="color: #000000;"> i){
+        Lnode t </span>= h; <span style="color: #008000;">//</span><span style="color: #008000;">从头结点算起，j就是从0开始</span>
+        <span style="color: #0000ff;">int</span> j =0<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span>(j&lt;<span style="color: #000000;">i){
+            t </span>=<span style="color: #000000;"> t.next;
+            j</span>++<span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">if</span>(t==<span style="color: #0000ff;">null</span><span style="color: #000000;">){
+            </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        }</span><span style="color: #0000ff;">else</span><span style="color: #000000;">{
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> t;    
+        }
+    }
+    
+    @Override
+    </span><span style="color: #0000ff;">public</span> String get(<span style="color: #0000ff;">int</span><span style="color: #000000;"> i) {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">取得第i个结点的值</span>
+        Lnode t = h; <span style="color: #008000;">//</span><span style="color: #008000;">从头结点算起，j就是从0开始</span>
+        <span style="color: #0000ff;">int</span> j =0<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span>(j&lt;<span style="color: #000000;">i){
+            t </span>=<span style="color: #000000;"> t.next;
+            j</span>++<span style="color: #000000;">;
+        }
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">或者从第一个结点开始</span>
+        <span style="color: #008000;">/*</span><span style="color: #008000;">Lnode t = h.next; 
+        int j =1;
+        while(j&lt;i){
+            t = t.next;
+            j++;
+        }</span><span style="color: #008000;">*/</span>
+        <span style="color: #008000;">//</span><span style="color: #008000;">这里需要加一个溢出处理</span>
+        <span style="color: #0000ff;">if</span>(t==<span style="color: #0000ff;">null</span><span style="color: #000000;">){
+            </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        }</span><span style="color: #0000ff;">else</span><span style="color: #000000;">{
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> String.valueOf(t.data);    
+        }
+        
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> indexOf(String s) {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">单链表不需要复写此方法</span>
+        <span style="color: #0000ff;">return</span> 0<span style="color: #000000;">;
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> String getPre(String s) {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">单链表不需要复写此方法</span>
+        <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> String getNext(String s) {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> TODO Auto-generated method stub</span>
+        <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span> insertElementAt(String s, <span style="color: #0000ff;">int</span><span style="color: #000000;"> i) {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> TODO Auto-generated method stub</span>
+<span style="color: #000000;">        
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> String remove(<span style="color: #0000ff;">int</span><span style="color: #000000;"> i) {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">先找到第i个结点，之后再将其移出,斌返回其的数值</span>
+        Lnode t =<span style="color: #000000;"> getLnode(i);
+        Lnode q </span>= getLnode(i-1); <span style="color: #008000;">//</span><span style="color: #008000;">q为t的前趋</span>
+        q.next =<span style="color: #000000;"> t.next;
+    
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> String.valueOf(t.data);
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> String remove(String s) {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> TODO Auto-generated method stub</span>
+        <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+    }
+    
+
+}</span></pre>
+</div>
+<h2>&nbsp;补充一下：</h2>
+<p><span style="font-size: 16px;">在Java实现字符窗口的输入时，很多人更喜欢选择使用扫描器Scanner，它操作起来比较简单。在编程的过程中，我发现用Scanner实现字符串的输入有两种方法，一种是next()，另一种是nextLine()，这两种有以下区别：</span><br /><br /><span style="font-size: 16px;">&nbsp;&nbsp;&nbsp; next()一定要读取到有效字符后才可以结束输入，对输入有效字符之前遇到的空格键、Tab键或Enter键等结束符，next()方法会自动将其去掉，只有在输入有效字符之后，next()方法才将其后输入的空格键、Tab键或Enter键等视为分隔符或结束符。</span><br /><br /><span style="font-size: 16px;">&nbsp;&nbsp;&nbsp;&nbsp; 简单地说，next()查找并返回来自此扫描器的下一个完整标记。完整标记的前后是与分隔模式匹配的输入信息，所以next方法不能得到带空格的字符串。</span><br /><br /><span style="font-size: 16px;">&nbsp;&nbsp;&nbsp; nextLine()方法的结束符只是Enter键，即nextLine()方法返回的是Enter键之前的所有字符，它是可以得到带空格的字符串的。</span></p>

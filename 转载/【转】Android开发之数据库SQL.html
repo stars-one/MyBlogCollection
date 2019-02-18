@@ -1,0 +1,1119 @@
+原文链接：http://www.cnblogs.com/kexing/archive/2017/10/02/7622658.html
+<p><span style="font-family: Arial; font-size: 14px; line-height: 26px;"><span style="font-family: Arial; font-size: 14px; line-height: 26px;">&nbsp;android中的应用开发很难避免不去使用数据库，这次就和大家聊聊android中的数据库操作。</span></span></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">一、<strong>android内的数据库的基础知识介绍</strong></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.<strong>用了什么数据库</strong></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;"> <strong><br />
+</strong></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; android中采用的数据库是<a style="color: #ca0000; text-decoration: none;" href="http://www.ibm.com/developerworks/cn/opensource/os-sqlite/" target="_blank">SQLite</a>这个轻量级的嵌入式开源数据库，它是用c语言构建的。相关简介可以从链接查看。</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.<strong>数据库基本知识观花</strong></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<strong><br />
+</strong></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 对于一些和我一样还没有真正系统学习数据库技术的同学来说，把<a style="color: #ca0000; text-decoration: none;" href="http://baike.baidu.com/view/1889818.html?fromTaglist" target="_blank">SQL92标准</a>中的一些基本概念、基本语句快速的了解一下，是很有必要的，这样待会用Android的database相关方法去执行一些数据库语句时就不会茫然了。</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;①<strong><em>数据库的基本结构&mdash;&mdash;表格</em></strong></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;表格是数据库中储存资料的基本架构。表格被分为栏位 (column) 及列位 
+(row)。每一列代表一笔资料，而每一栏代表一笔资料的一部份。举例来说，如果我们有一个记载顾客资料的表格，那栏位就有可能包括姓、名、地址、城市、国家、生日．．．等等。每一个表格拥有一个独一无二的名字（Table
+ Name）以便能够让用户定位到它上面。一个典型的表格结构如下：</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;&nbsp;&nbsp;<strong><em>Store_Information</em></strong>&nbsp;表格<br />
+</p>
+<table style="color: #000000; font-family: Arial; font-size: 14px; line-height: 26px;" border="1">
+<tbody>
+<tr>
+<td>store_name</td>
+<td>Sales</td>
+<td>Date</td>
+
+
+
+</tr>
+<tr>
+<td>Los Angeles</td>
+<td>$1500</td>
+<td>Jan-05-1999</td>
+
+
+
+</tr>
+<tr>
+<td>San Diego</td>
+<td>$250</td>
+<td>Jan-07-1999</td>
+
+
+
+</tr>
+<tr>
+<td>Los Angeles</td>
+<td>$300</td>
+<td>Jan-08-1999</td>
+
+
+
+</tr>
+<tr>
+<td>Boston</td>
+<td>$700</td>
+<td>Jan-08-1999</td>
+
+
+
+</tr>
+
+
+
+</tbody>
+
+
+
+</table>
+<p>
+<span style="font-family: Arial; font-size: 14px; line-height: 26px;"><span style="font-family: Arial; font-size: 14px; line-height: 26px;">
+<span style="font-family: Arial; font-size: 14px; line-height: 26px;">&nbsp;该表格的表格名字为Store_Information，一共有三个栏位，分别为store_name , Sales , Data ，已经录入了四笔数据所以有四个列位。</span></span></span></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;②<strong><em>关于数据类型</em></strong></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 和其他的数据库不同的是，sqlite是无类型的。也就是当你创建一个表格时，无需对每一个栏位要存储的数据的类型进行声明，当你在给表格增加数据条目时，sqlite会自动找到存入的数据的类型。</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SQLite允许忽略数据类型，但是，仍然建议在Create 
+Table语句中指定数据类型，因为数据类型有利于增强程序的可读性。SQLite支持常见的数据类型，如VARCHAR、NVARCHAR、TEXT、
+ INTEGER、FLOAT、BOOLEAN、CLOB、BLOB、TIMESTAMP、NUMERIC、VARYING、CHARACTER、 
+NATl0NAI, VARYINGCHARACTER。这些数据类型都是SQL92标准中规定的标准数据库数据类型，想要有更近一步了解，请参看下表。</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">&nbsp;</p>
+<table style="color: #000000; font-family: Arial; font-size: 14px; line-height: 26px;" border="0" cellspacing="0" cellpadding="0" align="center">
+<tbody>
+<tr>
+<td align="center" valign="bottom"><strong>SQL数据库数据类型详解</strong></td>
+
+
+
+</tr>
+
+
+
+</tbody>
+
+
+
+</table>
+<p>
+<span style="font-family: Arial; font-size: 14px; line-height: 26px;"><span style="font-family: Arial; font-size: 14px; line-height: 26px;"><span style="font-family: Arial; font-size: 14px; line-height: 26px;">
+<br style="font-family: Arial; font-size: 14px; line-height: 26px;" /></span></span></span></p>
+<table style="color: #000000; font-family: Arial; font-size: 14px; line-height: 26px;" border="0" cellspacing="0" cellpadding="0" align="center">
+<tbody>
+<tr>
+<td valign="top" height="333">
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px;">&nbsp;</p>
+<table border="0" cellspacing="1" align="center" bgcolor="#0099ff">
+<tbody>
+<tr bgcolor="#ffffff">
+<td width="106">数据类型</td>
+<td width="130">类型</td>
+<td valign="top">描 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述</td>
+
+
+
+</tr>
+<tr bgcolor="#ffffff">
+<td>bit</td>
+<td>整型</td>
+<td>bit 数据类型是整型，其值只能是0、1或空值。这种数据类型用于存储只有两种可能值的数据，如Yes 或No、True 或Fa lse 、On 或Off</td>
+
+
+
+</tr>
+<tr bgcolor="#ffffff">
+<td>int</td>
+<td>整型</td>
+<td>int 数据类型可以存储从- 231(-2147483648)到231 (2147483 647)之间的整数。存储到数据库的几乎所有数值型的数据都可以用这种数据类型。这种数据类型在数据库里占用4个字节</td>
+
+
+
+</tr>
+<tr bgcolor="#ffffff">
+<td>smallint</td>
+<td>整型</td>
+<td>smallint 数据类型可以存储从- 215(-32768)到215(32767)之间的整数。这种数据类型对存储一些常限定在特定范围内的数值型数据非常有用。这种数据类型在数据库里占用2 字节空间</td>
+
+
+
+</tr>
+<tr bgcolor="#ffffff">
+<td>tinyint</td>
+<td>整型</td>
+<td>tinyint 数据类型能存储从0到255 之间的整数。它在你只打算存储有限数目的数值时很有用。 这种数据类型在数据库中占用1 个字节</td>
+
+
+
+</tr>
+<tr bgcolor="#ffffff">
+<td>numeric</td>
+<td>精确数值型</td>
+<td>numeric数据类型与decimal 型相同</td>
+
+
+
+</tr>
+<tr bgcolor="#ffffff">
+<td>decimal</td>
+<td>精确数值型</td>
+<td>decimal 数据类型能用来存储从-1038-1到1038-1的固定精度和范围的数值型数据。使用这种数据类型时，必须指定范围和精度。 范围是小数点左右所能存储的数字的总位数。精度是小数点右边存储的数字的位数</td>
+
+
+
+</tr>
+<tr bgcolor="#ffffff">
+<td>money</td>
+<td>货币型</td>
+<td>money 数据类型用来表示钱和货币值。这种数据类型能存储从-9220亿到9220 亿之间的数据，精确到货币单位的万分之一</td>
+
+
+
+</tr>
+<tr bgcolor="#ffffff">
+<td>smallmoney</td>
+<td>货币型</td>
+<td>smallmoney 数据类型用来表示钱和货币值。这种数据类型能存储从-214748.3648 到214748.3647 之间的数据，精确到货币单位的万分之一</td>
+
+
+
+</tr>
+<tr bgcolor="#ffffff">
+<td>float</td>
+<td>近似数值型</td>
+<td>float 数据类型是一种近似数值类型，供浮点数使用。说浮点数是近似的，是因为在其范围内不是所有的数都能精确表示。浮点数可以是从-1.79E+308到1.79E+308 之间的任意数</td>
+
+
+
+</tr>
+<tr bgcolor="#ffffff">
+<td>real</td>
+<td>近似数值型</td>
+<td>real 数据类型像浮点数一样，是近似数值类型。它可以表示数值在-3.40E+38到3.40E+38之间的浮点数</td>
+
+
+
+</tr>
+<tr bgcolor="#ffffff">
+<td>datetime</td>
+<td>日期时间型</td>
+<td>datetime数据类型用来表示日期和时间。这种数据类型存储从1753年1月1日到9999年12月3 1日间所有的日期和时间数据， 精确到三百分之一秒或3.33毫秒</td>
+
+
+
+</tr>
+<tr bgcolor="#ffffff">
+<td>Smalldatetime</td>
+<td>日期时间型</td>
+<td>smalldatetime 数据类型用来表示从1900年1月1日到2079年6月6日间的日期和时间，精确到一分钟</td>
+
+
+
+</tr>
+<tr bgcolor="#ffffff">
+<td>cursor</td>
+<td>特殊数据型</td>
+<td>cursor 数据类型是一种特殊的数据类型，它包含一个对游标的引用。这种数据类型用在存储过程中，而且创建表时不能用</td>
+
+
+
+</tr>
+<tr bgcolor="#ffffff">
+<td>timestamp</td>
+<td>特殊数据型</td>
+<td>timestamp 数据类型是一种特殊的数据类型，用来创建一个数据库范围内的唯一数码。 
+一个表中只能有一个timestamp列。每次插入或修改一行时，timestamp列的值都会改变。尽管它的名字中有&ldquo;time&rdquo;， 
+但timestamp列不是人们可识别的日期。在一个数据库里，timestamp值是唯一的</td>
+
+
+
+</tr>
+<tr bgcolor="#ffffff">
+<td>Uniqueidentifier</td>
+<td>特殊数据型</td>
+<td>Uniqueidentifier数据类型用来存储一个全局唯一标识符，即GUID。GUID确实是全局唯一的。这个数几乎没有机会在另一个系统中被重建。可以使用NEWID 函数或转换一个字符串为唯一标识符来初始化具有唯一标识符的列</td>
+
+
+
+</tr>
+<tr bgcolor="#ffffff">
+<td>char</td>
+<td>字符型</td>
+<td>char数据类型用来存储指定长度的定长非统一编码型的数据。当定义一列为此类型时，你必须指定列长。当你总能知道要存储的数据的长度时，此数据类型很有用。例如，当你按邮政编码加4个字符格式来存储数据时，你知道总要用到10个字符。此数据类型的列宽最大为8000
+ 个字符</td>
+
+
+
+</tr>
+<tr bgcolor="#ffffff">
+<td>varchar</td>
+<td>字符型</td>
+<td>varchar数据类型，同char类型一样，用来存储非统一编码型字符数据。与char 型不一样，此数据类型为变长。当定义一列为该数据类型时，你要指定该列的最大长度。 它与char数据类型最大的区别是，存储的长度不是列长，而是数据的长度</td>
+
+
+
+</tr>
+<tr bgcolor="#ffffff">
+<td>text</td>
+<td>字符型</td>
+<td>text 数据类型用来存储大量的非统一编码型字符数据。这种数据类型最多可以有231-1或20亿个字符</td>
+
+
+
+</tr>
+<tr bgcolor="#ffffff">
+<td>nchar</td>
+<td>统一编码字符型</td>
+<td>nchar 数据类型用来存储定长统一编码字符型数据。统一编码用双字节结构来存储每个字符，而不是用单字节(普通文本中的情况)。它允许大量的扩展字符。此数据类型能存储4000种字符，使用的字节空间上增加了一倍</td>
+
+
+
+</tr>
+<tr bgcolor="#ffffff">
+<td>nvarchar</td>
+<td>统一编码字符型</td>
+<td>nvarchar 数据类型用作变长的统一编码字符型数据。此数据类型能存储4000种字符，使用的字节空间增加了一倍</td>
+
+
+
+</tr>
+<tr bgcolor="#ffffff">
+<td>ntext</td>
+<td>统一编码字符型</td>
+<td>ntext 数据类型用来存储大量的统一编码字符型数据。这种数据类型能存储230 -1或将近10亿个字符，且使用的字节空间增加了一倍</td>
+
+
+
+</tr>
+<tr bgcolor="#ffffff">
+<td>binary</td>
+<td>二进制数据类型</td>
+<td>binary数据类型用来存储可达8000 字节长的定长的二进制数据。当输入表的内容接近相同的长度时，你应该使用这种数据类型</td>
+
+
+
+</tr>
+<tr bgcolor="#ffffff">
+<td>varbinary</td>
+<td>二进制数据类型</td>
+<td>varbinary 数据类型用来存储可达8000 字节长的变长的二进制数据。当输入表的内容大小可变时，你应该使用这种数据类型</td>
+
+
+
+</tr>
+<tr bgcolor="#ffffff">
+<td>image</td>
+<td>二进制数据类型</td>
+<td>image 数据类型用来存储变长的二进制数据，最大可达231-1或大约20亿字节</td>
+
+
+
+</tr>
+
+
+
+</tbody>
+
+
+
+</table>
+
+
+
+</td>
+
+
+
+</tr>
+
+
+
+</tbody>
+
+
+
+</table>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+你或许已经在纳闷了，为什么之前的数据类型是大写的，而到了这个表格就变成了小写的。其实这是sqlite的一个不得不提的特性：<strong>sqlite是大小写不敏感的！</strong>这一特性对于很多c语言fans来说是很不习惯的。</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;③<strong><em>数据库的基本操作语句</em></strong></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<strong><em><br />
+</em></strong></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 其实这个还是SQL92标准中的一部分，只是不同的数据库会有一点点的不同而已，下面就对在android中最常用的几个操作语句给以概述，详细介绍请参看<a style="color: #ca0000; text-decoration: none;" href="http://www.w3school.com.cn/sql/index.asp" target="_blank">SQL语句简单介绍</a>。</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+(1)<strong>CREATE TABLE</strong></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;由于创建一个表格，基本使用语法结构是：</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<strong>CREATE TABLE "表格名" ("栏位1" 保存资料类型 ,&nbsp;"栏位3" &nbsp;保存资料类型 &nbsp;,&nbsp;"栏位2" 保存资料类型 .....);</strong></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 例如我要创建刚才的Store_Information表格，就可以这样：</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<strong>CREATE TABLE&nbsp; Store_Information&nbsp;(Store_Name char[50] ,&nbsp;Sales long , Date date&nbsp;); &nbsp;</strong></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 需要提示的是，这里还是声明了数据类型。而且不难发现，c语言构建的sqlite自身也有一些c语言的性格(例如一个完整语句后的分号)。</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+(2)<strong>SELECT</strong></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<strong>用于将资料从数据库中的表格内选出，基本语法结构为：</strong></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<strong><strong>S</strong>ELECT "栏位名" FROM "表格名" ;</strong></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<strong>例如我想将 Store_Information 里面的store_name 选出，则可以这样：</strong></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<strong>SELECT store_name FROM Store_Information ;</strong></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+这句执行后就会显示如下的信息：</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<table style="color: #000000; font-family: Arial; font-size: 14px; line-height: 26px;" border="0">
+<tbody>
+<tr>
+<td><strong><em>store_name</em></strong></td>
+
+
+
+</tr>
+<tr>
+<td><strong><em>Los Angeles</em></strong></td>
+
+
+
+</tr>
+<tr>
+<td><strong><em>San Diego</em></strong></td>
+
+
+
+</tr>
+<tr>
+<td><strong><em>Los Angeles</em></strong></td>
+
+
+
+</tr>
+<tr>
+<td><strong><em>Boston</em></strong></td>
+
+
+
+</tr>
+
+
+
+</tbody>
+
+
+
+</table>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+好了，效果一目了然。</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+(3)<strong>SELECT语句可以添加条件来缩小选择结果：</strong></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+去掉重复的结果：</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<strong>SELECT DISTINCT "栏位名"&nbsp;FROM "表格名"<strong>&nbsp;</strong></strong></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<strong>例如将刚才的语句改为：</strong></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<strong>SELECT&nbsp;DISTINCT&nbsp;store_name FROM Store_Information ;</strong></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<strong>则显示的结果为：</strong></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<br />
+</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">&nbsp;</p>
+<table style="color: #000000; font-family: Arial; font-size: 14px; line-height: 26px;" border="0">
+<tbody>
+<tr>
+<td>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px;">
+<strong>store_name</strong></p>
+
+
+
+</td>
+
+
+
+</tr>
+<tr>
+<td><strong>Los Angeles</strong></td>
+
+
+
+</tr>
+<tr>
+<td><strong>San Diego</strong></td>
+
+
+
+</tr>
+<tr>
+<td><strong><strong>Boston</strong><br />
+</strong></td>
+
+
+
+</tr>
+
+
+
+</tbody>
+
+
+
+</table>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+实现有条件的筛选：</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<strong>SELECT "栏位名" FROM "表格名" WHERE "条件语句" ;</strong></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+条件语句和c语言中的类似，只不过用AND表示&ldquo;且&rdquo;，OR表示&ldquo;或&rdquo;。</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+例如对表执行如下语句：</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<strong>SELECT store_name&nbsp;FROM Store_Information&nbsp;WHERE Sales &gt; 1000 ;</strong></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<strong>则显示结果为：</strong></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">&nbsp;</p>
+<p>
+<span style="font-family: Arial; font-size: 14px; line-height: 26px;"><span style="font-family: Arial; font-size: 14px; line-height: 26px;"><span style="font-family: Arial; font-size: 14px; line-height: 26px;"><span style="font-family: Arial; font-size: 14px; line-height: 26px;"><span style="font-family: Arial; font-size: 14px; line-height: 26px;">
+<span style="font-family: Arial; font-size: 14px; line-height: 26px;">store_name<span style="font-family: Arial; font-size: 14px; line-height: 26px;">&nbsp;<br style="font-family: Arial; font-size: 14px; line-height: 26px;" /></span></span></span></span></span></span></span></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<strong>Los Angeles</strong></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+其中WHERE语句用的较多，因为它可以实现自定义条件的使用和多条件的组合。</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+(4)<strong>INSERT INTO</strong></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<strong>在表格中加入资料&mdash;&mdash;可以实现一笔的加入和多笔的加入。</strong></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<strong>加入一笔：</strong></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<strong>INSERT INTO "表格名" ("栏位1", "栏位2", ...)&nbsp;VALUES ("值1", "值2", ...);</strong></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<strong><br />
+</strong></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+加入多笔：</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<strong>INSERT INTO "待加入数据的表格" ("栏位1", "栏位2", ...)&nbsp;SELECT "栏位3", "栏位4", ...&nbsp;FROM "被加入的表格" ;</strong></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<strong>加入多笔其实就是将另一个表格加入到现有表格中。</strong></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<strong>(5)<strong>UPDATE</strong></strong></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+用于修改表格中的数据，语法结构为：</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<strong>UPDATE "表格名"&nbsp;SET "栏位1" = [新值]&nbsp;WHERE {条件};</strong></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<strong>例如：</strong></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<strong>UPDATE Store_Information&nbsp;SET Sales = 500&nbsp;WHERE store_name = "Los Angeles"&nbsp;AND Date = "Jan-08-1999" ;</strong></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<strong>具体是什么意思的话就不说了，你懂的~~~</strong></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<strong>(6)<strong>DELETE FROM</strong></strong></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+删除表格中的某些数据，语法结构为：</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<strong>DELETE FROM "表格名"&nbsp;WHERE {条件} ;</strong></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<strong>满足条件的所有资料都会被删除掉。</strong></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+二、<strong>如何在android中调用数据库资源</strong></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<br />
+</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<strong>在android中主要有两种方法来实现对数据库的访问，一种是adb shell方式，另一种是通过相关的android 的java类来间接的对数据库来进行操作。其中前者主要用于在开发过程中进行调试等工作，后者则为android中主要的使用数据库的方式。</strong></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+下面就对这两种方式进行一个简要的介绍。</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+1.<strong>adb shell方式</strong></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+说白了，adb shell 就是一个android模拟器的后台资源调用器（个人理解啦~~）。它的操作方式和<strong>命令提示符</strong>差不多&mdash;&mdash;以命令行的方式进行。</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+既然是模拟器的后台资源调用器，那当然得先打开android模拟器了。</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+打开模拟器后，再打开命令提示符，在里面输入<strong>adb shell</strong>，这时会出现一个#号（懂linux的同学懂的），具体效果如下：</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<img style="border: none;" src="http://hi.csdn.net/attachment/201010/5/0_1286286727tpOt.gif" alt="" width="285" height="129" /></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+然后你就可以像在linux下进行shell命令的执行了。</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+接着输入 cd data/data/ 并执行，再执行ls，则会显示一些安装的软件的工程包名，效果如下：</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<img style="border: none;" src="http://hi.csdn.net/attachment/201010/5/0_1286287199yNys.gif" alt="" /></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+其实这在模拟器中是以一个个文件夹的形式存在的，所以你可以用cd命令进入它。例如我进入一个后，再用ls命令显示里面的内容：</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<img style="border: none;" src="http://hi.csdn.net/attachment/201010/6/0_12863417343Vm0.gif" alt="" width="214" height="85" /></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+该文件夹内又存在databases、 
+lib等文件夹（如果没有databases的话可以自己手动用mkdir命令创建一个）。而这个databases文件夹就是这个应用的数据库文件的所在地，cd进入后，应该会看到里面有一个或多个.db格式的文件（其实sqlite对文件的名字没有特殊要求，你用.txt等其他的格式也可以，但推荐.db）。如果没有db文件的话，可以用如下命令创建：sqlite3
+ mydata.db。这样就会在databases里面生成了一个数据库文件。如果已存在，可以直接用sqlite3命令调用该数据库文件，命令为
+ sqlite3 mydata.db（其实就是和刚才的命令一个样）。接下来你就会看到：</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<img style="border: none;" src="http://hi.csdn.net/attachment/201010/6/0_1286342469M65J.gif" alt="" /></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+在sqlite&gt;后面就可以执行你的sql语句了。下面执行了一些简单的语句：</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<img style="border: none;" src="http://hi.csdn.net/attachment/201010/6/0_1286342846dQlc.gif" alt="" /></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+好了，adb shell的方式介绍到这里。</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+2.<strong>通过android中的相关java类</strong></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+Android中对数据库进行操作的相关的借口、类等都在andorid.database和android.database.sqlite两个包里面。里面存在着很多的与数据库操作相关的类，但是在平时普通的开发中最经常遇到的仅仅就是那几个类而已，所以在这里我就省去通篇的介绍，对一些常用的接口、类做一下简介。</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+①<strong>SQLiteDatabase（android.database.sqlite.SQLiteDatabase）</strong></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<strong>文档信息:</strong></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<strong>public class</strong></p>
+<p>
+<span style="font-family: Arial; font-size: 14px; line-height: 26px;"><span style="font-family: Arial; font-size: 14px; line-height: 26px;"><span style="font-family: Arial; font-size: 14px; line-height: 26px;"><span style="font-family: Arial; font-size: 14px; line-height: 26px;"><span style="font-family: Arial; font-size: 14px; line-height: 26px;"><span style="font-family: Arial; font-size: 14px; line-height: 26px;"><span style="font-family: Arial; font-size: 14px; line-height: 26px;">
+<span style="font-family: Arial; font-size: 14px; line-height: 26px;">SQLiteDatabase</span></span></span></span></span></span></span></span></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+Exposes methods to manage a SQLite database.SQLiteDatabase has methods to&nbsp;<strong>create, delete, execute SQL</strong>commands,
+ and perform other common database management tasks.atabase names must 
+be unique within an application, not across all applications.</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+简介：</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+这个是在android中数据库操作使用最频繁的一个类。通过它可以实现数据库的创建或打开、创建表、插入数据、删除数据、查询数据、修改数据等操作。</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+重要方法介绍：</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+(1)public static&nbsp;<strong>SQLiteDatabase</strong>&nbsp;openOrCreateDatabase&nbsp;(<strong>File</strong>&nbsp;file,&nbsp;<strong>SQLiteDatabase.CursorFactory</strong>&nbsp;factory)</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;&nbsp; &nbsp;&nbsp;public static&nbsp;<strong>SQLiteDatabase</strong>&nbsp;openOrCreateDatabase&nbsp;(<strong>String</strong>&nbsp;path,&nbsp;<strong>SQLiteDatabase.CursorFactory</strong>&nbsp;factory)</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+这个方法用于打开或创建一个数据库（对于sqlite来说，就是打开或产生一个数据库文件），参数中的<strong>File</strong>类就是java中表示系统文件路径的<strong>File</strong>类，而<strong>SQLiteDatabase.CursorFactory</strong>则是一个产生<strong>Cursor</strong>对象的工厂类（<strong>Cursor</strong>接口将在后面介绍到）。</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<br />
+</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+(2)public&nbsp;<strong>long</strong>&nbsp;insert&nbsp;(<strong>String</strong>&nbsp;table,&nbsp;<strong>String</strong>&nbsp;nullColumnHack,&nbsp;<strong>ContentValues</strong>&nbsp;values)</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+看到它的名字以及sql中的相关语句你不难猜到这个方法用于在数据库中加入数据。<strong>ContentValue</strong>类似于java中<strong>HashMap</strong>类，用于以键值对的方式保存数据。</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<br />
+</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+(3)public&nbsp;<strong>int&nbsp;</strong>delete&nbsp;(<strong>String</strong>&nbsp;table,&nbsp;<strong>String</strong>&nbsp;whereClause,&nbsp;<strong>String[]</strong>&nbsp;whereArgs)</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+不用说了，用于删除表中的数据。</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<br />
+</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+(4)<strong>public&nbsp;Cursor&nbsp;query&nbsp;(booleandistinct,&nbsp;String&nbsp;table,&nbsp;String[]&nbsp;columns,&nbsp;String&nbsp;selection,&nbsp;String[]&nbsp;selectionArgs,&nbsp;String&nbsp;groupBy,&nbsp;String&nbsp;having,&nbsp;String&nbsp;orderBy,&nbsp;String&nbsp;limit)</strong></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<strong>名字很长是吧，它的功能也很强大，用于查询数据库中的数据。</strong></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<strong><br />
+</strong></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<span style="font-weight: bold;">(5)<strong>public&nbsp;int&nbsp;update&nbsp;(String&nbsp;table,&nbsp;ContentValues&nbsp;values,&nbsp;String&nbsp;whereClause,&nbsp;String[]&nbsp;whereArgs)</strong></span></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<span style="font-weight: bold;">用于修改数据。根据传入参数的名字可以对使用方法略知一二。</span></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<span style="font-weight: bold;"><br />
+</span></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<span style="font-weight: bold;">(6)public&nbsp;void&nbsp;execSQL&nbsp;(String&nbsp;sql,&nbsp;Object[]&nbsp;bindArgs)</span></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<span style="font-weight: bold;">&nbsp;&nbsp; &nbsp;&nbsp;public&nbsp;void&nbsp;execSQL&nbsp;(String&nbsp;sql)</span></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<span style="font-weight: bold;">这是我个人认为最为重要的方法。这个方法用于执行你用String表示的非查询（因为它不会返回一个Cursor对象）的sql语句，例如CREATE,SELECT等。遗憾的是现在尚无法一次调用该方法来执行用&ldquo;；&rdquo;分开的多条sql语句。第二个重写方法使用的更多些。</span></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<strong>另外在此提问：第一个重写方法中bindArgs表示的是一些什么，用来做什么用，知道的同学可以告诉我下，谢谢！</strong></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<strong><br />
+</strong></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<span style="font-weight: bold;">(7)public&nbsp;void&nbsp;close&nbsp;()</span></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<span style="font-weight: bold;">用来关闭数据库并释放数据库占用的相关资源。</span></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<span style="font-weight: bold;"><br />
+</span></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+②<strong>SQLiteOpenHelper （android.database.sqlite.SQLiteOpenHelper）</strong></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+文档信息：</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+public&nbsp;<strong>abstract</strong>&nbsp;class</p>
+<p>
+<span style="font-family: Arial; font-size: 14px; line-height: 26px;"><span style="font-family: Arial; font-size: 14px; line-height: 26px;"><span style="font-family: Arial; font-size: 14px; line-height: 26px;"><span style="font-family: Arial; font-size: 14px; line-height: 26px;"><span style="font-family: Arial; font-size: 14px; line-height: 26px;"><span style="font-family: Arial; font-size: 14px; line-height: 26px;"><span style="font-family: Arial; font-size: 14px; line-height: 26px;"><span style="font-family: Arial; font-size: 14px; line-height: 26px;">
+<span style="font-family: Arial; font-size: 14px; line-height: 26px;">SQLiteOpenHelper</span></span></span></span></span></span></span></span></span></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+A helper class to manage database creation and version management. You create a subclass implementing<strong>onCreate(SQLiteDatabase)</strong>,&nbsp;<strong>onUpgrade(SQLiteDatabase, int, int)</strong>&nbsp;and optionally&nbsp;<strong>onOpen(SQLiteDatabase)</strong>,
+ and
+ this class takes care of opening the database if it exists, creating it
+ if it does not, and upgrading it as necessary. Transactions are used to
+ make sure the database is always in a sensible state.</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+简介：</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+正如它的名字所表述的一样，<strong>这个抽象类</strong>是一个辅助类（Helper），用来打开（若数据库已存在）或创建数据库的。关于抽象类我们都知道，如果要使用它，一定是继承它。所以使用它都是通过自己定义一个类继承于它，并实现<strong>onCreate(SQLiteDatabase)&nbsp;</strong>,&nbsp;<strong>onUpgrade(SQLiteDatabase, int, int)&nbsp;</strong>,&nbsp;<strong>onOpen(SQLiteDatabase)</strong>三个方法。</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+在我看来，所谓的辅助类，其实就是充当了一个<strong>封装器</strong>&mdash;&mdash;也就是说用于对其辅助的类实现一个java上的封装。在这里，<strong>SQLiteOpenHelper</strong>就是用来对<strong>SQLiteDatabase</strong>进行一个封装处理。初学的同学想要进一步理解的话可以先看看<a style="color: #ca0000; text-decoration: none;" href="http://baike.baidu.com/view/154910.htm" target="_blank">什么是封装</a>。</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+它包含的方法如下：</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+(1)synchronized&nbsp;<strong>void&nbsp;close()</strong></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 关闭任何已开启的数据库对象。</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+(2)synchronized&nbsp;<strong>SQLiteDatabase&nbsp;getReadableDatabase()</strong></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 创建或打开一个仅仅可读的(read-only)数据库。</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+(3)synchronized&nbsp;<strong>SQLiteDatabase&nbsp;getWritableDatabase()</strong></p>
+<div style="font-family: Arial; font-size: 14px; line-height: 26px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 创建或打开一个可读可写的数据库。</div>
+<div style="font-family: Arial; font-size: 14px; line-height: 26px;">(4)abstract<strong>&nbsp;void&nbsp;onCreate(SQLiteDatabase&nbsp;</strong>db<strong>)</strong></div>
+<div style="font-family: Arial; font-size: 14px; line-height: 26px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 当数据库被第一次创建时被调用的的方法（类似于Activity的<strong>onCreate()</strong>）。</div>
+<div style="font-family: Arial; font-size: 14px; line-height: 26px;">(5)<strong>void&nbsp;onOpen(SQLiteDatabase&nbsp;</strong>db<strong>)</strong></div>
+<div style="font-family: Arial; font-size: 14px; line-height: 26px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 数据库已经被成打开后被调用。</div>
+<div style="font-family: Arial; font-size: 14px; line-height: 26px;">(6)abstract&nbsp;<strong>void&nbsp;onUpgrade(SQLiteDatabase</strong>&nbsp;db<strong>, int</strong>&nbsp;oldVersion<strong>, int</strong>&nbsp;newVersion<strong>)</strong></div>
+<div style="font-family: Arial; font-size: 14px; line-height: 26px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 当数据库需要被更改（更新）时被调用。</div>
+<div style="font-family: Arial; font-size: 14px; line-height: 26px;">&nbsp;</div>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+③<strong>Cursor（android.database.Cursor）</strong></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<strong>文档信息：</strong></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<strong>public interface</strong></p>
+<p>
+<span style="font-family: Arial; font-size: 14px; line-height: 26px;"><span style="font-family: Arial; font-size: 14px; line-height: 26px;"><span style="font-family: Arial; font-size: 14px; line-height: 26px;"><span style="font-family: Arial; font-size: 14px; line-height: 26px;"><span style="font-family: Arial; font-size: 14px; line-height: 26px;"><span style="font-family: Arial; font-size: 14px; line-height: 26px;"><span style="font-family: Arial; font-size: 14px; line-height: 26px;"><span style="font-family: Arial; font-size: 14px; line-height: 26px;"><span style="font-family: Arial; font-size: 14px; line-height: 26px;">
+<span style="font-family: Arial; font-size: 14px; line-height: 26px;">Cursor</span></span></span></span></span></span></span></span></span></span></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+This interface provides random read-write access to the result set returned by a database query.</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+简介：</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<strong>Cursor</strong>没有构造方法，只能通过<strong>query</strong>方法获得。</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+前面提到了，<strong>execSQL</strong>方法无法执行与查询相关的sql语句，是因为无法返回一个<strong>Cursor</strong>对象&mdash;&mdash;查询需要将查到的结果（就是表中的哪一行满足查询条件）返回，<strong>execSQL</strong>是返回void的，所以无法操作查询语句。从这里可以了解到，<strong>Cursor</strong>接口从某种意义上说就是为了弥补这一点的&mdash;&mdash;<strong>query</strong>方法就是返回了一个<strong>Cursor</strong>对象。从名字上看，它的意思是游标，所以大概可以猜到他起到了一个指代的作用（事实上就是的，它指代数据库中保存数据的表的一行，并且还可以简单的处理该行数据项的信息）。从类的描述看，<strong>Cursor</strong>提供了对一个数据库查询动作返回结果束的随机读写途径，也就是说，它是一个对查询操作返回结果进行进一步处理的类，而这些处理就是用<strong>Cursor</strong>里的方法实现的。</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+结合SimpleCursorAdapter这个适配器类，你可以很方便的将数据库中的数据显示到AdapterView（例如ListView，GridView）中&mdash;&mdash;这也是<strong>Cursor</strong>的另一大用处。</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+如果你了解java中的<a style="color: #ca0000; text-decoration: none;" href="http://baike.baidu.com/view/1413849.htm" target="_blank">迭代器</a>（Iterator）的话你就会发现其实<strong>Cursor和迭代器有些相似</strong>，这样你可能会更快的了解<strong>Cursor</strong>。</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+一些常用的方法有：</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+(1)<span style="font-weight: bold;">public abstract&nbsp;boolean&nbsp;moveToPosition&nbsp;(int&nbsp;position)</span></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<span style="font-weight: bold;">&nbsp;&nbsp; &nbsp;public abstract&nbsp;<strong>boolean&nbsp;</strong>moveToFirst&nbsp;()</span></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<span style="font-weight: bold;">&nbsp;&nbsp; &nbsp;public abstract&nbsp;boolean&nbsp;moveToLast&nbsp;()</span></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<span style="font-weight: bold;">&nbsp;&nbsp; &nbsp;public abstract&nbsp;boolean&nbsp;moveToNext&nbsp;()</span></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<span style="font-weight: bold;">&nbsp;&nbsp; &nbsp;public abstract&nbsp;<strong>boolean</strong>&nbsp;moveToPrevious&nbsp;()</span></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+把这些方法放在一起的目的很明显：它们都是对<strong>Cursor</strong>指向的位置进行操作的方法&mdash;&mdash;移到某个指定的位置、移到第一行、移到最后一行、移向下一行、移向上一行等等。</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+(2)<span style="font-weight: bold;">public abstract&nbsp;<strong>int</strong>&nbsp;getCount&nbsp;()</span></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<strong>返回Cursor指向的表含有的总数据项数。</strong></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<span style="font-weight: bold;">(3)public abstract&nbsp;<strong>boolean</strong>&nbsp;requery&nbsp;()</span></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<span style="font-weight: bold;"><strong>Cursor</strong>是被一个query方法产生的，而这个方法就是将那个<strong>query</strong>方法所做的查询动作再执行一遍&mdash;&mdash;这将会改变调用该方法的<strong>Cursor</strong>对象的值，也就是说，<strong>Cursor</strong>使用了该方法后就复位了。</span></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<span style="font-weight: bold;">(4)public abstract&nbsp;<strong>boolean</strong>&nbsp;isClosed&nbsp;()</span></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;&nbsp; &nbsp;<span style="font-weight: bold;">public abstract&nbsp;boolean&nbsp;isFirst&nbsp;()</span></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<span style="font-weight: bold;">&nbsp;&nbsp; &nbsp;public abstract&nbsp;boolean&nbsp;isLast&nbsp;()</span></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<span style="font-weight: bold;">&nbsp;&nbsp; &nbsp;public abstract&nbsp;boolean&nbsp;isNull&nbsp;(int&nbsp;columnIndex)</span></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<span style="font-weight: bold;">&nbsp;&nbsp; &nbsp;public abstract&nbsp;boolean&nbsp;isClosed&nbsp;()</span></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<span style="font-weight: bold;">&nbsp;&nbsp; &nbsp;public abstract&nbsp;boolean&nbsp;isAfterLast&nbsp;()</span></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<span style="font-weight: bold;">&nbsp;&nbsp; &nbsp;public abstract&nbsp;boolean&nbsp;isBeforeFirst&nbsp;()</span></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<span style="font-weight: bold;">在java中，类似于isWhatever形式的方法大都是对对象状态进行判断的方法&mdash;&mdash;Whatever成立则返回true，不成立则返回false。这些方法也不例外。</span></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<span style="font-weight: bold;">值得提一下的是isNull方法，该方法测试某个栏位所保存的信息是否为NULL。参数columnIndex代表了那个栏位的代号。</span></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<span style="font-weight: bold;">④另外建议各位了解一下<strong>SimpleCursorAdapter（android.widget.SimpleCursorAdapter）</strong>这个适配器类。</span></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<span style="font-weight: bold;">好了，介绍这么多了，该上源码了。这个源码很简单，但代表一种使用模式，所以还是值得仔细研究的。</span></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<span style="font-weight: bold;">1.实现一个继承SQLiteOpenHelper的类</span></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">&nbsp;</p>
+<div style="font-family: Arial; font-size: 14px; line-height: 26px;"><ol>
+<li><span style="font-weight: bold;">import&nbsp;android.content.ContentValues;&nbsp;&nbsp;</span></li>
+<li><span style="font-weight: bold;">import&nbsp;android.content.Context;&nbsp;&nbsp;</span></li>
+<li><span style="font-weight: bold;">import&nbsp;android.database.Cursor;&nbsp;&nbsp;</span></li>
+<li><span style="font-weight: bold;">import&nbsp;android.database.sqlite.SQLiteDatabase;&nbsp;&nbsp;</span></li>
+<li><span style="font-weight: bold;">import&nbsp;android.database.sqlite.SQLiteOpenHelper;&nbsp;&nbsp;</span></li>
+<li><span style="font-weight: bold;">public&nbsp;class&nbsp;DBHelper&nbsp;extends&nbsp;SQLiteOpenHelper&nbsp;{&nbsp;&nbsp;</span></li>
+<li><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;private&nbsp;static&nbsp;final&nbsp;String&nbsp;DB_NAME&nbsp;=&nbsp;"coll.db";&nbsp;&nbsp;</span></li>
+<li><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;private&nbsp;static&nbsp;final&nbsp;String&nbsp;TBL_NAME&nbsp;=&nbsp;"CollTbl";&nbsp;&nbsp;</span></li>
+<li><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;private&nbsp;static&nbsp;final&nbsp;String&nbsp;CREATE_TBL&nbsp;=&nbsp;"&nbsp;create&nbsp;table&nbsp;"&nbsp;&nbsp;</span></li>
+<li><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+&nbsp;"&nbsp;CollTbl(_id&nbsp;integer&nbsp;primary&nbsp;key&nbsp;autoincrement,name&nbsp;text,url&nbsp;text,&nbsp;desc&nbsp;text)&nbsp;";&nbsp;&nbsp;</span></li>
+<li><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</strong></li>
+<li><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;private&nbsp;SQLiteDatabase&nbsp;db;&nbsp;&nbsp;</span></li>
+<li><strong>&nbsp;&nbsp;&nbsp;&nbsp;DBHelper(Context&nbsp;c)&nbsp;{&nbsp;&nbsp;</strong></li>
+<li><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;super(c,&nbsp;DB_NAME,&nbsp;null,&nbsp;2);&nbsp;&nbsp;</span></li>
+<li><strong>&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</strong></li>
+<li><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;@Override&nbsp;&nbsp;</span></li>
+<li><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;void&nbsp;onCreate(SQLiteDatabase&nbsp;db)&nbsp;{&nbsp;&nbsp;</span></li>
+<li><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.db&nbsp;=&nbsp;db;&nbsp;&nbsp;</span></li>
+<li><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;db.execSQL(CREATE_TBL);&nbsp;&nbsp;</strong></li>
+<li><strong>&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</strong></li>
+<li><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;void&nbsp;insert(ContentValues&nbsp;values)&nbsp;{&nbsp;&nbsp;</span></li>
+<li><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SQLiteDatabase&nbsp;db&nbsp;=&nbsp;getWritableDatabase();&nbsp;&nbsp;</strong></li>
+<li><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;db.insert(TBL_NAME,&nbsp;null,&nbsp;values);&nbsp;&nbsp;</span></li>
+<li><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;db.close();&nbsp;&nbsp;</strong></li>
+<li><strong>&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</strong></li>
+<li><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;Cursor&nbsp;query()&nbsp;{&nbsp;&nbsp;</span></li>
+<li><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SQLiteDatabase&nbsp;db&nbsp;=&nbsp;getWritableDatabase();&nbsp;&nbsp;</strong></li>
+<li><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Cursor&nbsp;c&nbsp;=&nbsp;db.query(TBL_NAME,&nbsp;null,&nbsp;null,&nbsp;null,&nbsp;null,&nbsp;null,&nbsp;null);&nbsp;&nbsp;</span></li>
+<li><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;c;&nbsp;&nbsp;</span></li>
+<li><strong>&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</strong></li>
+<li><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;void&nbsp;del(int&nbsp;id)&nbsp;{&nbsp;&nbsp;</span></li>
+<li><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(db&nbsp;==&nbsp;null)&nbsp;&nbsp;</span></li>
+<li><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;db&nbsp;=&nbsp;getWritableDatabase();&nbsp;&nbsp;</strong></li>
+<li><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;db.delete(TBL_NAME,&nbsp;"_id=?",&nbsp;new&nbsp;String[]&nbsp;{&nbsp;String.valueOf(id)&nbsp;});&nbsp;&nbsp;</span></li>
+<li><strong>&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</strong></li>
+<li><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;void&nbsp;close()&nbsp;{&nbsp;&nbsp;</span></li>
+<li><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(db&nbsp;!=&nbsp;null)&nbsp;&nbsp;</span></li>
+<li><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;db.close();&nbsp;&nbsp;</strong></li>
+<li><strong>&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</strong></li>
+<li><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;@Override&nbsp;&nbsp;</span></li>
+<li><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;void&nbsp;onUpgrade(SQLiteDatabase&nbsp;db,&nbsp;int&nbsp;oldVersion,&nbsp;int&nbsp;newVersion)&nbsp;{&nbsp;&nbsp;</span></li>
+<li><strong>&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</strong></li>
+<li><strong>}&nbsp;&nbsp;</strong></li>
+
+
+</ol>
+</div>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<span style="font-weight: bold;">&nbsp;</span></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<span style="font-weight: bold;">2.创建一个录入数据的类</span></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<span style="font-weight: bold;">&nbsp;</span></p>
+<div style="font-family: Arial; font-size: 14px; line-height: 26px;"><ol>
+<li><span style="font-weight: bold;">import&nbsp;android.app.Activity;&nbsp;&nbsp;</span></li>
+<li><span style="font-weight: bold;">import&nbsp;android.content.ContentValues;&nbsp;&nbsp;</span></li>
+<li><span style="font-weight: bold;">import&nbsp;android.content.Intent;&nbsp;&nbsp;</span></li>
+<li><span style="font-weight: bold;">import&nbsp;android.os.Bundle;&nbsp;&nbsp;</span></li>
+<li><span style="font-weight: bold;">import&nbsp;android.view.View;&nbsp;&nbsp;</span></li>
+<li><span style="font-weight: bold;">import&nbsp;android.view.View.OnClickListener;&nbsp;&nbsp;</span></li>
+<li><span style="font-weight: bold;">import&nbsp;android.widget.Button;&nbsp;&nbsp;</span></li>
+<li><span style="font-weight: bold;">import&nbsp;android.widget.EditText;&nbsp;&nbsp;</span></li>
+<li><span style="font-weight: bold;">public&nbsp;class&nbsp;AddActivity&nbsp;extends&nbsp;Activity&nbsp;{&nbsp;&nbsp;</span></li>
+<li><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;private&nbsp;EditText&nbsp;et1,&nbsp;et2,&nbsp;et3;&nbsp;&nbsp;</span></li>
+<li><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;private&nbsp;Button&nbsp;b1;&nbsp;&nbsp;</span></li>
+<li><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;@Override&nbsp;&nbsp;</span></li>
+<li><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;void&nbsp;onCreate(Bundle&nbsp;savedInstanceState)&nbsp;{&nbsp;&nbsp;</span></li>
+<li><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;super.onCreate(savedInstanceState);&nbsp;&nbsp;</span></li>
+<li><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;setContentView(R.layout.add);&nbsp;&nbsp;</strong></li>
+<li><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.setTitle("添加收藏信息");&nbsp;&nbsp;</span></li>
+<li><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;et1&nbsp;=&nbsp;(EditText)&nbsp;findViewById(R.id.EditTextName);&nbsp;&nbsp;</strong></li>
+<li><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;et2&nbsp;=&nbsp;(EditText)&nbsp;findViewById(R.id.EditTextUrl);&nbsp;&nbsp;</strong></li>
+<li><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;et3&nbsp;=&nbsp;(EditText)&nbsp;findViewById(R.id.EditTextDesc);&nbsp;&nbsp;</strong></li>
+<li><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;b1&nbsp;=&nbsp;(Button)&nbsp;findViewById(R.id.ButtonAdd);&nbsp;&nbsp;</strong></li>
+<li><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;b1.setOnClickListener(new&nbsp;OnClickListener()&nbsp;{&nbsp;&nbsp;</span></li>
+<li><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;void&nbsp;onClick(View&nbsp;v)&nbsp;{&nbsp;&nbsp;</span></li>
+<li><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String&nbsp;name&nbsp;=&nbsp;et1.getText().toString();&nbsp;&nbsp;</strong></li>
+<li><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String&nbsp;url&nbsp;=&nbsp;et2.getText().toString();&nbsp;&nbsp;</strong></li>
+<li><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String&nbsp;desc&nbsp;=&nbsp;et3.getText().toString();&nbsp;&nbsp;</strong></li>
+<li><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ContentValues&nbsp;values&nbsp;=&nbsp;new&nbsp;ContentValues();&nbsp;&nbsp;</span></li>
+<li><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;values.put("name",&nbsp;name);&nbsp;&nbsp;</span></li>
+<li><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;values.put("url",&nbsp;url);&nbsp;&nbsp;</span></li>
+<li><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;values.put("desc",&nbsp;desc);&nbsp;&nbsp;</span></li>
+<li><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DBHelper&nbsp;helper&nbsp;=&nbsp;new&nbsp;DBHelper(getApplicationContext());&nbsp;&nbsp;</span></li>
+<li><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;helper.insert(values);&nbsp;&nbsp;</strong></li>
+<li><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Intent&nbsp;intent&nbsp;=&nbsp;new&nbsp;Intent(AddActivity.this,&nbsp;&nbsp;</span></li>
+<li><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;QueryActivity.class);&nbsp;&nbsp;</span></li>
+<li><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;startActivity(intent);&nbsp;&nbsp;</strong></li>
+<li><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</strong></li>
+<li><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;});&nbsp;&nbsp;</strong></li>
+<li><strong>&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</strong></li>
+<li><strong>}&nbsp;&nbsp;</strong></li>
+
+
+</ol>
+</div>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">&nbsp;</p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<span style="font-weight: bold;">&nbsp;</span></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">
+<span style="font-weight: bold;">3.创建一个显示数据库数据的类</span></p>
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">&nbsp;</p>
+<div style="font-family: Arial; font-size: 14px; line-height: 26px;">
+<div><strong><a style="color: #ca0000; text-decoration: none;" title="?" href="http://blog.csdn.net/nieweilin/article/details/5919013#" target="_blank"><br />
+</a></strong></div>
+<ol>
+<li><span style="font-weight: bold;">import&nbsp;android.app.AlertDialog;&nbsp;&nbsp;</span></li>
+<li><span style="font-weight: bold;">import&nbsp;android.app.ListActivity;&nbsp;&nbsp;</span></li>
+<li><span style="font-weight: bold;">import&nbsp;android.content.DialogInterface;&nbsp;&nbsp;</span></li>
+<li><span style="font-weight: bold;">import&nbsp;android.database.Cursor;&nbsp;&nbsp;</span></li>
+<li><span style="font-weight: bold;">import&nbsp;android.os.Bundle;&nbsp;&nbsp;</span></li>
+<li><span style="font-weight: bold;">import&nbsp;android.view.View;&nbsp;&nbsp;</span></li>
+<li><span style="font-weight: bold;">import&nbsp;android.widget.AdapterView;&nbsp;&nbsp;</span></li>
+<li><span style="font-weight: bold;">import&nbsp;android.widget.ListView;&nbsp;&nbsp;</span></li>
+<li><span style="font-weight: bold;">import&nbsp;android.widget.SimpleCursorAdapter;&nbsp;&nbsp;</span></li>
+<li><span style="font-weight: bold;">import&nbsp;android.widget.AdapterView.OnItemClickListener;&nbsp;&nbsp;</span></li>
+<li><span style="font-weight: bold;">public&nbsp;class&nbsp;QueryActivity&nbsp;extends&nbsp;ListActivity&nbsp;{&nbsp;&nbsp;</span></li>
+<li><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;@Override&nbsp;&nbsp;</span></li>
+<li><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;void&nbsp;onCreate(Bundle&nbsp;savedInstanceState)&nbsp;{&nbsp;&nbsp;</span></li>
+<li><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;super.onCreate(savedInstanceState);&nbsp;&nbsp;</span></li>
+<li><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.setTitle("浏览收藏信息");&nbsp;&nbsp;</span></li>
+<li><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;final&nbsp;DBHelper&nbsp;helpter&nbsp;=&nbsp;new&nbsp;DBHelper(this);&nbsp;&nbsp;</span></li>
+<li><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Cursor&nbsp;c&nbsp;=&nbsp;helpter.query();&nbsp;&nbsp;</strong></li>
+<li><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String[]&nbsp;from&nbsp;=&nbsp;{&nbsp;"_id",&nbsp;"name",&nbsp;"url",&nbsp;"desc"&nbsp;};&nbsp;&nbsp;</span></li>
+<li><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int[]&nbsp;to&nbsp;=&nbsp;{&nbsp;R.id.text0,&nbsp;R.id.text1,&nbsp;R.id.text2,&nbsp;R.id.text3&nbsp;};&nbsp;&nbsp;</span></li>
+<li><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SimpleCursorAdapter&nbsp;adapter&nbsp;=&nbsp;new&nbsp;SimpleCursorAdapter(this,&nbsp;&nbsp;</span></li>
+<li><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;R.layout.row,&nbsp;c,&nbsp;from,&nbsp;to);&nbsp;&nbsp;</strong></li>
+<li><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ListView&nbsp;listView&nbsp;=&nbsp;getListView();&nbsp;&nbsp;</strong></li>
+<li><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;listView.setAdapter(adapter);&nbsp;&nbsp;</strong></li>
+<li><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</strong></li>
+<li><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</strong></li>
+<li><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;final&nbsp;AlertDialog.Builder&nbsp;builder&nbsp;=&nbsp;new&nbsp;AlertDialog.Builder(this);&nbsp;&nbsp;</span></li>
+<li><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;listView.setOnItemClickListener(new&nbsp;OnItemClickListener()&nbsp;{&nbsp;&nbsp;</span></li>
+<li><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@Override&nbsp;&nbsp;</span></li>
+<li><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;void&nbsp;onItemClick(AdapterView&lt;?&gt;&nbsp;arg0,&nbsp;View&nbsp;arg1,&nbsp;int&nbsp;arg2,&nbsp;&nbsp;</span></li>
+<li><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;long&nbsp;arg3)&nbsp;{&nbsp;&nbsp;</span></li>
+<li><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;final&nbsp;long&nbsp;temp&nbsp;=&nbsp;arg3;&nbsp;&nbsp;</span></li>
+<li><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;builder.setMessage("真的要删除该记录吗？").setPositiveButton("是",&nbsp;&nbsp;</span></li>
+<li><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;new&nbsp;DialogInterface.OnClickListener()&nbsp;{&nbsp;&nbsp;</span></li>
+<li><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;void&nbsp;onClick(DialogInterface&nbsp;dialog,&nbsp;&nbsp;</span></li>
+<li><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int&nbsp;which)&nbsp;{&nbsp;&nbsp;</span></li>
+<li><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;helpter.del((int)temp);&nbsp;&nbsp;</span></li>
+<li><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Cursor&nbsp;c&nbsp;=&nbsp;helpter.query();&nbsp;&nbsp;</strong></li>
+<li><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String[]&nbsp;from&nbsp;=&nbsp;{&nbsp;"_id",&nbsp;"name",&nbsp;"url",&nbsp;"desc"&nbsp;};&nbsp;&nbsp;</span></li>
+<li><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int[]&nbsp;to&nbsp;=&nbsp;{&nbsp;R.id.text0,&nbsp;R.id.text1,&nbsp;R.id.text2,&nbsp;R.id.text3&nbsp;};&nbsp;&nbsp;</span></li>
+<li><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SimpleCursorAdapter&nbsp;adapter&nbsp;=&nbsp;new&nbsp;SimpleCursorAdapter(getApplicationContext(),&nbsp;&nbsp;</span></li>
+<li><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;R.layout.row,&nbsp;c,&nbsp;from,&nbsp;to);&nbsp;&nbsp;</strong></li>
+<li><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ListView&nbsp;listView&nbsp;=&nbsp;getListView();&nbsp;&nbsp;</strong></li>
+<li><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;listView.setAdapter(adapter);&nbsp;&nbsp;</strong></li>
+<li><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</strong></li>
+<li><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}).setNegativeButton("否",&nbsp;&nbsp;</span></li>
+<li><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;new&nbsp;DialogInterface.OnClickListener()&nbsp;{&nbsp;&nbsp;</span></li>
+<li><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;void&nbsp;onClick(DialogInterface&nbsp;dialog,&nbsp;&nbsp;</span></li>
+<li><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int&nbsp;which)&nbsp;{&nbsp;&nbsp;</span></li>
+<li><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</strong></li>
+<li><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</strong></li>
+<li><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;});&nbsp;&nbsp;</strong></li>
+<li><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AlertDialog&nbsp;ad&nbsp;=&nbsp;builder.create();&nbsp;&nbsp;</strong></li>
+<li><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ad.show();&nbsp;&nbsp;</strong></li>
+<li><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</strong></li>
+<li><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;});&nbsp;&nbsp;</strong></li>
+<li><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;helpter.close();&nbsp;&nbsp;</strong></li>
+<li><strong>&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</strong></li>
+<li><strong>}&nbsp;</strong></li>
+
+
+</ol>
+</div>

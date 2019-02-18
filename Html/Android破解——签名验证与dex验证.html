@@ -1,0 +1,167 @@
+原文链接：http://www.cnblogs.com/kexing/archive/2018/04/21/8900897.html
+<p>在讲签名绕过的方式前，需要先明确DEX校验和签名校验：</p>
+<p>1.将apk以压缩包的形式打开删除原签名后，再签名，安装能够正常打开，但是用IDE（即apk改之理，会自动反编译dex）工具二次打包，却出现非正常情况的，如：闪退/弹出非正版提示框。可以确定是dex文件的校验</p>
+<p>2、将apk以压缩包的形式打开删除原签名再签名，安装之后打开异常的，则基本可以断定是签名检验。如果在断网的情况下同样是会出现异常，则是本地的签名检验；如果首先出现的是提示网络没有连接，则是服务器端的签名校验.</p>
+<p>&nbsp;</p>
+<p>二次验证 提示盗版信息或者是退出程序</p>
+<p>&nbsp;</p>
+<h1>0x01 Android签名机制</h1>
+<hr />
+<p>将APK重命名为zip文件，然后可以看到有个META-INF的文件夹，里面有三个文件，分别名为MANIFEST.MF、CERT.SF和CERT.RSA，这些就是使用signapk.jar生成的签名文件。</p>
+<p>1、 MANIFEST.MF文件：</p>
+<p>程序遍历update.apk包中的所有文件(entry)，对非文件夹非签名文件的文件，逐个生成SHA1的数字签名信息，再用Base64进行编码。具体代码见这个方法：</p>
+<pre class="brush: java; notranslate">private static Manifest addDigestsToManifest(JarFile jar)
+</pre>
+<p>关键代码是</p>
+<p>&nbsp;</p>
+<pre class="brush: java; notranslate">for (JarEntry entry: byName.values()) {
+     String name = entry.getName();
+     if (!entry.isDirectory() &amp;&amp; !name.equals(JarFile.MANIFEST_NAME) &amp;&amp;
+         !name.equals(CERT_SF_NAME) &amp;&amp; !name.equals(CERT_RSA_NAME) &amp;&amp;
+         (stripPattern == null ||!stripPattern.matcher(name).matches())){
+         InputStream data = jar.getInputStream(entry);
+         while ((num = data.read(buffer)) &gt; 0) {
+         md.update(buffer, 0, num);
+       }
+       Attributes attr = null;
+       if (input != null) attr = input.getAttributes(name);
+       attr = attr != null ? new Attributes(attr) : new Attributes();
+       attr.putValue("SHA1-Digest", base64.encode(md.digest()));
+       output.getEntries().put(name, attr);
+    }
+}
+</pre>
+<p>之后将生成的签名写入MANIFEST.MF文件。关键代码如下：</p>
+<pre class="brush: java; notranslate">Manifest manifest = addDigestsToManifest(inputJar);
+je = new JarEntry(JarFile.MANIFEST_NAME);
+je.setTime(timestamp);
+outputJar.putNextEntry(je);
+manifest.write(outputJar);
+</pre>
+<p>2、 生成CERT.SF文件：</p>
+<p>对前一步生成的Manifest，使用SHA1-RSA算法，用私钥进行签名。关键代码如下：</p>
+<pre class="brush: java; notranslate">Signature signature = Signature.getInstance("SHA1withRSA");
+signature.initSign(privateKey);
+je = new JarEntry(CERT_SF_NAME);
+je.setTime(timestamp);
+outputJar.putNextEntry(je);
+writeSignatureFile(manifest,
+new SignatureOutputStream(outputJar, signature));
+</pre>
+<p>3、 生成CERT.RSA文件：</p>
+<p>生成MANIFEST.MF没有使用密钥信息，生成CERT.SF文件使用了私钥文件。那么我们可以很容易猜测到，CERT.RSA文件的生成肯定和公钥相关。 CERT.RSA文件中保存了公钥、所采用的加密算法等信息。核心代码如下：</p>
+<pre class="brush: java; notranslate">je = new JarEntry(CERT_RSA_NAME);
+je.setTime(timestamp);
+outputJar.putNextEntry(je);
+writeSignatureBlock(signature, publicKey, outputJar);
+</pre>
+<p>在程序中获取APK的签名时，通过signature方法进行获取，如下：</p>
+<pre class="brush: java; notranslate">packageInfo = manager.getPackageInfo(pkgname,PackageManager.GET_SIGNATURES);
+signatures = packageInfo.signatures;
+for (Signature signature : signatures) {
+    builder.append(signature.toCharsString());
+}
+signature = builder.toString();
+</pre>
+<p>所以一般的程序就是在代码中通过判断signature的值，来判断APK是否被重新打包过。</p>
+<h1>0x02 签名绕过方式</h1>
+<hr />
+<p>在讲签名绕过的方式前，需要先明确DEX校验和签名校验：</p>
+<p>1.将apk以压缩包的形式打开删除原签名后，再签名，安装能够正常打开，但是用IDE（即apk改之理，会自动反编译dex）工具二次打包，却出现非正常情况的，如：闪退/弹出非正版提示框。可以确定是dex文件的校验</p>
+<p>2、将apk以压缩包的形式打开删除原签名再签名，安装之后打开异常的，则基本可以断定是签名检验。如果在断网的情况下同样是会出现异常，则是本地的签名检验；如果首先出现的是提示网络没有连接，则是服务器端的签名校验.</p>
+<p>当我们把apk原来的签名文件删除之后，使用逆向助手重新签名之后，安装到手机上打开出现异常（提示非正版或者进去就闪退）就是签名验证，如果重新签名没有出现异常的但使用androidkiller工具对文件进行修改之后出现异常就是dex检验（使用IDA破解）</p>
+<h2>2.1.Java层校验</h2>
+<p>获取签名信息和验证的方法都写在android的java层。实例如下：</p>
+<p>1、使用APKIDE反编译APK，不做任何操作，然后直接回编译，安装后运行,提示如下：</p>
+<p>2、在APKIDE中搜索signatures(或者搜索错误提示),定位到签名验证的代码处。</p>
+<p>3、此处就是获取签名的，然后找程序判断签名的地方，进行修改，如下图，if-nez是进行判断的地方，将ne修改为eq。即if-eqz v2, :cond_0。则程序就可以绕过本地的签名交易。</p>
+<h2>2.2.NDK校验</h2>
+<p>将关键代码放到so中，在底层获取签名信息并验证。因为获取和验证的方法都封闭在更安全的so库里面，能够起到一定意义上的保护作用。实例如下：</p>
+<p>1、使用APKIDE反编译APK，不做任何操作，然后直接回编译，安装后运行,程序直接退出，无任何提示。</p>
+<p>2、在APKIDE中搜索signatures(或者搜索错误提示),定位到签名验证的代码处。</p>
+<p>3、使?用JD-GUI打开AppActivity，可以看到,此处是获取包名,然后进?行MD5计算。</p>
+<p>4.在程序中搜索getSignature,发现并没有调?用此函数的地?方,猜测在so?文件中,搜索loadLibrary。</p>
+<p>5.在代码中可以查找,可以找到调?用的是libcocos2dcpp.so</p>
+<p>6.使?用IDA打开libcocos2dcpp.so,然后搜索getSiganture,找到调?用此函数的地方。</p>
+<p>从代码中可以看到,此函数调?用了org.cocos2dx.cpp.AppActivity.getSignature</p>
+<p>7、查看F5代码,发现此函数是判断签名的函数,然后我们双击此函数的调?者,部分代码如下。</p>
+<p>8、从上图可以看出,只需要修改BEQ loc_11F754,让其不跳转到jjni&mdash;&mdash;&gt;error,就可以绕过签名校验。 查看HEX,使?010editor跳到0011F73E,修改D0为D1。成功绕过签名校验。</p>
+<h2>2.3.服务器验证</h2>
+<p>在android的java层获取签名信息，上传服务器在服务端进行签名然后返回验证结果。</p>
+<p>如下图，网络验证时，如果网络没连接，一般都会提示错误。</p>
+<p>既然是网络验证，肯定要把验证信息发送到服务端，然后进行验证，先看个简单的实例，下次会有个难度大的。</p>
+<p>1、手机配置好抓包，然后抓包。第一种图是正常的APK的时候的数据包，第二个图是反编译的APK的数据包，通过对比，发现cookie中的public_key不一样，那么我们替换一下，发现可以正常使用APK的功能了。</p>
+<p>2、将正确的public_key添加到APK中。打开反编译的代码，搜索signatures，定位到签名的代码。</p>
+<p>可以看到，代码将signatures的值传递到V4中，然后传递到Utils-&gt;mPublicKey函数中，于是我们将正确的public_key传给V4。</p>
+<p>然后重新打包，重新安装就可以了。</p>
+<h1>0x03.总结</h1>
+<hr />
+<p>java层的校验很容易就可以破解掉，在so层实现校验相对来说分析会更难点，而网络验证，如果仅仅是字符串的比较，那么也很容易破解掉。</p>
+<p>码子码的太累了。。</p>
+<p>后面还有几篇正在写的文章，包括so分析等等。</p>
+<p>&nbsp;</p>
+<p>签名验证的java代码</p>
+<pre name="code" class="prettyprint"><code class="language-java hljs  has-numbering"><span class="hljs-keyword">static <span class="hljs-keyword">public String <span class="hljs-title">getSignature(){
+        Activity activity = currentActivity;
+        PackageManager manager = activity.getPackageManager();
+        String md5 = <span class="hljs-string">"";
+        <span class="hljs-keyword">try {
+            PackageInfo packageInfo = manager.getPackageInfo(activity.getPackageName(), PackageManager.GET_SIGNATURES);
+            Signature[] signs = packageInfo.signatures;
+            Signature sign = signs[<span class="hljs-number">0];
+
+            md5 = md5(sign.toCharsString());
+
+        } <span class="hljs-keyword">catch (NameNotFoundException e) {
+            <span class="hljs-comment">// TODO Auto-generated catch block
+            <span class="hljs-comment">// TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        <span class="hljs-keyword">return  md5;
+    }
+
+    <span class="hljs-keyword">public <span class="hljs-keyword">static String <span class="hljs-title">md5(String string) {
+        <span class="hljs-keyword">byte[] hash;
+        <span class="hljs-keyword">try {
+            hash = MessageDigest.getInstance(<span class="hljs-string">"MD5").digest(string.getBytes(<span class="hljs-string">"UTF-8"));
+        } <span class="hljs-keyword">catch (NoSuchAlgorithmException e) {
+            <span class="hljs-keyword">throw <span class="hljs-keyword">new RuntimeException(<span class="hljs-string">"Huh, MD5 should be supported?", e);
+        } <span class="hljs-keyword">catch (UnsupportedEncodingException e) {
+            <span class="hljs-keyword">throw <span class="hljs-keyword">new RuntimeException(<span class="hljs-string">"Huh, UTF-8 should be supported?", e);
+        }
+
+        StringBuilder hex = <span class="hljs-keyword">new StringBuilder(hash.length * <span class="hljs-number">2);
+        <span class="hljs-keyword">for (<span class="hljs-keyword">byte b : hash) {
+            <span class="hljs-keyword">if ((b &amp; <span class="hljs-number">0xFF) &lt; <span class="hljs-number">0x10) hex.append(<span class="hljs-string">"0");
+            hex.append(Integer.toHexString(b &amp; <span class="hljs-number">0xFF));
+        }
+        <span class="hljs-keyword">return hex.toString();
+    }<br /></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></code></pre>
+<div><br />
+<div>通过公钥的对比可以发现这个apk是否是被二次打包，一般会把公钥的md5或者是sha1值计算出来放在程序中，然后程序运行的时候计算当前程序的md5，然后进行比较。<br />上段代码：<br />
+<div class="highlight">
+<pre><code class="language-text">public static int checkAppSignature(Context context) {
+    String SIGNATURE = "478yYkKAQF+KST8y4ATKvHkYibo=";//需要固定写在程序的某个位置的签名
+    try {
+        PackageInfo packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), PackageManager.GET_SIGNATURES);
+        Signature[] signatures = packageInfo.signatures;
+        Signature sign = signatures[0];
+        MessageDigest md = MessageDigest.getInstance("SHA");
+        md.update(sign.toByteArray());
+        Log.e("proyx", bytesToHexString(md.digest()));
+final String currentSignature = Base64.encodeToString(md.digest(), Base64.DEFAULT);
+        Log.e("proyx", "Include this string as a value for SIGNATURE:" + currentSignature);
+if (SIGNATURE.equals(currentSignature)) {
+return 0;
+        }
+    } catch (Exception e) {
+//assumes an issue in checking signature., but we let the caller decide on what to do.
+        e.printStackTrace();
+    }
+return 1;
+}</code></pre>
+</div>
+</div>
+</div>
+<pre name="code" class="prettyprint"><code class="language-java hljs  has-numbering"><span class="hljs-keyword"><span class="hljs-keyword"><span class="hljs-title"><span class="hljs-string"><span class="hljs-keyword"><span class="hljs-number"><span class="hljs-keyword"><span class="hljs-comment"><span class="hljs-comment"><span class="hljs-keyword"><span class="hljs-keyword"><span class="hljs-keyword"><span class="hljs-title"><span class="hljs-keyword"><span class="hljs-keyword"><span class="hljs-string"><span class="hljs-string"><span class="hljs-keyword"><span class="hljs-keyword"><span class="hljs-keyword"><span class="hljs-string"><span class="hljs-keyword"><span class="hljs-keyword"><span class="hljs-keyword"><span class="hljs-string"><span class="hljs-keyword"><span class="hljs-number"><span class="hljs-keyword"><span class="hljs-keyword"><span class="hljs-keyword"><span class="hljs-number"><span class="hljs-number"><span class="hljs-string"><span class="hljs-number"><span class="hljs-keyword">&nbsp;</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></code></pre>

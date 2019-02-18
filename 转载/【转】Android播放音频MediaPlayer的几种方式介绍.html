@@ -1,0 +1,1170 @@
+原文链接：http://www.cnblogs.com/kexing/archive/2018/03/28/8665257.html
+<p>接下来笔者介绍一下Android中播放音频的几种方式，android.media包下面包含了Android开发中媒体类，当然笔者不会依次去介绍，下面介绍几个音频播放中常用的类：</p>
+<h1>1.使用MediaPlayer播放音频</h1>
+<p>MediaPlayer的功能很强大，下面附上一张该类封装音频的生命周期图：</p>
+<p><img src="https://images2017.cnblogs.com/blog/1070689/201712/1070689-20171215141911558-1474249814.gif" alt="" /></p>
+<p>MediaPlayer支持AAC、AMR、FLAC、MP3、MIDI、OGG、PCM等格式，MediaPlayer可以通过设置元数据和播放源来音频。</p>
+<p>&nbsp;</p>
+<h2>1.1播放Raw文件夹下面音频的元数据</h2>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;">直接创建，不需要设置setDataSource</span>
+MediaPlayer mMediaPlayer；<br />mMediaPlayer=MediaPlayer.create(<span style="color: #0000ff;">this</span><span style="color: #000000;">, R.raw.audio); <br />mMediaPlayer.start();</span></pre>
+</div>
+<p>&nbsp;</p>
+<h2>1.2通过设置播放源来播放音频文件</h2>
+<h3>setDataSource(String path)</h3>
+<div class="cnblogs_code">
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码" /></a></span></div>
+<pre><span style="color: #008000;">//如果</span><span style="color: #008000;">从sd卡中加载音乐<br />//经过笔者的测试，需要加载sd卡的读权限，这里明明是从sd卡中读取文件<br />//&nbsp;&lt;uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/&gt;<br />//然后就可以利用 Environment.getExternalStorageDirectory() 获取SD卡的根目录了，一般为/storage/emulated/0<br />//接下来把xxx.wav放到SD的根目录下，就可以获得文件的路径了 String path=<span style="color: #008000;">Environment.getExternalStorageDirectory()</span>+"/xxx.wav";</span>
+mMediaPlayer.setDataSource(path<span style="color: #000000;">) ;<br />
+</span><span style="color: #008000;">//如果</span><span style="color: #008000;">从网络加载音乐，如果是从网络中加载那么需要设置网络权限<br />//&lt;uses-permission android:name="android.permission.INTERNET"/&gt;</span>
+mMediaPlayer.setDataSource("http://..../xxx.mp3"<span style="color: #000000;">) ;<br />
+</span><span style="color: #008000;">//</span><span style="color: #008000;">需使用异步缓冲</span>
+mMediaPlayer.prepareAsync() ;</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码" /></a></span></div>
+</div>
+<p>&nbsp;</p>
+<h3>setDataSource(FileDescriptor fd)</h3>
+<div class="cnblogs_code">
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码" /></a></span></div>
+<pre><span style="color: #008000;">//</span><span style="color: #008000;">需将资源文件放在assets文件夹</span>
+ AssetFileDescriptor fd = getAssets().openFd("samsara.mp3"<span style="color: #000000;">);
+ mMediaPlayer.setDataSource(fd.<span style="color: #000000;">getFileDescriptor</span>());<span style="color: #008000;">//经过笔者的测试，发现这个方法有时候不能播放成功，尽量使用该方法的另一个重载方法 setDataSource(FileDescptor fd,long offset,long length)</span>
+ mMediaPlayer.prepare() ;
+
+ Ps:此方法系统需大于等于android </span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码" /></a></span></div>
+</div>
+<p>&nbsp;</p>
+<h3>setDataSource(Context context,Uri uri)</h3>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">这个方法没什么好说的，一般通过ContentProvider获取Android系统提供
+的共享music获取uri，然后设置数据播放</span></pre>
+</div>
+<p>&nbsp;</p>
+<h3>setDataSource(FileDescptor fd,long offset,long length)</h3>
+<div class="cnblogs_code">
+<pre> <span style="color: #008000;">//</span><span style="color: #008000;">需将资源文件放在assets文件夹</span>
+ AssetFileDescriptor fd = getAssets().openFd("samsara.mp3"<span style="color: #000000;">);
+ mMediaPlayer.setDataSource(fd.getFileDescriptor(), fd.getStartOffset(), fd.getLength());
+ mMediaPlayer.prepare();</span></pre>
+</div>
+<p>设置完数据源，不要忘记prepare()，尽量使用异步prepareAync()，这样不会阻塞UI线程。</p>
+<p>&nbsp;</p>
+<h2>1.3 MediaPlayer的常用方法</h2>
+<div class="cnblogs_code">
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码" /></a></span></div>
+<pre>start();<span style="color: #008000;">//</span><span style="color: #008000;">开始播放</span>
+pause();<span style="color: #008000;">//</span><span style="color: #008000;">暂停播放</span>
+reset()<span style="color: #008000;">//</span><span style="color: #008000;">清空MediaPlayer中的数据</span>
+setLooping(<span style="color: #0000ff;">boolean</span>);<span style="color: #008000;">//</span><span style="color: #008000;">设置是否循环播放</span>
+seekTo(msec)<span style="color: #008000;">//</span><span style="color: #008000;">定位到音频数据的位置，单位毫秒</span>
+stop();<span style="color: #008000;">//</span><span style="color: #008000;">停止播放</span>
+relase();<span style="color: #008000;">//</span><span style="color: #008000;">释放资源</span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码" /></a></span></div>
+</div>
+<p>&nbsp;</p>
+<h1>2.使用SoundPool播放音频</h1>
+<p>&nbsp;SoundPool支持多个音频文件同时播放(组合音频也是有上限的)，延时短，比较适合短促、密集的场景，是游戏开发中音效播放的福音。</p>
+<h2>2.1 SoundPool实例化方式</h2>
+<h3>1. new SoundPool(适用与5.0以下)</h3>
+<p>&nbsp;&nbsp;&nbsp; SoundPool(int maxStreams, int streamType, int srcQuality)<br />&nbsp;&nbsp; &nbsp;从android5.0开始此方法被标记为过时，稍微说以下几个参数。<br />&nbsp;&nbsp; &nbsp;　　1.maxStreams :允许同时播放的流的最大值<br /><br />&nbsp;&nbsp; &nbsp;　　2.streamType ：音频流的类型描述，<br />&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 在Audiomanager中有种类型声明，游戏应用通常会使用流媒体音乐（AudioManager.STREAM_MUSIC）<br />&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;<br />&nbsp;&nbsp; 　　&nbsp;3. srcQuality：采样率转化质量，默认值为0 。</p>
+<h3>2. SoundPool.Builder(从5.0开始支持)</h3>
+<p>&nbsp;&nbsp;&nbsp; //设置描述音频流信息的属性<br />&nbsp;&nbsp; &nbsp;AudioAttributes abs = new AudioAttributes.Builder()<br />&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .setUsage(AudioAttributes.USAGE_MEDIA)<br />&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)<br />&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .build() ;<br />&nbsp;&nbsp; &nbsp;SoundPool mSoundPoll =&nbsp; new SoundPool.Builder()<br />&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .setMaxStreams(100)&nbsp;&nbsp; //设置允许同时播放的流的最大值<br />&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .setAudioAttributes(abs)&nbsp;&nbsp; //完全可以设置为null<br />&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .build() ;</p>
+<h3>2.2 SoundPool的几个重要的方法</h3>
+<div class="cnblogs_code">
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码" /></a></span></div>
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> 几个load方法和上文提到的MediaPlayer基本一致，这里的每个load都会返回一个SoundId值，这个值可以用来播放和卸载音乐。
+</span><span style="color: #008000;">//</span><span style="color: #008000;">------------------------------------------------------------</span>
+
+<span style="color: #0000ff;">int</span> load(AssetFileDescriptor afd, <span style="color: #0000ff;">int</span><span style="color: #000000;"> priority)
+
+</span><span style="color: #0000ff;">int</span> load(Context context, <span style="color: #0000ff;">int</span> resId, <span style="color: #0000ff;">int</span><span style="color: #000000;"> priority)
+
+</span><span style="color: #0000ff;">int</span> load(String path, <span style="color: #0000ff;">int</span><span style="color: #000000;"> priority)
+
+</span><span style="color: #0000ff;">int</span> load(FileDescriptor fd, <span style="color: #0000ff;">long</span> offset, <span style="color: #0000ff;">long</span> length, <span style="color: #0000ff;">int</span><span style="color: #000000;"> priority)
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;">-------------------------------------------------------------
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 通过流id暂停播放</span>
+<span style="color: #0000ff;">final</span> <span style="color: #0000ff;">void</span> pause(<span style="color: #0000ff;">int</span><span style="color: #000000;"> streamID)
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 播放声音，soundID:音频id（这个id来自load的返回值）； left/rightVolume:左右声道(默认1,1)；loop:循环次数(-1无限循环，0代表不循环)；rate:播放速率(1为标准)，该方法会返回一个streamID,如果StreamID为0表示播放失败，否则为播放成功</span>
+<span style="color: #0000ff;">final</span> <span style="color: #0000ff;">int</span> play(<span style="color: #0000ff;">int</span> soundID, <span style="color: #0000ff;">float</span> leftVolume, <span style="color: #0000ff;">float</span> rightVolume, <span style="color: #0000ff;">int</span> priority, <span style="color: #0000ff;">int</span> loop, <span style="color: #0000ff;">float</span><span style="color: #000000;"> rate)
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;">释放资源(很重要)</span>
+<span style="color: #0000ff;">final</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> release()
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;">恢复播放</span>
+<span style="color: #0000ff;">final</span> <span style="color: #0000ff;">void</span> resume(<span style="color: #0000ff;">int</span><span style="color: #000000;"> streamID)
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;">设置指定id的音频循环播放次数</span>
+<span style="color: #0000ff;">final</span> <span style="color: #0000ff;">void</span> setLoop(<span style="color: #0000ff;">int</span> streamID, <span style="color: #0000ff;">int</span><span style="color: #000000;"> loop)
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;">设置加载监听(因为加载是异步的，需要监听加载，完成后再播放)</span>
+<span style="color: #0000ff;">void</span><span style="color: #000000;"> setOnLoadCompleteListener(SoundPool.OnLoadCompleteListener listener)
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;">设置优先级(同时播放个数超过最大值时，优先级低的先被移除)</span>
+<span style="color: #0000ff;">final</span> <span style="color: #0000ff;">void</span> setPriority(<span style="color: #0000ff;">int</span> streamID, <span style="color: #0000ff;">int</span><span style="color: #000000;"> priority)
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;">设置指定音频的播放速率，0.5~2.0(rate&gt;1:加快播放，反之慢速播放)</span>
+<span style="color: #0000ff;">final</span> <span style="color: #0000ff;">void</span> setRate(<span style="color: #0000ff;">int</span> streamID, <span style="color: #0000ff;">float</span><span style="color: #000000;"> rate)
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;">停止指定音频播放</span>
+<span style="color: #0000ff;">final</span> <span style="color: #0000ff;">void</span> stop(<span style="color: #0000ff;">int</span><span style="color: #000000;"> streamID)
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;">卸载指定音频，soundID来自load()方法的返回值</span>
+<span style="color: #0000ff;">final</span> <span style="color: #0000ff;">boolean</span> unload(<span style="color: #0000ff;">int</span><span style="color: #000000;"> soundID)
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;">暂停所有音频的播放</span>
+<span style="color: #0000ff;">final</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> autoPause()
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;">恢复所有暂停的音频播放</span>
+<span style="color: #0000ff;">final</span> <span style="color: #0000ff;">void</span> autoResum()</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码" /></a></span></div>
+</div>
+<p>下面简单演示一下SoundPool如何播放音乐：</p>
+<div class="cnblogs_code">
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码" /></a></span></div>
+<pre>    <span style="color: #0000ff;">protected</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> onCreate(Bundle savedInstanceState) {
+        </span><span style="color: #0000ff;">super</span><span style="color: #000000;">.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+         SoundPool soundPool</span>=<span style="color: #0000ff;">new</span>  SoundPool(100,AudioManager.STREAM_MUSIC,0);<span style="color: #008000;">//</span><span style="color: #008000;">构建对象</span>
+         <span style="color: #0000ff;">int</span> soundId=soundPool.load(context,R.raw.test,1);<span style="color: #008000;">//</span><span style="color: #008000;">加载资源，得到soundId</span>
+         <span style="color: #0000ff;">int</span> streamId= soundPool.play(soundId, 1,1,1,-1,1);<span style="color: #008000;">//</span><span style="color: #008000;">播放，得到StreamId
+         </span><span style="color: #008000;">//</span><span style="color: #008000;"> soundPool.stop(streamId);//暂停</span>
+    }</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码" /></a></span></div>
+</div>
+<p>&nbsp;</p>
+<h1>3.使用AudioTrack播放音频</h1>
+<p>&nbsp;AudioTrack属于更偏底层的音频播放，MediaPlayerService的内部就是使用了AudioTrack。<br /><br />AudioTrack用于单个音频播放和管理，相比于MediaPlayer具有：精炼、高效的优点。<br />更适合实时产生播放数据的情况，如加密的音频，<br />MediaPlayer是束手无策的，AudioTrack却可以。<br /><br />AudioTrack用于播放PCM(PCM无压缩的音频格式)音乐流的回放，<br />如果要播需放其它格式音频，需要响应的解码器，<br />这也是AudioTrack用的比较少的原因，需要自己解码音频。</p>
+<p>&nbsp;</p>
+<p>AudioTreack的2种播放模式<br />静态模式&mdash;static<br />静态的言下之意就是数据一次性交付给接收方。好处是简单高效，只需要进行一次操作就完成了数据的传递;缺点当然也很明显，对于数据量较大的音频回放，显然它是无法胜任的，因而通常只用于播放铃声、系统提醒等对内存小的操作<br /><br />流模式streaming<br />流模式和网络上播放视频是类似的，即数据是按照一定规律不断地传递给接收方的。理论上它可用于任何音频播放的场景，不过我们一般在以下情况下采用：<br />&nbsp;&nbsp;&nbsp; 音频文件过大<br />&nbsp;&nbsp;&nbsp; 音频属性要求高，比如采样率高、深度大的数据<br />&nbsp;&nbsp;&nbsp; 音频数据是实时产生的，这种情况就只能用流模式了</p>
+<p><br />通过write(byte[], int, int), write(short[], int, int)等方法推送解码数据到AudioTrack</p>
+<p>&nbsp;</p>
+<h1>4.使用Ringtone播放音频</h1>
+<p>&nbsp;&nbsp;Ringtone为铃声、通知和其他类似声音提供快速播放的方法,这里还不得不提到一个管理类&rdquo;RingtoneManager&rdquo;，提供系统铃声列表检索方法，并且，Ringtone实例需要从RingtoneManager获取。</p>
+<h2><br />&nbsp;&nbsp; 1. 获取实例</h2>
+<div class="cnblogs_code">
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码" /></a></span></div>
+<pre><span style="color: #008000;">//</span><span style="color: #008000;">获取实例方法，均为RingtoneManager类提供
+
+</span><span style="color: #008000;">//1.</span><span style="color: #008000;">通过铃声uri获取</span>
+<span style="color: #0000ff;">static</span><span style="color: #000000;"> Ringtone getRingtone(Context context, Uri ringtoneUri)
+
+</span><span style="color: #008000;">//2.</span><span style="color: #008000;">通过铃声检索位置获取</span>
+Ringtone getRingtone(<span style="color: #0000ff;">int</span> position)</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码" /></a></span></div>
+</div>
+<p>&nbsp;</p>
+<h2>2. RingtoneManager几个重要的方法</h2>
+<div class="cnblogs_code">
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码" /></a></span></div>
+<pre>1. <span style="color: #008000;">//</span><span style="color: #008000;"> 两个构造方法</span>
+<span style="color: #000000;">RingtoneManager(Activity activity)
+RingtoneManager(Context context)
+
+</span>2. <span style="color: #008000;">//</span><span style="color: #008000;"> 获取指定声音类型(铃声、通知、闹铃等)的默认声音的Uri</span>
+<span style="color: #0000ff;">static</span> Uri getDefaultUri(<span style="color: #0000ff;">int</span><span style="color: #000000;"> type)
+
+</span>3. <span style="color: #008000;">//</span><span style="color: #008000;"> 获取系统所有Ringtone的cursor</span>
+<span style="color: #000000;">Cursor getCursor()
+
+</span>4. <span style="color: #008000;">//</span><span style="color: #008000;"> 获取cursor指定位置的Ringtone uri</span>
+Uri getRingtoneUri(<span style="color: #0000ff;">int</span><span style="color: #000000;"> position)
+
+</span>5. <span style="color: #008000;">//</span><span style="color: #008000;"> 判断指定Uri是否为默认铃声</span>
+<span style="color: #0000ff;">static</span> <span style="color: #0000ff;">boolean</span><span style="color: #000000;"> isDefault(Uri ringtoneUri)
+
+</span>6. <span style="color: #008000;">//</span><span style="color: #008000;">获取指定uri的所属类型</span>
+<span style="color: #0000ff;">static</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> getDefaultType(Uri defaultRingtoneUri)
+
+</span>7. <span style="color: #008000;">//</span><span style="color: #008000;">将指定Uri设置为指定声音类型的默认声音</span>
+<span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span> setActualDefaultRingtoneUri(Context context, <span style="color: #0000ff;">int</span> type, Uri ringtoneUri)</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码" /></a></span></div>
+</div>
+<p>从api看，Ringtone和RingtoneManager还是比较简单的，不多做解释了，直接放上一段使用代码。</p>
+<div class="cnblogs_code">
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码" /></a></span></div>
+<pre><span style="color: #008000;">/**</span><span style="color: #008000;">
+ * 播放来电铃声的默认音乐
+</span><span style="color: #008000;">*/</span>
+<span style="color: #0000ff;">private</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> playRingtoneDefault(){
+    Uri uri </span>=<span style="color: #000000;"> RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE) ;
+    Ringtone mRingtone </span>= RingtoneManager.getRingtone(<span style="color: #0000ff;">this</span><span style="color: #000000;">,uri);
+    mRingtone.play();
+}
+
+
+</span><span style="color: #008000;">/**</span><span style="color: #008000;">
+* 随机播放一个Ringtone(有可能是提示音、铃声等)
+</span><span style="color: #008000;">*/</span>
+<span style="color: #0000ff;">private</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> ShufflePlayback(){
+    RingtoneManager manager </span>= <span style="color: #0000ff;">new</span> RingtoneManager(<span style="color: #0000ff;">this</span><span style="color: #000000;">) ;
+    Cursor cursor </span>=<span style="color: #000000;"> manager.getCursor();
+    </span><span style="color: #0000ff;">int</span> count =<span style="color: #000000;"> cursor.getCount() ;
+    </span><span style="color: #0000ff;">int</span> position = (<span style="color: #0000ff;">int</span>)(Math.random()*<span style="color: #000000;">count) ;
+    Ringtone mRingtone </span>=<span style="color: #000000;"> manager.getRingtone(position) ;
+    mRingtone.play();
+}</span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码" /></a></span></div>
+</div>
+<p>最后记得添加权限：</p>
+<p>&nbsp;&nbsp;&nbsp; &lt;uses-permission android:name="android.permission.MEDIA_CONTENT_CONTROL"/&gt;<br />&nbsp;&nbsp;&nbsp; &lt;uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/&gt;</p>
+<p><br />其实，Rington这个类比较简单，只需要掌握，播放、停止(paly(),stop())等方法就可以了，而RingtoneManager却是比较重要的。</p>
+<h1>5.总结</h1>
+<p>1.对于延迟度要求不高，并且希望能够更全面的控制音乐的播放，MediaPlayer比较适合<br />2.声音短小，延迟度小，并且需要几种声音同时播放的场景，适合使用SoundPool<br />3.播放大文件音乐，如WAV无损音频和PCM无压缩音频，可使用更底层的播放方式AudioTrack。它支持流式播放，可以读取(可来自本地和网络)音频流，却播放延迟较小。<br />ps：据我测试AudioTrack直接支持WAV和PCM，其他音频需要解码成PCM格式才能播放。(其他无损格式没有尝试，有兴趣可以使本文提供的例子测试一下)<br />4. .jet的音频比较少见(有的游戏中在使用)，可使用专门的播放器JetPlayer播放<br />5.对于系统类声音的播放和操作，Ringtone更适合、</p>
+<h2 id="android中播放音乐的几种方式"><strong>Android中播放音乐的几种方式</strong></h2>
+<h3 id="前言"><a name="t1"></a><strong>前言</strong></h3>
+<blockquote>
+<p>前几天一直在研究RxJava2，也写了记录了几篇博客，但因为工作任务原因，需要研究音频相关的知识，暂时放下Rxjava，本文的demo中，MediaPalyer
+ 
+部分使用RxJava编写一点逻辑，其中涉及，RxJava2的被压、解除订阅等知识点，虽然简单，最起码没有丢了RxJava，后续Rxjava会继续研究，做记录.</p>
+<p>andorid提供了对声音和视频处理的api包android.media.本文编写了针对这几种方式播放的Demo，文章最后贴出。</p>
+
+</blockquote>
+<h3 id="mediaplayer播放音频"><a name="t2"></a><strong>MediaPlayer播放音频</strong></h3>
+<blockquote>
+<p>对于android音频的播放，这个类可能是大家最熟悉的了，从入门就一直想编写一个自己的音乐播放器，有木有？MediaPlayer确实强大，提供了对音频播放的各种控制，生命周期：</p>
+
+</blockquote>
+<center> <br />
+<img title="" src="https://img-blog.csdn.net/20170802151245129?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzM2NjAwOA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述" /> <br />
+</center>
+<h4 id="都很熟悉了讲几个重点其余不啰嗦了"><strong>都很熟悉了，讲几个重点，其余不啰嗦了</strong></h4>
+<p><strong>1. MediaPlayer支持：AAC、AMR、FLAC、MP3、MIDI、OGG、PCM等格式</strong> <br />
+<strong>2. 播放Raw下的元数据</strong></p>
+<pre class="prettyprint"><code class="hljs sql has-numbering">//直接创建，不需要设置setDataSource
+mMediaPlayer=MediaPlayer.<span class="hljs-operator"><span class="hljs-keyword">create</span>(this, R.raw.audio);</span>
+mMediaPlayer.<span class="hljs-operator"><span class="hljs-keyword">start</span>();</span>
+</code></pre>
+<ul class="pre-numbering">
+<li style="color: #999999;">1</li>
+<li style="color: #999999;">2</li>
+<li style="color: #999999;">3</li>
+<li style="color: #999999;">4</li>
+</ul>
+<p><strong>3. MediaPlayer设置播放源的4中方式 </strong></p>
+<ul>
+<li>setDataSource (String path)</li>
+</ul>
+<pre class="prettyprint"><code class="hljs cs has-numbering"><span class="hljs-comment">//从sd卡中加载音乐</span>
+mMediaPlayer.setDataSource(<span class="hljs-string">"../music/samsara.mp3"</span>) ;
+<span class="hljs-comment">//从网路加载音乐</span>
+mMediaPlayer.setDataSource(<span class="hljs-string">"http://..../xxx.mp3"</span>) ;
+<span class="hljs-comment">//需使用异步缓冲</span>
+mMediaPlayer.prepareAsync() ;
+</code></pre>
+<ul class="pre-numbering">
+<li style="color: #999999;">1</li>
+<li style="color: #999999;">2</li>
+<li style="color: #999999;">3</li>
+<li style="color: #999999;">4</li>
+<li style="color: #999999;">5</li>
+<li style="color: #999999;">6</li>
+<li style="color: #999999;">7</li>
+</ul>
+<ul>
+<li>setDataSource (FileDescriptor fd)</li>
+</ul>
+<pre class="prettyprint"><code class="hljs avrasm has-numbering">//需将资源文件放在assets文件夹
+ AssetFileDescriptor fd = getAssets()<span class="hljs-preprocessor">.openFd</span>(<span class="hljs-string">"samsara.mp3"</span>)<span class="hljs-comment">;</span>
+ mMediaPlayer<span class="hljs-preprocessor">.setDataSource</span>(fd)
+ mMediaPlayer<span class="hljs-preprocessor">.prepare</span>() <span class="hljs-comment">;</span>
+
+ Ps:此方法系统需大于等于android </code></pre>
+<ul class="pre-numbering">
+<li style="color: #999999;">1</li>
+<li style="color: #999999;">2</li>
+<li style="color: #999999;">3</li>
+<li style="color: #999999;">4</li>
+<li style="color: #999999;">5</li>
+<li style="color: #999999;">6</li>
+</ul>
+<ul>
+<li>setDataSource (Context context, Uri uri)</li>
+</ul>
+<pre class="prettyprint"><code class="hljs  has-numbering">这个方法没什么好说的，一般通过ContentProvider获取Android系统提供
+的共享music获取uri，然后设置数据播放</code></pre>
+<ul class="pre-numbering">
+<li style="color: #999999;">1</li>
+<li style="color: #999999;">2</li>
+</ul>
+<ul>
+<li>setDataSource (FileDescriptor fd, long offset, long length)</li>
+</ul>
+<pre class="prettyprint"><code class="hljs avrasm has-numbering"> //需将资源文件放在assets文件夹
+ AssetFileDescriptor fd = getAssets()<span class="hljs-preprocessor">.openFd</span>(<span class="hljs-string">"samsara.mp3"</span>)<span class="hljs-comment">;</span>
+ mMediaPlayer<span class="hljs-preprocessor">.setDataSource</span>(fd, fd<span class="hljs-preprocessor">.getStartOffset</span>(), fd<span class="hljs-preprocessor">.getLegth</span>())
+ mMediaPlayer<span class="hljs-preprocessor">.prepare</span>() <span class="hljs-comment">;</span>
+</code></pre>
+<ul class="pre-numbering">
+<li style="color: #999999;">1</li>
+<li style="color: #999999;">2</li>
+<li style="color: #999999;">3</li>
+<li style="color: #999999;">4</li>
+<li style="color: #999999;">5</li>
+</ul>
+<p><strong>4. 注意点</strong></p>
+<ul>
+<li>设置完数据源，不要忘记prepare()，尽量使用异步prepareAync()，这样不会阻塞UI线程。</li>
+<li>播放完毕即使释放资源 <br />
+<code> <br />
+mediaPlayer.stop(); <br />
+mediaPlayer.release(); <br />
+mediaPlayer = null; <br />
+</code></li>
+</ul>
+<h4 id="不足"><strong>不足</strong></h4>
+<blockquote>
+<p>资源占用量较高、延迟时间较长、不支持多个音频同时播放等</p>
+
+</blockquote>
+<ul>
+<li>### MeidaPlayer demo片段</li>
+</ul>
+<pre class="prettyprint"><code class="hljs java has-numbering"><span class="hljs-comment">//创建播放时间格式化工具</span>
+mFormat = <span class="hljs-keyword">new</span> SimpleDateFormat(<span class="hljs-string">"mm:ss"</span>);
+<span class="hljs-comment">//创建MediaPlayer和设置监听</span>
+mPlayer = <span class="hljs-keyword">new</span> MediaPlayer() ;
+mSeekBar.setOnSeekBarChangeListener(<span class="hljs-keyword">new</span> MySeekBarChangeListener());
+mPlayer.setOnPreparedListener(<span class="hljs-keyword">new</span> MyOnPrepareListener());
+mPlayer.setOnCompletionListener(<span class="hljs-keyword">new</span> MyOnCompletionListener());
+
+
+<span class="hljs-javadoc">/**
+    * 从assets资源文件夹中播放
+     *<span class="hljs-javadoctag"> @param</span> name
+     */</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">playSoundFromA</span>(String name) {
+        <span class="hljs-keyword">if</span> (mPlayer.isPlaying()) {
+            mPlayer.stop();
+        }
+        <span class="hljs-comment">// 设置当前播放歌曲的名字</span>
+        title.setText(names[current]);
+        mPlayer.reset();
+        AssetFileDescriptor afd = getAssetFileDescriptor(name);
+        <span class="hljs-keyword">try</span> {
+            mPlayer.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
+            hasResource = <span class="hljs-keyword">true</span>;
+            mPlayer.prepareAsync();
+        } <span class="hljs-keyword">catch</span> (IOException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+</code></pre>
+<ul class="pre-numbering">
+<li style="color: #999999;">1</li>
+<li style="color: #999999;">2</li>
+<li style="color: #999999;">3</li>
+<li style="color: #999999;">4</li>
+<li style="color: #999999;">5</li>
+<li style="color: #999999;">6</li>
+<li style="color: #999999;">7</li>
+<li style="color: #999999;">8</li>
+<li style="color: #999999;">9</li>
+<li style="color: #999999;">10</li>
+<li style="color: #999999;">11</li>
+<li style="color: #999999;">12</li>
+<li style="color: #999999;">13</li>
+<li style="color: #999999;">14</li>
+<li style="color: #999999;">15</li>
+<li style="color: #999999;">16</li>
+<li style="color: #999999;">17</li>
+<li style="color: #999999;">18</li>
+<li style="color: #999999;">19</li>
+<li style="color: #999999;">20</li>
+<li style="color: #999999;">21</li>
+<li style="color: #999999;">22</li>
+<li style="color: #999999;">23</li>
+<li style="color: #999999;">24</li>
+<li style="color: #999999;">25</li>
+<li style="color: #999999;">26</li>
+<li style="color: #999999;">27</li>
+<li style="color: #999999;">28</li>
+<li style="color: #999999;">29</li>
+<li style="color: #999999;">30</li>
+<li style="color: #999999;">31</li>
+<li style="color: #999999;">32</li>
+</ul>
+<h3 id="soundpool播放音频"><a name="t3"></a><strong>SoundPool播放音频</strong></h3>
+<blockquote>
+<p>SoundPool支持多个音频文件同时播放(组合音频也是有上限的)，延时短，比较适合短促、密集的场景，是游戏开发中音效播放的福音。</p>
+</blockquote>
+<h4 id="soundpool实例化方式">SoundPool实例化方式</h4>
+<h5 id="1-new-soundpool适用与50以下"><strong>1. new SoundPool(适用与5.0以下)</strong></h5>
+<pre class="prettyprint"><code class="hljs cs has-numbering">SoundPool(<span class="hljs-keyword">int</span> maxStreams, <span class="hljs-keyword">int</span> streamType, <span class="hljs-keyword">int</span> srcQuality)
+从android5<span class="hljs-number">.0</span>开始此方法被标记为过时，稍微说以下几个参数。
+<span class="hljs-number">1.</span>maxStreams :允许同时播放的流的最大值
+
+<span class="hljs-number">2.</span>streamType ：音频流的类型描述，
+               在Audiomanager中有种类型声明，游戏应用通常会使用流媒体音乐。
+<span class="hljs-number">3.</span> srcQuality：采样率转化质量
+</code></pre>
+<ul class="pre-numbering">
+<li style="color: #999999;">1</li>
+<li style="color: #999999;">2</li>
+<li style="color: #999999;">3</li>
+<li style="color: #999999;">4</li>
+<li style="color: #999999;">5</li>
+<li style="color: #999999;">6</li>
+<li style="color: #999999;">7</li>
+<li style="color: #999999;">8</li>
+</ul>
+<h5 id="2-soundpoolbuilder从50开始支持"><strong>2. SoundPool.Builder(从5.0开始支持)</strong></h5>
+<pre class="prettyprint"><code class="hljs avrasm has-numbering">//设置描述音频流信息的属性
+AudioAttributes abs = new AudioAttributes<span class="hljs-preprocessor">.Builder</span>()
+                <span class="hljs-preprocessor">.setUsage</span>(AudioAttributes<span class="hljs-preprocessor">.USAGE</span>_MEDIA)
+                <span class="hljs-preprocessor">.setContentType</span>(AudioAttributes<span class="hljs-preprocessor">.CONTENT</span>_TYPE_MUSIC)
+                <span class="hljs-preprocessor">.build</span>() <span class="hljs-comment">;</span>
+SoundPool mSoundPoll =  new SoundPool<span class="hljs-preprocessor">.Builder</span>()
+                <span class="hljs-preprocessor">.setMaxStreams</span>(<span class="hljs-number">100</span>)   //设置允许同时播放的流的最大值
+                <span class="hljs-preprocessor">.setAudioAttributes</span>(abs)   //完全可以设置为null
+                <span class="hljs-preprocessor">.build</span>() <span class="hljs-comment">;</span>
+</code></pre>
+<ul class="pre-numbering">
+<li style="color: #999999;">1</li>
+<li style="color: #999999;">2</li>
+<li style="color: #999999;">3</li>
+<li style="color: #999999;">4</li>
+<li style="color: #999999;">5</li>
+<li style="color: #999999;">6</li>
+<li style="color: #999999;">7</li>
+<li style="color: #999999;">8</li>
+<li style="color: #999999;">9</li>
+<li style="color: #999999;">10</li>
+</ul>
+<h5 id="3-几个重要的方法"><strong>3. 几个重要的方法</strong></h5>
+<pre class="prettyprint"><code class="hljs java has-numbering"><span class="hljs-comment">// 几个load方法和上文提到的MediaPlayer基本一致，不做多的解释</span>
+<span class="hljs-comment">//------------------------------------------------------------</span>
+
+<span class="hljs-keyword">int</span> load(AssetFileDescriptor afd, <span class="hljs-keyword">int</span> priority)
+
+<span class="hljs-keyword">int</span> load(Context context, <span class="hljs-keyword">int</span> resId, <span class="hljs-keyword">int</span> priority)
+
+<span class="hljs-keyword">int</span> load(String path, <span class="hljs-keyword">int</span> priority)
+
+<span class="hljs-keyword">int</span> load(FileDescriptor fd, <span class="hljs-keyword">long</span> offset, <span class="hljs-keyword">long</span> length, <span class="hljs-keyword">int</span> priority)
+
+<span class="hljs-comment">//-------------------------------------------------------------</span>
+
+<span class="hljs-comment">// 通过流id暂停播放</span>
+<span class="hljs-keyword">final</span> <span class="hljs-keyword">void</span> pause(<span class="hljs-keyword">int</span> streamID)
+
+<span class="hljs-comment">// 播放声音，soundID:音频id； left/rightVolume:左右声道(默认1,1)；loop:循环次数(-1无限循环)；rate:播放速率(1为标准)</span>
+<span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> play(<span class="hljs-keyword">int</span> soundID, <span class="hljs-keyword">float</span> leftVolume, <span class="hljs-keyword">float</span> rightVolume, <span class="hljs-keyword">int</span> priority, <span class="hljs-keyword">int</span> loop, <span class="hljs-keyword">float</span> rate)
+
+<span class="hljs-comment">//释放资源(很重要)</span>
+<span class="hljs-keyword">final</span> <span class="hljs-keyword">void</span> release()
+
+<span class="hljs-comment">//恢复播放</span>
+<span class="hljs-keyword">final</span> <span class="hljs-keyword">void</span> resume(<span class="hljs-keyword">int</span> streamID)
+
+<span class="hljs-comment">//设置指定id的音频循环播放次数</span>
+<span class="hljs-keyword">final</span> <span class="hljs-keyword">void</span> setLoop(<span class="hljs-keyword">int</span> streamID, <span class="hljs-keyword">int</span> loop)
+
+<span class="hljs-comment">//设置加载监听(因为加载是异步的，需要监听加载，完成后再播放)</span>
+<span class="hljs-keyword">void</span> setOnLoadCompleteListener(SoundPool.OnLoadCompleteListener listener)
+
+<span class="hljs-comment">//设置优先级(同时播放个数超过最大值时，优先级低的先被移除)</span>
+<span class="hljs-keyword">final</span> <span class="hljs-keyword">void</span> setPriority(<span class="hljs-keyword">int</span> streamID, <span class="hljs-keyword">int</span> priority)
+
+<span class="hljs-comment">//设置指定音频的播放速率，0.5~2.0(rate&gt;1:加快播放，反之慢速播放)</span>
+<span class="hljs-keyword">final</span> <span class="hljs-keyword">void</span> setRate(<span class="hljs-keyword">int</span> streamID, <span class="hljs-keyword">float</span> rate)
+
+<span class="hljs-comment">//停止指定音频播放</span>
+<span class="hljs-keyword">final</span> <span class="hljs-keyword">void</span> stop(<span class="hljs-keyword">int</span> streamID)
+
+<span class="hljs-comment">//卸载指定音频</span>
+<span class="hljs-keyword">final</span> <span class="hljs-keyword">boolean</span> unload(<span class="hljs-keyword">int</span> soundID)
+
+<span class="hljs-comment">//暂停所有音频的播放</span>
+<span class="hljs-keyword">final</span> <span class="hljs-keyword">void</span> autoPause()
+
+<span class="hljs-comment">//恢复所有暂停的音频播放</span>
+<span class="hljs-keyword">final</span> <span class="hljs-keyword">void</span> autoResum()
+</code></pre>
+<ul class="pre-numbering">
+<li style="color: #999999;">1</li>
+<li style="color: #999999;">2</li>
+<li style="color: #999999;">3</li>
+<li style="color: #999999;">4</li>
+<li style="color: #999999;">5</li>
+<li style="color: #999999;">6</li>
+<li style="color: #999999;">7</li>
+<li style="color: #999999;">8</li>
+<li style="color: #999999;">9</li>
+<li style="color: #999999;">10</li>
+<li style="color: #999999;">11</li>
+<li style="color: #999999;">12</li>
+<li style="color: #999999;">13</li>
+<li style="color: #999999;">14</li>
+<li style="color: #999999;">15</li>
+<li style="color: #999999;">16</li>
+<li style="color: #999999;">17</li>
+<li style="color: #999999;">18</li>
+<li style="color: #999999;">19</li>
+<li style="color: #999999;">20</li>
+<li style="color: #999999;">21</li>
+<li style="color: #999999;">22</li>
+<li style="color: #999999;">23</li>
+<li style="color: #999999;">24</li>
+<li style="color: #999999;">25</li>
+<li style="color: #999999;">26</li>
+<li style="color: #999999;">27</li>
+<li style="color: #999999;">28</li>
+<li style="color: #999999;">29</li>
+<li style="color: #999999;">30</li>
+<li style="color: #999999;">31</li>
+<li style="color: #999999;">32</li>
+<li style="color: #999999;">33</li>
+<li style="color: #999999;">34</li>
+<li style="color: #999999;">35</li>
+<li style="color: #999999;">36</li>
+<li style="color: #999999;">37</li>
+<li style="color: #999999;">38</li>
+<li style="color: #999999;">39</li>
+<li style="color: #999999;">40</li>
+<li style="color: #999999;">41</li>
+<li style="color: #999999;">42</li>
+<li style="color: #999999;">43</li>
+<li style="color: #999999;">44</li>
+<li style="color: #999999;">45</li>
+<li style="color: #999999;">46</li>
+<li style="color: #999999;">47</li>
+<li style="color: #999999;">48</li>
+<li style="color: #999999;">49</li>
+</ul>
+<p>以上方法基本上是SoundPool的所有方法了，也都很常用。</p>
+<h5 id="4-区分2个概念"><strong>4. 区分2个概念</strong></h5>
+<blockquote>
+<p>看了Sounpool的api，是不是感觉对 streamID 和 soundID 一脸懵逼？ <br />
+  1. soundID：加载音乐资源时的返回值，int load(String path, int priority),这个int返回值就是soundID <br />
+  2. streamID：播放时返回的值，即play()方法的返回值</p>
+
+</blockquote>
+<p><strong>这两个值都很重要，需要缓存下来</strong></p>
+<h5 id="5-soundpool-demo片段"><strong>5. SoundPool Demo片段</strong></h5>
+<pre class="prettyprint"><code class="hljs java has-numbering">注：我把SoundPool做了简单封装,SoundPoolUtil,会在文末上传，
+有兴趣可下载看一下，时间比较急，还有很多不足的地方
+
+<span class="hljs-comment">//初始化SoundPool</span>
+<span class="hljs-keyword">if</span>(Build.VERSION.SDK_INT &gt;=  Build.VERSION_CODES.LOLLIPOP){
+            AudioAttributes aab = <span class="hljs-keyword">new</span> AudioAttributes.Builder()
+                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                    .setUsage(AudioAttributes.USAGE_MEDIA)
+                    .build() ;
+            mSoundPool = <span class="hljs-keyword">new</span> SoundPool.Builder()
+                    .setMaxStreams(<span class="hljs-number">10</span>)
+                    .setAudioAttributes(aab)
+                    .build() ;
+        }<span class="hljs-keyword">else</span>{
+            mSoundPool = <span class="hljs-keyword">new</span> SoundPool(<span class="hljs-number">60</span>, AudioManager.STREAM_MUSIC,<span class="hljs-number">8</span>) ;
+        }
+        mSoundPool = <span class="hljs-keyword">new</span> SoundPool(<span class="hljs-number">60</span>, AudioManager.STREAM_MUSIC,<span class="hljs-number">8</span>) ;
+        <span class="hljs-comment">//设置资源加载监听</span>
+        mSoundPool.setOnLoadCompleteListener(<span class="hljs-keyword">new</span> MyOnLoadCompleteListener());
+
+<span class="hljs-comment">//加载资源</span>
+<span class="hljs-javadoc">/**
+     * 加载指定路径列表的资源
+     *<span class="hljs-javadoctag"> @param</span> map
+     */</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">loadR</span>(Map&lt;String, String&gt; map){
+        Set&lt;Map.Entry&lt;String, String&gt;&gt; entries = map.entrySet();
+        <span class="hljs-keyword">for</span>(Map.Entry&lt;String, String&gt; entry : entries){
+            String key = entry.getKey() ;
+            <span class="hljs-keyword">if</span>(checkSoundPool()){
+                <span class="hljs-keyword">if</span>(!idCache.containsKey(key)){
+                    idCache.put(key, mSoundPool.load(entry.getValue(),<span class="hljs-number">1</span>)) ;
+                }
+            }
+        }
+    }
+
+    <span class="hljs-javadoc">/**
+     * 播放指定音频，并返用于停止、暂停、恢复的StreamId
+     *<span class="hljs-javadoctag"> @param</span> name
+     *<span class="hljs-javadoctag"> @param</span> times
+     *<span class="hljs-javadoctag"> @return</span>
+     */</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">play</span>(String name, <span class="hljs-keyword">int</span> times){
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.play(name,<span class="hljs-number">1</span>,<span class="hljs-number">1</span>,<span class="hljs-number">1</span>,times,<span class="hljs-number">1</span>) ;
+    }
+</code></pre>
+<ul class="pre-numbering">
+<li style="color: #999999;">1</li>
+<li style="color: #999999;">2</li>
+<li style="color: #999999;">3</li>
+<li style="color: #999999;">4</li>
+<li style="color: #999999;">5</li>
+<li style="color: #999999;">6</li>
+<li style="color: #999999;">7</li>
+<li style="color: #999999;">8</li>
+<li style="color: #999999;">9</li>
+<li style="color: #999999;">10</li>
+<li style="color: #999999;">11</li>
+<li style="color: #999999;">12</li>
+<li style="color: #999999;">13</li>
+<li style="color: #999999;">14</li>
+<li style="color: #999999;">15</li>
+<li style="color: #999999;">16</li>
+<li style="color: #999999;">17</li>
+<li style="color: #999999;">18</li>
+<li style="color: #999999;">19</li>
+<li style="color: #999999;">20</li>
+<li style="color: #999999;">21</li>
+<li style="color: #999999;">22</li>
+<li style="color: #999999;">23</li>
+<li style="color: #999999;">24</li>
+<li style="color: #999999;">25</li>
+<li style="color: #999999;">26</li>
+<li style="color: #999999;">27</li>
+<li style="color: #999999;">28</li>
+<li style="color: #999999;">29</li>
+<li style="color: #999999;">30</li>
+<li style="color: #999999;">31</li>
+<li style="color: #999999;">32</li>
+<li style="color: #999999;">33</li>
+<li style="color: #999999;">34</li>
+<li style="color: #999999;">35</li>
+<li style="color: #999999;">36</li>
+<li style="color: #999999;">37</li>
+<li style="color: #999999;">38</li>
+<li style="color: #999999;">39</li>
+<li style="color: #999999;">40</li>
+<li style="color: #999999;">41</li>
+<li style="color: #999999;">42</li>
+<li style="color: #999999;">43</li>
+<li style="color: #999999;">44</li>
+<li style="color: #999999;">45</li>
+<li style="color: #999999;">46</li>
+<li style="color: #999999;">47</li>
+</ul>
+<h3 id="audiotrack播放音频"><a name="t4"></a><strong>AudioTrack播放音频</strong></h3>
+<pre class="prettyprint"><code class="hljs scss has-numbering">AudioTrack属于更偏底层的音频播放，MediaPlayerService的内部就是使用了AudioTrack。
+
+AudioTrack用于单个音频播放和管理，相比于MediaPlayer具有：精炼、高效的优点。
+更适合实时产生播放数据的情况，如加密的音频，
+MediaPlayer是束手无策的，AudioTrack却可以。
+
+AudioTrack用于播放<span class="hljs-function">PCM(PCM无压缩的音频格式)</span>音乐流的回放，
+如果需要播放其它格式音频，需要响应的解码器，
+这也是AudioTrack用的比较少的原因，需要自己解码音频。
+</code></pre>
+<ul class="pre-numbering">
+<li style="color: #999999;">1</li>
+<li style="color: #999999;">2</li>
+<li style="color: #999999;">3</li>
+<li style="color: #999999;">4</li>
+<li style="color: #999999;">5</li>
+<li style="color: #999999;">6</li>
+<li style="color: #999999;">7</li>
+<li style="color: #999999;">8</li>
+<li style="color: #999999;">9</li>
+<li style="color: #999999;">10</li>
+</ul>
+<h4 id="audiotreack的2种播放模式">AudioTreack的2种播放模式</h4>
+<p><strong>静态模式&mdash;static</strong></p>
+<p>静态的言下之意就是数据一次性交付给接收方。好处是简单高效，只需要进行一次操作就完成了数据的传递;缺点当然也很明显，对于数据量较大的音频回放，显然它是无法胜任的，因而通常只用于播放铃声、系统提醒等对内存小的操作</p>
+<p><strong>流模式streaming</strong></p>
+<p>流模式和网络上播放视频是类似的，即数据是按照一定规律不断地传递给接收方的。理论上它可用于任何音频播放的场景，不过我们一般在以下情况下采用：</p>
+<ul>
+<li>
+<p>音频文件过大</p>
+</li>
+<li>
+<p>音频属性要求高，比如采样率高、深度大的数据</p>
+</li>
+<li>
+<p>音频数据是实时产生的，这种情况就只能用流模式了</p>
+</li>
+</ul>
+<pre class="prettyprint"><code class="hljs cs has-numbering">通过write(<span class="hljs-keyword">byte</span>[], <span class="hljs-keyword">int</span>, <span class="hljs-keyword">int</span>), write(<span class="hljs-keyword">short</span>[], <span class="hljs-keyword">int</span>, <span class="hljs-keyword">int</span>)
+write(<span class="hljs-keyword">float</span>[], <span class="hljs-keyword">int</span>, <span class="hljs-keyword">int</span>, <span class="hljs-keyword">int</span>)等方法推送解码数据到AudioTrack
+</code></pre>
+<ul class="pre-numbering">
+<li style="color: #999999;">1</li>
+<li style="color: #999999;">2</li>
+<li style="color: #999999;">3</li>
+</ul>
+<h4 id="使用demo">使用Demo</h4>
+<pre class="prettyprint"><code class="hljs cs has-numbering"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">jetPlayStream</span>(){
+        <span class="hljs-keyword">new</span> Thread(<span class="hljs-keyword">new</span> Runnable() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
+            @Override
+            <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">run</span>() {
+                <span class="hljs-comment">// 获取最小缓冲区</span>
+                <span class="hljs-keyword">int</span> bufSize = AudioTrack.getMinBufferSize(<span class="hljs-number">44100</span>, AudioFormat.CHANNEL_OUT_MONO, AudioFormat.ENCODING_PCM_16BIT);
+                <span class="hljs-comment">// 实例化AudioTrack(设置缓冲区为最小缓冲区的2倍，至少要等于最小缓冲区)</span>
+                AudioTrack audioTrack = <span class="hljs-keyword">new</span> AudioTrack(AudioManager.STREAM_MUSIC, <span class="hljs-number">44100</span>, AudioFormat.CHANNEL_OUT_STEREO,
+                        AudioFormat.ENCODING_PCM_16BIT, bufSize*<span class="hljs-number">2</span>, AudioTrack.MODE_STREAM);
+                <span class="hljs-comment">// 设置音量</span>
+                audioTrack.setVolume(<span class="hljs-number">2</span>f) ;
+                <span class="hljs-comment">// 设置播放频率</span>
+                audioTrack.setPlaybackRate(<span class="hljs-number">10</span>) ;
+                audioTrack.play();
+                <span class="hljs-comment">// 获取音乐文件输入流</span>
+                InputStream <span class="hljs-keyword">is</span> = getResources().openRawResource(R.raw.zbc);
+                <span class="hljs-keyword">byte</span>[] buffer = <span class="hljs-keyword">new</span> <span class="hljs-keyword">byte</span>[bufSize*<span class="hljs-number">2</span>] ;
+                <span class="hljs-keyword">int</span> len ;
+                <span class="hljs-keyword">try</span> {
+                    <span class="hljs-keyword">while</span>((len=<span class="hljs-keyword">is</span>.read(buffer,<span class="hljs-number">0</span>,buffer.length)) != -<span class="hljs-number">1</span>){
+                        System.<span class="hljs-keyword">out</span>.println(<span class="hljs-string">"读取数据中..."</span>);
+                        <span class="hljs-comment">// 将读取的数据，写入Audiotrack</span>
+                        audioTrack.write(buffer,<span class="hljs-number">0</span>,buffer.length) ;
+                    }
+                    <span class="hljs-keyword">is</span>.close();
+                } <span class="hljs-keyword">catch</span> (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+</code></pre>
+<ul class="pre-numbering">
+<li style="color: #999999;">1</li>
+<li style="color: #999999;">2</li>
+<li style="color: #999999;">3</li>
+<li style="color: #999999;">4</li>
+<li style="color: #999999;">5</li>
+<li style="color: #999999;">6</li>
+<li style="color: #999999;">7</li>
+<li style="color: #999999;">8</li>
+<li style="color: #999999;">9</li>
+<li style="color: #999999;">10</li>
+<li style="color: #999999;">11</li>
+<li style="color: #999999;">12</li>
+<li style="color: #999999;">13</li>
+<li style="color: #999999;">14</li>
+<li style="color: #999999;">15</li>
+<li style="color: #999999;">16</li>
+<li style="color: #999999;">17</li>
+<li style="color: #999999;">18</li>
+<li style="color: #999999;">19</li>
+<li style="color: #999999;">20</li>
+<li style="color: #999999;">21</li>
+<li style="color: #999999;">22</li>
+<li style="color: #999999;">23</li>
+<li style="color: #999999;">24</li>
+<li style="color: #999999;">25</li>
+<li style="color: #999999;">26</li>
+<li style="color: #999999;">27</li>
+<li style="color: #999999;">28</li>
+<li style="color: #999999;">29</li>
+<li style="color: #999999;">30</li>
+<li style="color: #999999;">31</li>
+<li style="color: #999999;">32</li>
+<li style="color: #999999;">33</li>
+</ul>
+<p>更深入的研究，请参考以下博客 <br />
+<a href="http://blog.csdn.net/edmond999/article/details/18600323" target="_blank">http://blog.csdn.net/edmond999/article/details/18600323</a> <br />
+<a href="http://blog.csdn.net/conowen/article/details/7799155/" target="_blank">http://blog.csdn.net/conowen/article/details/7799155/</a></p>
+<h3 id="asyncplayer播放音频"><a name="t5"></a><strong>AsyncPlayer播放音频</strong></h3>
+<h4 id="1介绍"><strong>1.介绍</strong></h4>
+<blockquote>
+<p>从名字就可看出AsyncPlayer属于异步播放器，官方给出的说明是：所有工作都在子线程进行，不影响调用线程任何操作。</p>
+<p>AsyncPlayer就是对MediaPlayer的一次简单的封装，对MediaPlaer所有的操作都在新开线程中执行。</p>
+<p>AsyncPlayer只适合简单的异步播放，不能控制进度，只能开始或停止播放。如果播放在此调用play()方法，AsyncPlayer会停止当前播放，开始新的播放。</p>
+
+</blockquote>
+<p><strong>播放源码</strong></p>
+<pre class="prettyprint"><code class="hljs java has-numbering">
+<span class="hljs-javadoc">/**
+*内部线程类
+**/</span>
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Thread</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">java</span>.<span class="hljs-title">lang</span>.<span class="hljs-title">Thread</span> {</span>
+
+        <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">run</span>() {
+            <span class="hljs-keyword">while</span> (<span class="hljs-keyword">true</span>) {
+                Command cmd = <span class="hljs-keyword">null</span>;
+                <span class="hljs-keyword">synchronized</span> (mCmdQueue) {
+
+                    <span class="hljs-comment">//取出链表中新加入的cmd</span>
+                    cmd = mCmdQueue.removeFirst();
+                }
+
+                <span class="hljs-keyword">switch</span> (cmd.code) {
+                <span class="hljs-keyword">case</span> PLAY:
+                    <span class="hljs-keyword">if</span> (mDebug) Log.d(mTag, <span class="hljs-string">"PLAY"</span>);
+
+                    <span class="hljs-comment">//调用MediaPlayer播放</span>
+                    startSound(cmd);
+                    <span class="hljs-keyword">break</span>;
+
+                }
+                ....
+            }
+        }
+    }
+
+ <span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">startSound</span>(Command cmd) {
+        <span class="hljs-comment">// Preparing can be slow, so if there is something else</span>
+        <span class="hljs-comment">// is playing, let it continue until we're done, so </span>
+            <span class="hljs-keyword">if</span> (mDebug) Log.d(mTag, <span class="hljs-string">"Starting playback"</span>);
+            MediaPlayer player = <span class="hljs-keyword">new</span> MediaPlayer();
+            player.setAudioStreamType(cmd.stream);
+            player.setDataSource(cmd.context, cmd.uri);
+            player.setLooping(cmd.looping);
+            player.prepare();
+            player.start();
+            ....
+
+    }
+</code></pre>
+<ul class="pre-numbering">
+<li style="color: #999999;">1</li>
+<li style="color: #999999;">2</li>
+<li style="color: #999999;">3</li>
+<li style="color: #999999;">4</li>
+<li style="color: #999999;">5</li>
+<li style="color: #999999;">6</li>
+<li style="color: #999999;">7</li>
+<li style="color: #999999;">8</li>
+<li style="color: #999999;">9</li>
+<li style="color: #999999;">10</li>
+<li style="color: #999999;">11</li>
+<li style="color: #999999;">12</li>
+<li style="color: #999999;">13</li>
+<li style="color: #999999;">14</li>
+<li style="color: #999999;">15</li>
+<li style="color: #999999;">16</li>
+<li style="color: #999999;">17</li>
+<li style="color: #999999;">18</li>
+<li style="color: #999999;">19</li>
+<li style="color: #999999;">20</li>
+<li style="color: #999999;">21</li>
+<li style="color: #999999;">22</li>
+<li style="color: #999999;">23</li>
+<li style="color: #999999;">24</li>
+<li style="color: #999999;">25</li>
+<li style="color: #999999;">26</li>
+<li style="color: #999999;">27</li>
+<li style="color: #999999;">28</li>
+<li style="color: #999999;">29</li>
+<li style="color: #999999;">30</li>
+<li style="color: #999999;">31</li>
+<li style="color: #999999;">32</li>
+<li style="color: #999999;">33</li>
+<li style="color: #999999;">34</li>
+<li style="color: #999999;">35</li>
+<li style="color: #999999;">36</li>
+<li style="color: #999999;">37</li>
+<li style="color: #999999;">38</li>
+<li style="color: #999999;">39</li>
+<li style="color: #999999;">40</li>
+<li style="color: #999999;">41</li>
+<li style="color: #999999;">42</li>
+<li style="color: #999999;">43</li>
+</ul>
+<h4 id="2简单demo"><strong>2.简单demo</strong></h4>
+<pre class="prettyprint"><code class="hljs  has-numbering">十分简单，不再贴出，可以在文末Demo中看到</code></pre>
+<ul class="pre-numbering">
+<li style="color: #999999;">1</li>
+</ul>
+<h3 id="jetplayer播放音频"><a name="t6"></a><strong>JetPlayer播放音频</strong></h3>
+<blockquote>
+<p>Jet是由OHA联盟成员SONiVOX开发的一个交互音乐引擎。其包括两部分：JET播放器和JET引擎。JET常用于控制游戏的声音特效，采用MIDI（Musical Instrument Digital Interface）格式。</p>
+<p>ps：以后遇到手机中的&rdquo;.jet&rdquo;文件，就只到它究竟是什么东东了。。。</p>
+</blockquote>
+<ul>
+<li><strong>获取实例</strong></li>
+</ul>
+<pre class="prettyprint"><code class="hljs fix has-numbering"><span class="hljs-attribute">//获取JetPlayer播放器
+JetPlayer mJet </span>=<span class="hljs-string"> JetPlayer.getJetPlayer() ;
+</span></code></pre>
+<ul class="pre-numbering">
+<li style="color: #999999;">1</li>
+<li style="color: #999999;">2</li>
+<li style="color: #999999;">3</li>
+</ul>
+<ul>
+<li><strong>几个重要方法</strong></li>
+</ul>
+<pre class="prettyprint"><code class="hljs java has-numbering"><span class="hljs-comment">// 清空分段队列，并清除所有要进行播放的剪辑。</span>
+<span class="hljs-number">1.</span> <span class="hljs-keyword">boolean</span> clearQueue()  <span class="hljs-comment">//每次播放前，记得做一次清空操作</span>
+
+<span class="hljs-comment">// 加载jet文件的方法</span>
+<span class="hljs-number">2.</span> <span class="hljs-keyword">boolean</span> loadJetFile(String path)
+   <span class="hljs-keyword">boolean</span> loadJetFile(AssetFileDescriptor afd)
+
+<span class="hljs-comment">// 开始播放</span>
+<span class="hljs-number">3.</span> <span class="hljs-keyword">boolean</span> play()
+
+<span class="hljs-comment">// 暂停播放</span>
+<span class="hljs-number">4.</span> <span class="hljs-keyword">boolean</span> pause()
+
+<span class="hljs-comment">// 释放资源</span>
+<span class="hljs-number">5.</span> <span class="hljs-keyword">void</span> release()
+
+<span class="hljs-comment">// 指定jet队列的播放序列(调用play()前需要调用此方法)</span>
+<span class="hljs-number">6.</span> <span class="hljs-keyword">boolean</span> queueJetSegment(<span class="hljs-keyword">int</span> segmentNum, <span class="hljs-keyword">int</span> libNum, <span class="hljs-keyword">int</span> repeatCount, <span class="hljs-keyword">int</span> transpose, <span class="hljs-keyword">int</span> muteFlags, <span class="hljs-keyword">byte</span> userID)
+
+</code></pre>
+<ul class="pre-numbering">
+<li style="color: #999999;">1</li>
+<li style="color: #999999;">2</li>
+<li style="color: #999999;">3</li>
+<li style="color: #999999;">4</li>
+<li style="color: #999999;">5</li>
+<li style="color: #999999;">6</li>
+<li style="color: #999999;">7</li>
+<li style="color: #999999;">8</li>
+<li style="color: #999999;">9</li>
+<li style="color: #999999;">10</li>
+<li style="color: #999999;">11</li>
+<li style="color: #999999;">12</li>
+<li style="color: #999999;">13</li>
+<li style="color: #999999;">14</li>
+<li style="color: #999999;">15</li>
+<li style="color: #999999;">16</li>
+<li style="color: #999999;">17</li>
+<li style="color: #999999;">18</li>
+<li style="color: #999999;">19</li>
+<li style="color: #999999;">20</li>
+</ul>
+<ul>
+<li><strong>JetPlayer Demo</strong></li>
+</ul>
+<pre class="prettyprint"><code class="hljs java has-numbering"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">jetPlayer</span>(){
+        <span class="hljs-comment">// 获取JetPlayer播放器</span>
+        JetPlayer mJet = JetPlayer.getJetPlayer() ;
+        <span class="hljs-comment">//清空播放队列</span>
+        mJet.clearQueue() ;
+        <span class="hljs-comment">//绑定事件监听</span>
+        mJet.setEventListener(<span class="hljs-keyword">new</span> JetPlayer.OnJetEventListener() {
+            <span class="hljs-comment">//播放次数记录</span>
+            <span class="hljs-keyword">int</span> playNum = <span class="hljs-number">1</span> ;
+            <span class="hljs-annotation">@Override</span>
+            <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onJetEvent</span>(JetPlayer player, <span class="hljs-keyword">short</span> segment, <span class="hljs-keyword">byte</span> track, <span class="hljs-keyword">byte</span> channel, <span class="hljs-keyword">byte</span> controller, <span class="hljs-keyword">byte</span> value) {
+                Log.i(TAG,<span class="hljs-string">"-----&gt;onJetEvent"</span>) ;
+            }
+
+            <span class="hljs-annotation">@Override</span>
+            <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onJetUserIdUpdate</span>(JetPlayer player, <span class="hljs-keyword">int</span> userId, <span class="hljs-keyword">int</span> repeatCount) {
+                Log.i(TAG,<span class="hljs-string">"-----&gt;onJetUserIdUpdate"</span>) ;
+            }
+
+            <span class="hljs-annotation">@Override</span>
+            <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onJetNumQueuedSegmentUpdate</span>(JetPlayer player, <span class="hljs-keyword">int</span> nbSegments) {
+                Log.i(TAG,<span class="hljs-string">"-----&gt;onJetNumQueuedSegmentUpdate"</span>) ;
+            }
+
+            <span class="hljs-annotation">@Override</span>
+            <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onJetPauseUpdate</span>(JetPlayer player, <span class="hljs-keyword">int</span> paused) {
+                Log.i(TAG,<span class="hljs-string">"-----&gt;onJetPauseUpdate"</span>) ;
+                <span class="hljs-keyword">if</span>(playNum == <span class="hljs-number">2</span>){
+                    playNum = -<span class="hljs-number">1</span> ;
+                    <span class="hljs-comment">//释放资源，并关闭jet文件</span>
+                    player.release();
+                    player.closeJetFile() ;
+                }<span class="hljs-keyword">else</span>{
+                    playNum++ ;
+                }
+            }
+        });
+        <span class="hljs-comment">//加载资源</span>
+        mJet.loadJetFile(getResources().openRawResourceFd(R.raw.level1)) ;
+        <span class="hljs-keyword">byte</span> sSegmentID = <span class="hljs-number">0</span> ;
+        <span class="hljs-comment">//指定播放序列</span>
+        mJet.queueJetSegment(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, sSegmentID);
+        mJet.queueJetSegment(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, sSegmentID);
+        <span class="hljs-comment">//开始播放</span>
+        mJet.play() ;
+    }
+</code></pre>
+<ul class="pre-numbering">
+<li style="color: #999999;">1</li>
+<li style="color: #999999;">2</li>
+<li style="color: #999999;">3</li>
+<li style="color: #999999;">4</li>
+<li style="color: #999999;">5</li>
+<li style="color: #999999;">6</li>
+<li style="color: #999999;">7</li>
+<li style="color: #999999;">8</li>
+<li style="color: #999999;">9</li>
+<li style="color: #999999;">10</li>
+<li style="color: #999999;">11</li>
+<li style="color: #999999;">12</li>
+<li style="color: #999999;">13</li>
+<li style="color: #999999;">14</li>
+<li style="color: #999999;">15</li>
+<li style="color: #999999;">16</li>
+<li style="color: #999999;">17</li>
+<li style="color: #999999;">18</li>
+<li style="color: #999999;">19</li>
+<li style="color: #999999;">20</li>
+<li style="color: #999999;">21</li>
+<li style="color: #999999;">22</li>
+<li style="color: #999999;">23</li>
+<li style="color: #999999;">24</li>
+<li style="color: #999999;">25</li>
+<li style="color: #999999;">26</li>
+<li style="color: #999999;">27</li>
+<li style="color: #999999;">28</li>
+<li style="color: #999999;">29</li>
+<li style="color: #999999;">30</li>
+<li style="color: #999999;">31</li>
+<li style="color: #999999;">32</li>
+<li style="color: #999999;">33</li>
+<li style="color: #999999;">34</li>
+<li style="color: #999999;">35</li>
+<li style="color: #999999;">36</li>
+<li style="color: #999999;">37</li>
+<li style="color: #999999;">38</li>
+<li style="color: #999999;">39</li>
+<li style="color: #999999;">40</li>
+<li style="color: #999999;">41</li>
+<li style="color: #999999;">42</li>
+<li style="color: #999999;">43</li>
+<li style="color: #999999;">44</li>
+<li style="color: #999999;">45</li>
+<li style="color: #999999;">46</li>
+<li style="color: #999999;">47</li>
+</ul>
+<h3 id="ringtone"><a name="t7"></a><strong>Ringtone</strong></h3>
+<blockquote>
+<p>Ringtone为铃声、通知和其他类似声音提供快速播放的方法,这里还不得不提到一个管理类&rdquo;RingtoneManager&rdquo;，提供系统铃声列表检索方法，并且，Ringtone实例需要从RingtoneManager获取。</p>
+</blockquote>
+<h4 id="1-获取实例">1. 获取实例</h4>
+<pre class="prettyprint"><code class="hljs scss has-numbering">获取实例方法，均为RingtoneManager类提供
+
+<span class="hljs-comment">//通过铃声uri获取</span>
+<span class="hljs-value">static</span> Ringtone <span class="hljs-function">getRingtone(Context context, Uri ringtoneUri)</span>
+
+<span class="hljs-comment">//通过铃声检索位置获取</span>
+Ringtone <span class="hljs-function">getRingtone(int position)</span>
+</code></pre>
+<ul class="pre-numbering">
+<li style="color: #999999;">1</li>
+<li style="color: #999999;">2</li>
+<li style="color: #999999;">3</li>
+<li style="color: #999999;">4</li>
+<li style="color: #999999;">5</li>
+<li style="color: #999999;">6</li>
+<li style="color: #999999;">7</li>
+<li style="color: #999999;">8</li>
+</ul>
+<p>其实，Rington这个类比较简单，只需要掌握，播放、停止(paly(),stop())等方法就可以了，而RingtoneManager却是比较重要的。</p>
+<h4 id="2-ringtonemanager几个钟要的方法"><strong>2. RingtoneManager几个钟要的方法</strong></h4>
+<pre class="prettyprint"><code class="hljs scss has-numbering">1. <span class="hljs-comment">// 两个构造方法</span>
+<span class="hljs-function">RingtoneManager(Activity activity)</span>
+<span class="hljs-function">RingtoneManager(Context context)</span>
+
+2. <span class="hljs-comment">// 获取指定声音类型(铃声、通知、闹铃等)的默认声音的Uri</span>
+<span class="hljs-value">static</span> Uri <span class="hljs-function">getDefaultUri(int type)</span>
+
+3. <span class="hljs-comment">// 获取系统所有Ringtone的cursor</span>
+<span class="hljs-attribute">Cursor</span> <span class="hljs-function">getCursor()</span>
+
+4. <span class="hljs-comment">// 获取cursor指定位置的Ringtone uri</span>
+Uri <span class="hljs-function">getRingtoneUri(int position)</span>
+
+5. <span class="hljs-comment">// 判断指定Uri是否为默认铃声</span>
+<span class="hljs-value">static</span> boolean <span class="hljs-function">isDefault(Uri ringtoneUri)</span>
+
+6. <span class="hljs-comment">//获取指定uri的所属类型</span>
+<span class="hljs-value">static</span> int <span class="hljs-function">getDefaultType(Uri defaultRingtoneUri)</span>
+
+7. <span class="hljs-comment">//将指定Uri设置为指定声音类型的默认声音</span>
+<span class="hljs-value">static</span> void <span class="hljs-function">setActualDefaultRingtoneUri(Context context, int type, Uri ringtoneUri)</span>
+</code></pre>
+<ul class="pre-numbering">
+<li style="color: #999999;">1</li>
+<li style="color: #999999;">2</li>
+<li style="color: #999999;">3</li>
+<li style="color: #999999;">4</li>
+<li style="color: #999999;">5</li>
+<li style="color: #999999;">6</li>
+<li style="color: #999999;">7</li>
+<li style="color: #999999;">8</li>
+<li style="color: #999999;">9</li>
+<li style="color: #999999;">10</li>
+<li style="color: #999999;">11</li>
+<li style="color: #999999;">12</li>
+<li style="color: #999999;">13</li>
+<li style="color: #999999;">14</li>
+<li style="color: #999999;">15</li>
+<li style="color: #999999;">16</li>
+<li style="color: #999999;">17</li>
+<li style="color: #999999;">18</li>
+<li style="color: #999999;">19</li>
+<li style="color: #999999;">20</li>
+<li style="color: #999999;">21</li>
+<li style="color: #999999;">22</li>
+</ul>
+<p>从api看，Ringtone和RingtoneManager还是比较简单的，不多做解释了，直接放上一段使用代码。</p>
+<pre class="prettyprint"><code class="hljs java has-numbering"> <span class="hljs-javadoc">/**
+ * 播放来电铃声的默认音乐
+*/</span>
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">playRingtoneDefault</span>(){
+    Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE) ;
+    Ringtone mRingtone = RingtoneManager.getRingtone(<span class="hljs-keyword">this</span>,uri);
+    mRingtone.play();
+}
+
+
+<span class="hljs-javadoc">/**
+* 随机播放一个Ringtone(有可能是提示音、铃声等)
+*/</span>
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">ShufflePlayback</span>(){
+    RingtoneManager manager = <span class="hljs-keyword">new</span> RingtoneManager(<span class="hljs-keyword">this</span>) ;
+    Cursor cursor = manager.getCursor();
+    <span class="hljs-keyword">int</span> count = cursor.getCount() ;
+    <span class="hljs-keyword">int</span> position = (<span class="hljs-keyword">int</span>)(Math.random()*count) ;
+    Ringtone mRingtone = manager.getRingtone(position) ;
+    mRingtone.play();
+    }
+
+    <span class="hljs-comment">//记得添加下面两个权限</span>
+    &lt;uses-permission android:name=<span class="hljs-string">"android.permission.MEDIA_CONTENT_CONTROL"</span>/&gt;
+    &lt;uses-permission android:name=<span class="hljs-string">"android.permission.READ_EXTERNAL_STORAGE"</span>/&gt;
+</code></pre>
+<ul class="pre-numbering">
+<li style="color: #999999;">1</li>
+<li style="color: #999999;">2</li>
+<li style="color: #999999;">3</li>
+<li style="color: #999999;">4</li>
+<li style="color: #999999;">5</li>
+<li style="color: #999999;">6</li>
+<li style="color: #999999;">7</li>
+<li style="color: #999999;">8</li>
+<li style="color: #999999;">9</li>
+<li style="color: #999999;">10</li>
+<li style="color: #999999;">11</li>
+<li style="color: #999999;">12</li>
+<li style="color: #999999;">13</li>
+<li style="color: #999999;">14</li>
+<li style="color: #999999;">15</li>
+<li style="color: #999999;">16</li>
+<li style="color: #999999;">17</li>
+<li style="color: #999999;">18</li>
+<li style="color: #999999;">19</li>
+<li style="color: #999999;">20</li>
+<li style="color: #999999;">21</li>
+<li style="color: #999999;">22</li>
+<li style="color: #999999;">23</li>
+<li style="color: #999999;">24</li>
+<li style="color: #999999;">25</li>
+<li style="color: #999999;">26</li>
+</ul>
+<h3 id="总结"><a name="t8"></a><strong>总结</strong></h3>
+<blockquote>
+<p>以上介绍了几种播放方式，可以说各有优劣。 <br />
+  本文写的不够详细，只是大概的介绍一下几种播放方式。在此做下简单的总结。</p>
+<ol>
+<li>对于延迟度要求不高，并且希望能够更全面的控制音乐的播放，MediaPlayer比较适合</li>
+<li>声音短小，延迟度小，并且需要几种声音同时播放的场景，适合使用SoundPool</li>
+<li>对于简单的播放，不需要复杂控制的播放，可以给使用AsyncPlayer，所有操作均在子线程不阻塞UI</li>
+<li>播放大文件音乐，如WAV无损音频和PCM无压缩音频，可使用更底层的播放方式AudioTrack。它支持流式播放，可以读取(可来自本地和网络)音频流，却播放延迟较小。 <br />
+  ps：据我测试AudioTrack直接支持WAV和PCM，其他音频需要解码成PCM格式才能播放。(其他无损格式没有尝试，有兴趣可以使本文提供的例子测试一下)</li>
+<li>.jet的音频比较少见(有的游戏中在使用)，可使用专门的播放器JetPlayer播放</li>
+<li>对于系统类声音的播放和操作，Ringtone更适合(主要是掌握好RingtoneManager)</li>
+</ol>
+<p>android.media包中提供的播放音频的方式，远不止这些，本文只是参考api和其他大牛的博客做一些研究和记录，android.media种还有很多只是等着我们探索&hellip;&hellip;</p>
+
+</blockquote>

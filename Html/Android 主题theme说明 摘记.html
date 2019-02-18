@@ -1,0 +1,90 @@
+原文链接：http://www.cnblogs.com/kexing/archive/2017/08/15/7367868.html
+<div id="article_content" class="article_content tracking-ad" data-mod="popu_307" data-dsm="post">
+<p>主题Theme就是用来设置界面UI风格，可以设置整个应用或者某个活动Activity的界面风格。在<a class="replace_word" style="color: #df3434; font-weight: bold;" title="Android知识库" href="http://lib.csdn.net/base/android" target="_blank">Android</a> SDK中内置了下面的Theme，可以按标题栏Title Bar和状态栏Status Bar是否可见来分类：</p>
+<p>&nbsp;</p>
+<p><img src="http://hi.csdn.net/attachment/201105/31/0_1306832211y1TS.gif" alt="" /></p>
+<p><br />
+</p>
+<p>&nbsp;</p>
+<div style="word-wrap: break-word;">
+<div class="dp-highlighter bg_html">
+<div class="bar">
+<div class="tools"><strong>[html]</strong> <a class="ViewSource" title="view plain" href="http://blog.csdn.net/feng88724/article/details/6457431#" target="_blank">view plain</a><span data-mod="popu_168"> <a class="CopyToClipboard" title="copy" href="http://blog.csdn.net/feng88724/article/details/6457431#" target="_blank">copy</a><span data-mod="popu_169"> <a class="PrintSource" title="print" href="http://blog.csdn.net/feng88724/article/details/6457431#" target="_blank">print</a><a class="About" title="?" href="http://blog.csdn.net/feng88724/article/details/6457431#" target="_blank">?</a></span></span></div>
+
+</div>
+<ol class="dp-xml" start="1">
+<li class="alt">&bull;<span class="attribute">android:theme=<span class="attribute-value">"@android:style/Theme.Dialog"&nbsp;&nbsp;&nbsp;将一个Activity显示为能话框模式&nbsp;&nbsp;</span></span></li>
+<li>&bull;<span class="attribute">android:theme=<span class="attribute-value">"@android:style/Theme.NoTitleBar"&nbsp;&nbsp;不显示应用程序标题栏&nbsp;&nbsp;</span></span></li>
+<li class="alt">&bull;<span class="attribute">android:theme=<span class="attribute-value">"@android:style/Theme.NoTitleBar.Fullscreen"&nbsp;&nbsp;不显示应用程序标题栏，并全屏&nbsp;&nbsp;</span></span></li>
+<li>&bull;<span class="attribute">android:theme=<span class="attribute-value">"Theme.Light"&nbsp;&nbsp;背景为白色&nbsp;&nbsp;</span></span></li>
+<li class="alt">&bull;<span class="attribute">android:theme=<span class="attribute-value">"Theme.Light.NoTitleBar"&nbsp;&nbsp;白色背景并无标题栏&nbsp;&nbsp;&nbsp;</span></span></li>
+<li>&bull;<span class="attribute">android:theme=<span class="attribute-value">"Theme.Light.NoTitleBar.Fullscreen"&nbsp;&nbsp;白色背景，无标题栏，全屏&nbsp;&nbsp;</span></span></li>
+<li class="alt">&bull;<span class="attribute">android:theme=<span class="attribute-value">"Theme.Black"&nbsp;&nbsp;背景黑色&nbsp;&nbsp;</span></span></li>
+<li>&bull;<span class="attribute">android:theme=<span class="attribute-value">"Theme.Black.NoTitleBar"&nbsp;&nbsp;黑色背景并无标题栏&nbsp;&nbsp;</span></span></li>
+<li class="alt">&bull;<span class="attribute">android:theme=<span class="attribute-value">"Theme.Black.NoTitleBar.Fullscreen"&nbsp;&nbsp;&nbsp;&nbsp;黑色背景，无标题栏，全屏&nbsp;&nbsp;</span></span></li>
+<li>&bull;<span class="attribute">android:theme=<span class="attribute-value">"Theme.Wallpaper"&nbsp;&nbsp;用系统桌面为应用程序背景&nbsp;&nbsp;</span></span></li>
+<li class="alt">&bull;<span class="attribute">android:theme=<span class="attribute-value">"Theme.Wallpaper.NoTitleBar"&nbsp;&nbsp;用系统桌面为应用程序背景，且无标题栏&nbsp;&nbsp;</span></span></li>
+<li>&bull;<span class="attribute">android:theme=<span class="attribute-value">"Theme.Wallpaper.NoTitleBar.Fullscreen"&nbsp;&nbsp;用系统桌面为应用程序背景，无标题栏，全屏&nbsp;&nbsp;</span></span></li>
+<li class="alt">&bull;<span class="attribute">android:theme=<span class="attribute-value">"Translucent"&nbsp;&nbsp;半透明&nbsp;&nbsp;</span></span></li>
+<li>&bull;<span class="attribute">android:theme=<span class="attribute-value">"Theme.Translucent.NoTitleBar"&nbsp;半透明、无标题栏&nbsp;&nbsp;</span></span></li>
+<li class="alt">&bull;<span class="attribute">android:theme=<span class="attribute-value">"Theme.Translucent.NoTitleBar.Fullscreen"&nbsp;半透明、无标题栏、全屏&nbsp;&nbsp;</span></span></li>
+<li>&bull;<span class="attribute">android:theme=<span class="attribute-value">"Theme.Panel"&nbsp;&nbsp;</span></span></li>
+<li class="alt">&bull;<span class="attribute">android:theme=<span class="attribute-value">"Theme.Light.Panel"&nbsp;&nbsp;</span></span></li>
+
+</ol></div>
+
+<br />
+<br />
+</div>
+
+
+<br />
+<p><br />
+</p>
+<p>这些主题可以应用到整个应用Application范围或者某个活动Activity范围中。<br />
+<br />
+应用Application范围<br />
+在AndroidManifest.xml中的application节点中设置theme属性，主题theme应用到整个应用程序中。<br />
+&lt;application<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="replace_word" style="color: #df3434; font-weight: bold;" title="Android知识库" href="http://lib.csdn.net/base/android" target="_blank">android</a>:icon=&rdquo;@drawable/icon&rdquo;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;Android:icon=&rdquo;@string/app_name&rdquo;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;Android:icon=&rdquo;@android:style/ Theme.Black.NoTitleBar&rdquo;&gt;<br />
+<br />
+活动Activity范围<br />
+使用<a class="replace_word" style="color: #df3434; font-weight: bold;" title="Java 知识库" href="http://lib.csdn.net/base/java" target="_blank">Java</a>代码或者在AndroidManifest.xml中对活动Activity的主题进行设置，主题仅应用到当前活动中。<br />
+在AndroidMainifest.xml设置方法：<br />
+&lt;activity<br />
+android:name=&ldquo;.About&rdquo;<br />
+android:label=&ldquo;@string/app_name&rdquo;<br />
+android:theme=&ldquo;@android:style/ Theme.Black.NoTitleBar&rdquo; &gt;<br />
+<br />
+使用java代码进行设置，在当前活动Activity的onCreate中进行设置：<br />
+@Override<br />
+public void onCreate(Bundle savedInstanceState){<br />
+super.onCreate(savedInstanceState);<br />
+setTheme(android.R.style.Theme_Translucent_NoTitleBar);<br />
+setContentView(R.layout.main);<br />
+}</p>
+<p>&nbsp;</p>
+<p>&nbsp;@android:style/Theme.Black&nbsp;&nbsp;//背景黑色-有标题-非全屏</p>
+<div>&nbsp;&nbsp;&nbsp;@android:style/Theme.Black.NoTitleBar //背景黑色-无标题-非全屏</div>
+<div>&nbsp;&nbsp;&nbsp;@android:style/Theme.Black.NoTitleBar.Fullscreen //背景黑色-无标题-全屏显示</div>
+<div>&nbsp;&nbsp;&nbsp;@android:style/Theme.Dialog //对话框显示</div>
+<div>&nbsp;&nbsp;&nbsp;@android:style/Theme.InputMethod</div>
+<div>&nbsp;</div>
+<div>&nbsp;&nbsp;&nbsp;@android:style/Theme.Light&nbsp;&nbsp;&nbsp;&nbsp;//背景白色-有标题-非全屏</div>
+<div>&nbsp;&nbsp;&nbsp;@android:style/Theme.Light.NoTitleBar //背景白色-无标题-非全屏</div>
+<div>&nbsp;&nbsp;&nbsp;@android:style/Theme.Light.NoTitleBar.Fullscreen //背景白色-无标题-全屏显示</div>
+<div>&nbsp;</div>
+<div>&nbsp;&nbsp;&nbsp;@android:style/Theme.Light.Panel</div>
+<div>&nbsp;&nbsp;&nbsp;@android:style/Theme.Light.WallpaperSettings //背景透明</div>
+<div>&nbsp;&nbsp;&nbsp;@android:style/Theme.NoDisplay</div>
+<div>&nbsp;</div>
+<div>&nbsp;&nbsp;&nbsp;@android:style/Theme.Translucent.NoTitleBar.Fullscreen //半透明、无标题栏、全屏</div>
+<div>&nbsp;</div>
+<div>&nbsp;&nbsp;&nbsp;@android:style/Theme.Wallpaper.NoTitleBar.Fullscreen</div>
+<div>&nbsp;</div>
+
+
+   
+</div>

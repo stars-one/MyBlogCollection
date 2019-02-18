@@ -1,0 +1,35 @@
+原文链接：http://www.cnblogs.com/kexing/archive/2018/03/08/8528714.html
+<h2>前言：</h2>
+<p><span style="font-size: 16px;">老实说，我有点不知道该讲什么了，希望看过的人能给我提提意见，感激不尽。</span></p>
+<h2>本期知识点：</h2>
+<p><span style="font-size: 16px;">长按事件，<span style="font-size: 16px;">log的简单使用</span>，双击退出程序功能的实现</span></p>
+<h2>正文：</h2>
+<p><span style="font-size: 16px;">上一期我们了解到点击事件其实就是让控件绑定一个监听器，之后在监听器中写上相关的处理代码，如弹出Toast弹窗啊等等，长按事件与点击事件十分类似，过程实现的也是几乎一样的</span></p>
+<p><span style="font-size: 16px;">问题来了，竟然是一样的，那么之前在点击事件中说的五种设置监听器的方法在长按事件中能否也能实现呢？答案是可以的，限于时间，我就不一一测试了，以之前点击事件，直接实现了一个onlongclick接口，之后为控件绑定监听器，复写监听器中的方法</span></p>
+<p><span style="font-size: 16px;"><img src="https://images2018.cnblogs.com/blog/1210268/201803/1210268-20180308144659958-1359952265.png" alt="" /></span></p>
+<p><img src="https://images2018.cnblogs.com/blog/1210268/201803/1210268-20180308144838637-412491814.png" alt="" /></p>
+<p><img src="https://images2018.cnblogs.com/blog/1210268/201803/1210268-20180308144854278-1850165571.png" alt="" /></p>
+<h3>效果：</h3>
+<p><img src="https://images2018.cnblogs.com/blog/1210268/201803/1210268-20180308145040669-1246229034.gif" alt="" /></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px;">上面的图片很好的展示了我们的效果，不知道大家是不是注意到了，我们使用的Toast弹窗就是被用来当做检查测试来使用的，这里我们的代码还比较少，用Toast没有什么问题，但是，日后，可能我们写的代码很多，也很复杂，测试的时候出现了bug，我们用Toast去检查的话是不是很头疼？所以接下来向大家简单的介绍一下Log的使用</span></p>
+<p><span style="font-size: 16px;">Log的使用其实很简单，<span style="color: #ff0000;">我们只需要打上Log，之后按下tab键就会像Toast那样补全代码</span>，我电脑不知道最近怎么了，按下tab键无法补全代码，不过，大家的电脑应该是可以的</span></p>
+<p><span style="font-size: 16px;">我在长按事件中添加了图片中的代码，<span style="color: #ff0000;">Log.d里面接收两个String参数，第一个是Tag（标识），第二个则是内容</span>，一般使用的时候，我们可以在当前的activity中声明一个静态String常量，之后调用Log的时候，Tag就直接使用该常量即可，如下面的例子</span></p>
+<p><span style="font-size: 16px; color: #0000ff;">private static final TAG = &ldquo;MainActivity&rdquo;;</span></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px;"><img src="https://images2018.cnblogs.com/blog/1210268/201803/1210268-20180308145840178-1249016963.png" alt="" /></span></p>
+<p><span style="font-size: 16px;">要怎么样去查看呢？打开Android Monitor，就会出现一个面板，之后，我们就在模拟器中进行相关的操作，返回查看就会显示消息了</span></p>
+<p><span style="font-size: 16px;"><img src="https://images2018.cnblogs.com/blog/1210268/201803/1210268-20180308150311317-1282996285.png" alt="" width="1128" height="604" /></span></p>
+<p><img src="https://images2018.cnblogs.com/blog/1210268/201803/1210268-20180308150437577-2142235929.png" alt="" width="1115" height="597" /></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px;">&nbsp;我们在许多APP都有双击退出程序的功能，这个功能想必大家应该也有兴趣吧，所以来讲解一下</span></p>
+<p><span style="font-size: 16px;">Activity中有一个方法名为onBackPressed，如名字可以知道就是当我们按下返回键时候就会调用此方法</span></p>
+<p><span style="font-size: 16px; color: #ff0000;">实现的思路，当按下返回键时，弹出一个Toast，提示用户需要再按一次才可以退出程序，用户如果在两秒内再次按下了返回键就退出程序，否则不退出程序</span></p>
+<p><img src="https://images2018.cnblogs.com/blog/1210268/201803/1210268-20180308151341760-1745934006.png" alt="" /></p>
+<p><img src="https://images2018.cnblogs.com/blog/1210268/201803/1210268-20180308151519616-1087583520.png" alt="" /></p>
+<p><img src="https://images2018.cnblogs.com/blog/1210268/201803/1210268-20180308152102786-412330322.png" alt="" /></p>
+<p><span style="color: #ff0000;">这里我们还需要在onDestroy加上System.exit(0);</span></p>
+<p><span style="color: #ff0000;">代表着完全退出，如果不加的程序就会报错</span></p>
+<h3>&nbsp;效果：</h3>
+<p><img src="https://images2018.cnblogs.com/blog/1210268/201803/1210268-20180308152342304-316633066.gif" alt="" /></p>
+<p>&nbsp;</p>

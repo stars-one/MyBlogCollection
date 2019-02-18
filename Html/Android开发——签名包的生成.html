@@ -1,0 +1,28 @@
+原文链接：http://www.cnblogs.com/kexing/archive/2018/03/18/8596838.html
+<h2>前言：</h2>
+<p><span style="font-size: 16px;">最近想要在酷安网上传apk，注册开发者的时候需要申请验证，验证需要两个apk，一个是自己的apk（需要签名），另外一个则是下载酷安的模板生成的一个签名包（使用的签名要与之前的签名自己的apk一样），在签名包的生成之中，gradle报了几条错误，之后经过漫长的百度，总算是完美解决，便是把这个记录下来，这里我用的酷安，其他的APP市场应该也是会有，大家可以借鉴一下</span></p>
+<h2>正文：</h2>
+<p><span style="font-size: 16px;">酷安网将模板下载之后是一个压缩包，我们解压之后，可以看到就是Android Studio的标准目录</span></p>
+<p><span style="font-size: 16px;"><img src="https://images2018.cnblogs.com/blog/1210268/201803/1210268-20180318205403835-319805300.png" alt="" /></span></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px;">我们在Android Studio中打开这个项目</span></p>
+<p><img src="https://images2018.cnblogs.com/blog/1210268/201803/1210268-20180318205840603-190016164.png" alt="" /></p>
+<p><span style="font-size: 16px;">打开前会出现错误提示，直接确定即可</span></p>
+<p><span style="font-size: 16px;">之后，gradle就会有一个错误</span></p>
+<p><span style="font-size: 16px;"><img src="https://images2018.cnblogs.com/blog/1210268/201803/1210268-20180318210808586-340665531.png" alt="" width="963" height="155" /></span></p>
+<p><span style="font-size: 16px;">大概意思是gradle插件版本比较低级，需要我们去更新版本，这里我们就点击Open File打开build.gradle文件</span></p>
+<p><span style="font-size: 16px;"><img src="https://images2018.cnblogs.com/blog/1210268/201803/1210268-20180318211127378-1606528333.png" alt="" /></span></p>
+<p><span style="font-size: 16px;">我用的是Android Studio 2.3.3版本，这个版本其实就是相当于gradle插件的版本（gradle插件版本与gradle版本不一样，gradle插件版本可以看做为Android Studio版本），所以将这一行代码修改为2.3.3版本即可</span></p>
+<p><span style="font-size: 16px;">如果你不确定的话，可以使用Android Studio新建一个项目，之后，查看项目的build.gradle文件（Project），去找与上面截图相同的代码，之后修改即可</span></p>
+<p><span style="font-size: 16px;">点击sync now，重新构建，gradle又报出了一个错</span></p>
+<p><span style="font-size: 16px;"><img src="https://images2018.cnblogs.com/blog/1210268/201803/1210268-20180318211448774-2146852306.png" alt="" /></span></p>
+<p><span style="font-size: 16px;">这里的Gradle version与之前的不一样，至于怎么不一样，具体可以百度，我大概理解但是说不清（无奈）</span></p>
+<p><span style="font-size: 16px;">这里的提示是Gradle version最低为3.3，而当前版本则是2.14.1</span></p>
+<p><span style="font-size: 16px;">之所以出现这个报错信息，就是因为当前项目的gradle版本是2.14.1，而gradle2.3插件对应的gradle版本是3.3（我们在上面一步改成了2.3.3），所以导致了报错。</span></p>
+<p><span style="font-size: 16px; color: #ff0000;">gradle2.2.3插件对应的的gradle版本是2.14.1</span></p>
+<p><span style="font-size: 16px; color: #000000;">所以我们将之前的2.3.3修改为2.2.3</span></p>
+<p>&nbsp;<img src="https://images2018.cnblogs.com/blog/1210268/201803/1210268-20180318213400660-259447914.png" alt="" /></p>
+<p><span style="font-size: 16px;">再次编译，你就会发现成功的编译了，会弹出一个升级gradle的窗口，直接忽略即可，毕竟这是一个签名包而已，我们不用改太多东西</span></p>
+<p><span style="font-size: 16px;">&nbsp;之后，选择之前签名我们自己apk的那个签名文件，对这个项目进行签名即可，签名不懂的话百度吧~大神的博客都将得很详细了，这里就不多说！！</span></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px;">PS：上传的时候提示失败，原因是两个上传的apk文件相同，修改apk名字上传就可以了！</span></p>

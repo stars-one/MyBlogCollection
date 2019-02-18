@@ -1,0 +1,28 @@
+原文链接：http://www.cnblogs.com/kexing/archive/2017/09/11/7505967.html
+<p><span style="font-size: 16px;">引言：摘录Android用户界面设计</span></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px;">Android支持各类xml可绘制对象，其中一些可绘制对象可用于实现让一个资源使用多个图片文件，另外一些则允许你在xml中真正地指定颜色，还有一些你从来都不会用到的，但是，了解是有必要的，指不定哪一天设计界面就会用到，在这里只是简介一下各类可绘制对象的种类与用途，想要继续深入的请走百度！</span></p>
+<p>&nbsp;</p>
+<h2>Layer List</h2>
+<p><span style="font-size: 16px;">Layer list（层列表）是用xml定义的一组可绘制对象，被用于创建LayerDrawable实例每个可绘制对象以不同的数值偏移到左、上、右、下的位置，可绘制对象以它们被声明（就像view）的顺序绘制出来，并且进行缩放以适应可用的空间</span></p>
+<h2>State List</h2>
+<p><span style="font-size: 16px;">StateListDrawable用选择符xml节点来定义，允许为不同状态指定不同的可绘制对象。一个简单的例子就是按钮按下之后的变化，或者是长按时的颜色变化</span></p>
+<h2>Level List</h2>
+<p><span style="font-size: 16px;">LevelListDrawable管理这众多的可绘制对象，并给每一个可绘制对象指派各种值，电量指示器就是一个很好的例子，到了多少等级显示不同的图片</span></p>
+<h2>TransitionDrawable</h2>
+<p><span style="font-size: 16px;">TransitionDrawable允许指定两个淡入或淡出的可绘制图像，startTransition（int）和reverseTransition（int）方法允许你控制两个可绘制对象之间过渡</span></p>
+<h2>InsetDrawable</h2>
+<p><span style="font-size: 16px;">InsetDrawable允许插入另外一个可绘制图像，当你让一个可绘制对象显得比一个view还小或者大一圈，就可以用到它了</span></p>
+<h2>ClipDrawable</h2>
+<p><span style="font-size: 16px;">ClipDrawable接受一个单独的可绘制对象，并依据一个由等级决定的临界点来剪切或者切掉这个单独的可绘制对象，最常用用于进度条</span></p>
+<h2>ScaleDrawable</h2>
+<p><span style="font-size: 16px;">ScaleDrawable允许在运行过中使用setLevel（int）来缩放可绘制对象</span></p>
+<h2>ShapeDrawable</h2>
+<p><span style="font-size: 16px;">ShapeDrawable是用xml定义的一个矩形，椭圆，线或环</span></p>
+<h2>VectorDrawable</h2>
+<p><span style="font-size: 16px;">VectorDrawable表示使用矢量数据图片的可绘制对象，可以用Android Studio自带的功能将svg格式的图片转换成这类文件</span></p>
+<h2>AnimatedVectorDrawable</h2>
+<p><span style="font-size: 16px;">这一种很容易创建矢量动画的方式，常通过操纵一个矢量的路径将它变成另外的一个矢量</span></p>
+<h2>RippleDrawable</h2>
+<p><span style="font-size: 16px;">产生类似于Android5.0碰到选项后的水纹效果</span></p>
+<p>&nbsp;</p>

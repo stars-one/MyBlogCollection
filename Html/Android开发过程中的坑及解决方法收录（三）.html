@@ -1,0 +1,34 @@
+原文链接：http://www.cnblogs.com/kexing/archive/2018/01/11/8270572.html
+<h2><span style="color: #ff0000;">bug：应用出现了 不幸运的，应用已停止的错误提示</span></h2>
+<h2>排除问题：</h2>
+<h3>1.intent接收数据的字符串不匹配</h3>
+<h3>2.java常见的NullPointerException（空指针错误），可能由三个原因引起，<span><span style="color: #333333; line-height: 28px; white-space: pre-wrap;">字符串变量未初始化；</span><span style="color: #333333; line-height: 28px; white-space: pre-wrap;"><span style="color: #333333; line-height: 28px; white-space: pre-wrap;">接口类型的对象没有用具体的类初始化；<span style="font-size: 10pt;"><span style="color: #333333;">没有判断是否为空</span></span></span></span><span style="color: #333333; font-size: 14px; line-height: 28px; white-space: pre-wrap;"><br />
+</span><span style="color: #333333; line-height: 28px; white-space: pre-wrap;">所谓的指针，就是java中的对象的引用。比如String s;这个s就是指针。</span></span><span style="color: #333333; line-height: 28px; white-space: pre-wrap;">若是直接引用s就会出现空指针错误</span></h3>
+<p><span style="color: #333333; font-size: 16px; line-height: 28px; white-space: pre-wrap;">再比如： 
+List lt; 会报错 
+List lt = new ArrayList(); 则不会报错了</span></p>
+<h3><strong><span style="color: #333333; line-height: 28px; white-space: pre-wrap;">3.接收的类型不符合，显示出来出现错误</span><span style="color: #333333; line-height: 28px; white-space: pre-wrap;">，需要使用转型</span></strong></h3>
+<h3><span style="color: #333333; font-size: 14px; line-height: 28px; white-space: pre-wrap;">例如</span></h3>
+<p><span style="color: #000000; font-size: 14px; line-height: 28px; white-space: pre-wrap;">int s = Integer.valueOf(mEditAttack.getText().toString())；</span></p>
+<p><span style="font-size: 14px; line-height: 28px; white-space: pre-wrap; color: #000000;">String s = Integer.valueOf(mEditAttack.getText().toString()).toString();</span></p>
+<p>&nbsp;</p>
+<h2><span style="color: #ff0000;">bug：editText输入文字显示一半</span></h2>
+<p><span style="color: #000000; font-size: 16px;">原因：</span></p>
+<p><span style="color: #000000; font-size: 16px;">1.editText的textsize设置过大，将字体改小，或者是设置<span style="color: #0099ff;">android:paddingTop属性</span><br /></span></p>
+<p><span style="color: #000000; font-size: 16px;">2.模拟器分辨率问题，建议使用真机进行测试</span></p>
+<h2><span style="color: #ff0000;">bug：litepal建表错误</span></h2>
+<p><span style="font-size: 16px;">错误提示内容：</span></p>
+<p><span style="font-size: 16px;">org.litepal.exceptions.DatabaseGenerateException: An exception that indicates there was an error with SQL parsing or execution. create table BookStores (id integer primary key autoincrement,comeId text, upDate text, thumb text, title text, type text</span></p>
+<p><span style="font-size: 16px;">原因：<span style="line-height: 21px;">这是因为表结构的实体类中的字段（属性）用了SQL语法中的关键字（如使用了id）</span></span></p>
+<p><span style="font-size: 16px;"><span style="line-height: 21px;">修改为其他名称即可</span></span></p>
+<h2><strong><span style="line-height: 21px;"><span style="color: #ff0000;">bug：litepal关联表返回的list为null</span></span></strong></h2>
+<p><span style="color: #000000; font-size: 16px;"><span style="line-height: 21px;"><span style="line-height: 21px;">原因：使用了findfirst方法查询带有model的数据库</span></span></span></p>
+<p><span style="color: #000000; font-size: 16px;"><span style="line-height: 21px;"><span style="line-height: 21px;">解决方法：使用find（class，id，true）方法查询</span></span></span></p>
+<p>&nbsp;</p>
+<h2><strong><span style="line-height: 21px;"><span style="color: #ff0000;">bug：list调用clear方法之后没有数据</span></span></strong></h2>
+<p><span style="line-height: 21px; font-size: 16px;"><span style="color: #ff0000;"><span style="color: #000000;"><span style="line-height: 21px;"><span style="line-height: 21px;">原因：list调用clear后在</span></span></span></span></span></p>
+<p><span style="line-height: 21px; font-size: 16px;"><span style="color: #ff0000;"><span style="color: #000000;"><span style="line-height: 21px;"><span style="line-height: 21px;">list.clear();</span></span></span></span></span></p>
+<p><span style="line-height: 21px; font-size: 16px;"><span style="color: #ff0000;"><span style="color: #000000;"><span style="line-height: 21px;"><span style="line-height: 21px;">list = getList();</span></span></span></span></span></p>
+<p><span style="line-height: 21px; font-size: 16px;"><span style="color: #ff0000;"><span style="color: #000000;"><span style="line-height: 21px;"><span style="line-height: 21px;">上述的代码中list清除之后，getList是list指向了getList中返回的list，list中是没有数据的</span></span></span></span></span></p>
+<p><span style="line-height: 21px; font-size: 16px;"><span style="color: #ff0000;"><span style="color: #000000;"><span style="line-height: 21px;"><span style="line-height: 21px;">想要数据的话，使用addAll（），参数是一个同类型的list</span></span></span></span></span></p>
+<p>&nbsp;</p>

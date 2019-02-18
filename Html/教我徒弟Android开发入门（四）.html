@@ -1,0 +1,81 @@
+原文链接：http://www.cnblogs.com/kexing/archive/2018/04/25/8667982.html
+<h2>本期知识点：</h2>
+<ul>
+<li>
+<h3>两大常用布局的简单介绍</h3>
+</li>
+<li>
+<h3>在我们的APP使用第三方库</h3>
+</li>
+<li>
+<h3>Android Studio常用快捷键</h3>
+</li>
+</ul>
+<h3>&nbsp;一、两大常用布局</h3>
+<h3>1.LinearLayout线性布局</h3>
+<p><span style="font-size: 16px;">线性布局，可以垂直显示或者水平显示，设置LinearLayout显示的方式属性为orientation, 有vertical和<span style="color: #000000;">horizontal</span></span></p>
+<p><span style="color: #000000; font-size: 16px;">如果不设置的话，可以显示出一个控件，若是布局放多个控件，就是无法显示出相应的控件，因为布局不知道该如何显示控件</span></p>
+<h3>2.RealtiveLayout相对布局</h3>
+<p><span style="font-size: 16px;">RealtiveLayout，可以根据各个控件来控制控件显示的地方，特有的就是margin_xx属性，这个网上应该都有相应的资料，这里不多说</span></p>
+<p>&nbsp;</p>
+<h3>二、使用第三方库</h3>
+<p><span style="font-size: 16px;">网上有许多好用的开源库（第三方库），这些库可以节省我们在开发中的不少时间，那么如何去使用呢？请往下看</span></p>
+<h3>1.第三方库的导入的两种方式</h3>
+<p><span style="font-size: 16px;">使用第三方库之前，我们得将第三库导入到我们的项目之中才可以使用</span></p>
+<p><span style="font-size: 16px;">第三库可以分为两种，一种是大公司（也可以说是官方开发的），另外一种则是个人开发者</span></p>
+<p><span style="font-size: 16px;">举个例子吧，如果看过我写的博客，就应该知道recyclerview这个控件吧，这个recyclerview其实是listview的加强版，是谷歌官方在基于listview中写出的一个第三方库，我们使用的时候得将其导入到我们项目中，</span></p>
+<p><span style="font-size: 16px;"><span style="font-size: 16px;">导入有两种方式：</span></span></p>
+<p><span style="font-size: 16px;"><strong>第一种 打开file，进入到Project Stucture中点击添加按钮（就是加号），之后选择相应的第三方库添加到我们的项目中去</strong><br /></span></p>
+<p><span style="font-size: 16px;"><span style="color: #000000;"><img src="https://images2018.cnblogs.com/blog/1210268/201804/1210268-20180424220610808-404149318.png" alt="" /></span></span></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px;"><strong><span style="font-size: 16px;"><img src="https://images2018.cnblogs.com/blog/1210268/201804/1210268-20180424220222178-369036958.png" alt="" width="975" height="694" /></span></strong></span></p>
+<p><strong><span style="font-size: 16px;">第二种则是在gradle文件中写上相关的代码</span></strong></p>
+<p><strong><span style="font-size: 16px;"><img src="https://images2018.cnblogs.com/blog/1210268/201804/1210268-20180424220703034-1614982662.png" alt="" /></span></strong></p>
+<p><span style="font-size: 16px;">有图片中可以看到，这里有两个build.gradle文件，那么，我们应该修改哪一个呢？</span></p>
+<p><span style="font-size: 16px;">修改在APP目录下的那个</span></p>
+<p><span style="font-size: 16px;">我图片中使用的project模式查看，如果你用的是默认（也就是android模式），可以看到得更明显</span></p>
+<p><img src="https://images2018.cnblogs.com/blog/1210268/201804/1210268-20180424220912151-908108834.png" alt="" /></p>
+<p><span style="font-size: 16px;">我们进入到gradle文件中，就可以看到我们导入的第三方库</span></p>
+<p><img src="https://images2018.cnblogs.com/blog/1210268/201804/1210268-20180424221036734-611010604.png" alt="" width="895" height="583" /></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px;">其实，<span style="color: #ff0000;">这两种的本质都是在gradle文件上进行添加代码</span></span></p>
+<p><span style="font-size: 16px;">PS：这里得提一下，官方的直接输入compile xxx就能导入那些官方的第三方库，如果是个人开发者的话，他们一般是将第三库发在了一个<span style="font-size: 16px;">JitPack</span>网站，这时我们导入的时候，得先把那个网站添加到我们的gradle文件中（这里的gradle前面提到的另外一个的gradle）<br /></span></p>
+<p>&nbsp;</p>
+<pre><span style="font-size: 16px;"><code>maven { url 'https://jitpack.io' }</code></span></pre>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px;"><img src="https://images2018.cnblogs.com/blog/1210268/201804/1210268-20180425084444538-1655648144.png" alt="" /></span></p>
+<p><span style="font-size: 16px;">之后再导入相关的第三方包，使用即可</span></p>
+<p><span style="font-size: 16px;">一般来说，第三方库的那些作者都会在他的那个github项目中写上了相关的使用说明，我们不懂使用的话就可以对照他们写的说明来使用</span></p>
+<h3>例子：</h3>
+<p><span style="font-size: 16px;">这里我拿我最近开发的一个打字机效果的TextView来说明</span></p>
+<p><span style="font-size: 16px;"><a href="https://github.com/Stars-One/SuperTextView" target="_blank">https://github.com/Stars-One/SuperTextView</a></span></p>
+<p><span style="font-size: 16px;">去到我的那个项目的github，可以看到有使用的说明，我现在只写了中文版的使用文档，可以到使用文档中查看，使用应该是很简单的，我就不多说了</span></p>
+<p><img src="https://images2018.cnblogs.com/blog/1210268/201804/1210268-20180425085410812-235170772.png" alt="" /></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px;">这里就给大家一个示范，导入我的这个库</span></p>
+<p><span style="font-size: 16px;">可以从上面那一张图可以看到，是如何导入的</span></p>
+<p><span style="font-size: 16px;">两个build.gradle,APP的那个则是写<code> compile 'com.github.Stars-One:SuperTextView:v1.1'</code></span></p>
+<p><span style="font-size: 16px;">另外一个则是在加上<code>maven { url 'https://jitpack.io' }</code></span></p>
+<p>&nbsp;<span style="font-size: 16px;"><img src="https://images2018.cnblogs.com/blog/1210268/201804/1210268-20180425084444538-1655648144.png" alt="" /></span></p>
+<p><span style="font-size: 16px; color: #ff0000;">&nbsp;不要忘记之后要点击sync进行重构哦！！</span></p>
+<h3>&nbsp;三、Android Studio的常用快捷键</h3>
+<p><span style="font-size: 16px;">之前，安装完Android Studio，因为不习惯Android Studio上的快捷键，就把Android Studio的快捷键改为了eclipse中的快捷键，现在感觉，这样改的话可能之后进入公司啊什么的会不习惯（公司的话肯定是使用默认的快捷键，），而且，有时候查找某一个快捷键的时候，网上的大部分资料都是说的默认的那个Android Studio的快捷键，非常不方便，这样的话我们也顺应潮流吧，开始习惯一下Android Studio的常用快捷键</span></p>
+<p>&nbsp;</p>
+<p>Ctrl +Alt +E　　　　　　　　　　　　findviewbyid</p>
+<p><span style="font-size: 16px;">Alt+Insert 　　　　　　　　　　生成代码(如get,set方法,构造函数等)</span></p>
+<p><span style="font-size: 16px;">Ctrl+Shift+Space 　　　　　　 &nbsp;自动补全代码</span></p>
+<p><span style="font-size: 16px;">Ctrl+空格 　　　　　　　　　　代码提示</span></p>
+<p><span style="font-size: 16px;">Ctrl+P 　　　　　　　　　　　 方法参数提示</span></p>
+<p><span style="font-size: 16px;">Ctrl +O　　　　　　　　　　　复写方法</span></p>
+<p><span style="font-size: 16px;">Ctrl+I　　　　　　　　　　　　接口复写</span></p>
+<p><span style="font-size: 16px;">Alt+回车　　　　　　　　　　 &nbsp;导入包,自动修正</span></p>
+<p><span style="font-size: 16px;">Ctrl+J&nbsp;&nbsp;　　　　　　　　　　 &nbsp; &nbsp;代码模版（快捷代码）</span></p>
+<p><span style="font-size: 16px;">Ctrl+/ 或 Ctrl+Shift+/&nbsp;&nbsp;　　　　 &nbsp; &nbsp;注释（// 或者/*...*/ ）</span></p>
+<p><span style="font-size: 16px;">Ctrl+B 　　　　　　　　　　　 快速打开光标处的类或方法（crtl + 鼠标点击也可以）</span></p>
+<p><span style="font-size: 16px;">Ctrl＋Alt＋T　　　　　　　　　可以把代码包在一块内，例如try/catch<br /></span></p>
+<p><span style="font-size: 16px;">&nbsp;Ctrl＋E&nbsp;&nbsp;&nbsp;&nbsp; 　　　　　　　　　　可以显示最近编辑的文件列表</span></p>
+<p><span style="font-size: 16px;">Ctrl+Alt+M 　　　　　　　　　　抽取方法</span></p>
+<p><span style="font-size: 16px;">Ctrl+D 　　　　　　　　　　　　将当前一行代码复制到下一行，不影响剪切板中的内容</span></p>
+<p><span style="font-size: 16px;">选中整行点击行号即可</span></p>
+<p><span style="font-size: 16px;">PS ：Ctrl +空格 这个在我电脑与搜狗输入法切换中英文的快捷键冲突了，很无语，<span style="font-size: 16px;">Ctrl+Shift+Space 这个与这个是类似的，凑合地用吧</span></span></p>
+<p>&nbsp;</p>

@@ -1,0 +1,286 @@
+原文链接：http://www.cnblogs.com/kexing/archive/2017/08/22/7413565.html
+<p>&nbsp;</p>
+<p>前几期介绍完了各种方法，就是可以实现下棋的功能了，但是，还无法判断输赢，这一期就是讲解判断输赢的方法</p>
+<p>&nbsp;</p>
+<p>正文开始&mdash;&mdash;&mdash;</p>
+<p>首先，我们得声明两个boolean类型的变量</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">boolean</span> IsGameOver; <span style="color: #008000;">//</span><span style="color: #008000;">判断游戏是否结束</span>
+<span style="color: #0000ff;">private</span> <span style="color: #0000ff;">boolean</span> IsWhitewin; <span style="color: #008000;">//</span><span style="color: #008000;">判断白棋是否胜利</span></pre>
+</div>
+<p>两个变量的作用已经注释了，这里便不解释了</p>
+<p>&nbsp;</p>
+<p>之后，<span style="color: #ff0000;">定义一个方法来实现判断输赢，在这个方法之中还加入了弹出对话框与Toast提示</span>，具体的之后详解</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> checkGameover() {
+        boolean whitewin </span>=<span style="color: #000000;"> checkFiveInline(Whitearray);
+        boolean blackwin </span>=<span style="color: #000000;"> checkFiveInline(Blackarray);
+        boolean textflag </span>= <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span><span style="color: #000000;">(whitewin){
+            IsGameOver </span>= <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+            IsWhitewin </span>= <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+            textflag </span>= <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+            showDlog(</span><span style="color: #800000;">"</span><span style="color: #800000;">白棋胜利</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+        }
+        </span><span style="color: #0000ff;">if</span><span style="color: #000000;">(blackwin){
+            IsGameOver </span>= <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+            IsWhitewin </span>= <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+            textflag </span>= <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+            showDlog(</span><span style="color: #800000;">"</span><span style="color: #800000;">黑棋胜利</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+        }
+        </span><span style="color: #0000ff;">if</span><span style="color: #000000;">(textflag){
+        String text </span>= IsWhitewin?<span style="color: #800000;">"</span><span style="color: #800000;">白棋胜利</span><span style="color: #800000;">"</span>:<span style="color: #800000;">"</span><span style="color: #800000;">黑棋胜利</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+        Toast.makeText(getContext(), text, Toast.LENGTH_SHORT).show();
+        }
+    }</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>这里代码有点多，我一个个解释。</p>
+<p>首先，我<span style="color: #ff0000;">定义了两个两个boolean变量用来判断游戏中是白棋胜利还是黑棋胜利，这两个boolean的值由checkFiveInLine()方法返回可得</span></p>
+<p><span style="color: #ff0000;">checkFiveInLine()中传入的参数就是白棋坐标和黑棋坐标</span></p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">private</span> boolean checkFiveInline(List&lt;Point&gt;<span style="color: #000000;"> myarray) {
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;">(Point p:myarray){
+            </span><span style="color: #0000ff;">int</span> x =<span style="color: #000000;"> p.x;
+            </span><span style="color: #0000ff;">int</span> y =<span style="color: #000000;"> p.y;
+            boolean flag </span>= checkHorizontal(x , y ,myarray)||checkVertical(x,y,myarray)||checkLeftDiagonal(x,y,myarray)||<span style="color: #000000;">checkRightDiagonal(x,y,myarray);
+            </span><span style="color: #0000ff;">if</span><span style="color: #000000;">(flag){
+                </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+            }
+        }
+            </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    }</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;这里中，<span style="color: #0000ff; font-size: 16px;">for(Point p:myarray)这一个循环其实是相当于for(Point p=0;p&lt;myarray.length();p++),用来遍历Point型数组myarray的,每一次访问数组myarray的时候读取的数据放入Point型的p中</span></p>
+<p>将<span style="color: #ff0000; font-size: 16px;">得到的横坐标与纵坐标给x与y，<span style="color: #000000;">之后再是声明一个boolean类型的flag变量</span>，将x与y作为参数传入到横向，纵向，斜向是否有五子方法中，之后由检查横向，纵向，斜向是否有五子方法的返回值经过逻辑与的逻辑计算得到数值</span></p>
+<p><span style="color: #339966; font-size: 16px;">逻辑与计算，只要有一个为真，结果都是为真</span></p>
+<p><span style="font-size: 16px;">flag有数值之后，再<span style="color: #ff0000;">用一个if语句判断并返回boolean数值</span></span></p>
+<p><span style="font-size: 16px;">检查横向，纵向，斜向是否有五子方法代码如下，具体的都有注释了，这里需要注意的是，x和y坐标原点是在屏幕左上角，也就是说，<span style="color: #ff0000;">x+是往右边，y+是往下边</span>，这里应该不难，理解一个就是能举一反三了</span></p>
+<div class="cnblogs_code">
+<pre><span style="font-size: 15px;"><span style="color: #008000;">//</span><span style="color: #008000;">水平方向检查是否五子</span>
+    <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">boolean</span> checkHorizontal(<span style="color: #0000ff;">int</span> x,<span style="color: #0000ff;">int</span> y,List&lt;Point&gt;<span style="color: #000000;"> myarray){
+        </span><span style="color: #0000ff;">int</span> count=1<span style="color: #000000;">;
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">右边检查是否五子</span>
+        <span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">int</span> i = 1;i &lt; 5; i++<span style="color: #000000;">){
+            </span><span style="color: #0000ff;">if</span> (myarray.contains(<span style="color: #0000ff;">new</span> Point(x+<span style="color: #000000;">i,y))) {
+               count</span>++<span style="color: #000000;">;
+             }</span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+            }
+       }
+       </span><span style="color: #0000ff;">if</span> (count == 5<span style="color: #000000;">) {
+           </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+       }
+       </span><span style="color: #008000;">//</span><span style="color: #008000;">左边检查是否五子</span>
+       <span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">int</span> i = 1;i &lt; 5; i++<span style="color: #000000;">){
+           </span><span style="color: #0000ff;">if</span> (myarray.contains(<span style="color: #0000ff;">new</span> Point(x-<span style="color: #000000;">i,y))) {
+               count</span>++<span style="color: #000000;">;
+           }</span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+           }
+       }
+       </span><span style="color: #0000ff;">if</span> (count == 5<span style="color: #000000;">) {
+           </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+       }
+
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    }
+    
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">垂直方向检查五子</span>
+    <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">boolean</span> checkVertical(<span style="color: #0000ff;">int</span> x,<span style="color: #0000ff;">int</span> y,List&lt;Point&gt;<span style="color: #000000;"> myarray){
+        </span><span style="color: #0000ff;">int</span> count=1<span style="color: #000000;">;
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">下边检查是否五子</span>
+        <span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">int</span> i = 1;i &lt; 5; i++<span style="color: #000000;">){
+            </span><span style="color: #0000ff;">if</span> (myarray.contains(<span style="color: #0000ff;">new</span> Point(x,y+<span style="color: #000000;">i))) {
+               count</span>++<span style="color: #000000;">;
+             }</span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+            }
+       }
+       </span><span style="color: #0000ff;">if</span> (count == 5<span style="color: #000000;">) {
+           </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+       }
+       </span><span style="color: #008000;">//</span><span style="color: #008000;">上边检查是否五子</span>
+       <span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">int</span> i = 1;i &lt; 5; i++<span style="color: #000000;">){
+           </span><span style="color: #0000ff;">if</span> (myarray.contains(<span style="color: #0000ff;">new</span> Point(x,y-<span style="color: #000000;">i))) {
+               count</span>++<span style="color: #000000;">;
+           }</span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+           }
+       }
+       </span><span style="color: #0000ff;">if</span> (count == 5<span style="color: #000000;">) {
+           </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+       }
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    }
+    
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">左斜方向检查是否五子</span>
+    <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">boolean</span> checkLeftDiagonal(<span style="color: #0000ff;">int</span> x,<span style="color: #0000ff;">int</span> y,List&lt;Point&gt;<span style="color: #000000;"> myarray){
+        </span><span style="color: #0000ff;">int</span> count=1<span style="color: #000000;">;
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">左上角向右下角检查是否五子</span>
+        <span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">int</span> i = 1;i &lt; 5; i++<span style="color: #000000;">){
+            </span><span style="color: #0000ff;">if</span> (myarray.contains(<span style="color: #0000ff;">new</span> Point(x+i,y+<span style="color: #000000;">i))) {
+               count</span>++<span style="color: #000000;">;
+             }</span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+            }
+       }
+       </span><span style="color: #0000ff;">if</span> (count == 5<span style="color: #000000;">) {
+           </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+       }
+       </span><span style="color: #008000;">//</span><span style="color: #008000;">右下角向左上角检查是否五子</span>
+       <span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">int</span> i = 1;i &lt; 5; i++<span style="color: #000000;">){
+           </span><span style="color: #0000ff;">if</span> (myarray.contains(<span style="color: #0000ff;">new</span> Point(x-i,y-<span style="color: #000000;">i))) {
+               count</span>++<span style="color: #000000;">;
+           }</span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+           }
+       }
+       </span><span style="color: #0000ff;">if</span> (count == 5<span style="color: #000000;">) {
+           </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+       }
+
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    }
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">右斜方向检查是否五子</span>
+    <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">boolean</span> checkRightDiagonal(<span style="color: #0000ff;">int</span> x,<span style="color: #0000ff;">int</span> y,List&lt;Point&gt;<span style="color: #000000;"> myarray){
+        </span><span style="color: #0000ff;">int</span> count=1<span style="color: #000000;">;
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">左下角向右上角检查是否五子</span>
+        <span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">int</span> i = 1;i &lt; 5; i++<span style="color: #000000;">){
+            </span><span style="color: #0000ff;">if</span> (myarray.contains(<span style="color: #0000ff;">new</span> Point(x+i,y-<span style="color: #000000;">i))) {
+               count</span>++<span style="color: #000000;">;
+             }</span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+            }
+       }
+       </span><span style="color: #0000ff;">if</span> (count == 5<span style="color: #000000;">) {
+           </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+       }
+       </span><span style="color: #008000;">//</span><span style="color: #008000;">右上角想左下角检查是否五子</span>
+       <span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">int</span> i = 1;i &lt; 5; i++<span style="color: #000000;">){
+           </span><span style="color: #0000ff;">if</span> (myarray.contains(<span style="color: #0000ff;">new</span> Point(x-i,y+<span style="color: #000000;">i))) {
+               count</span>++<span style="color: #000000;">;
+           }</span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+           }
+       }
+       </span><span style="color: #0000ff;">if</span> (count == 5<span style="color: #000000;">) {
+           </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+       }
+
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    }</span></span></pre>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px;">回到checkGameOver()这个方法中来，先忽略掉textflag这个boolean变量，前面的两个boolean变量已经获得了数值，之后便是由两个if语句判断，之后给相应的<span style="color: #3366ff;">全局变量赋值</span>（<span style="color: #ff0000;">其实赋值的话可以提取出来放在两个if语句之后，或者作为一个方法，这样的话可以省一些代码，不过，为了方便理解，我就是写进了if语句之中</span>），到这一步是可以判断输赢了，但是还是可以画棋子的，我们<span style="color: #ff0000;">还需要在onTouchEvent事件中加入一个if判断</span>，如果IsGameOver这个boolean变量数值为true的话，就返回一个false，不执行下面的触摸事件，也就是不能再画棋子</span></p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="font-size: 15px;"><span style="color: #0000ff;">if</span><span style="color: #000000;">(IsGameOver){
+            </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        }</span></span></pre>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff; font-size: 15px;">private <span style="color: #0000ff;">void<span style="color: #000000;"> checkGameover() {
+        boolean whitewin =<span style="color: #000000;"> checkFiveInline(Whitearray);
+        boolean blackwin =<span style="color: #000000;"> checkFiveInline(Blackarray);
+        boolean textflag = <span style="color: #0000ff;">false<span style="color: #000000;">;
+        <span style="color: #0000ff;">if<span style="color: #000000;">(whitewin){
+            IsGameOver = <span style="color: #0000ff;">true<span style="color: #000000;">;
+            IsWhitewin = <span style="color: #0000ff;">true<span style="color: #000000;">;
+            textflag = <span style="color: #0000ff;">true<span style="color: #000000;">;
+            showDlog(<span style="color: #800000;">"<span style="color: #800000;">白棋胜利<span style="color: #800000;">"<span style="color: #000000;">);
+        }
+        <span style="color: #0000ff;">if<span style="color: #000000;">(blackwin){
+            IsGameOver = <span style="color: #0000ff;">true<span style="color: #000000;">;
+            IsWhitewin = <span style="color: #0000ff;">false<span style="color: #000000;">;
+            textflag = <span style="color: #0000ff;">true<span style="color: #000000;">;
+            showDlog(<span style="color: #800000;">"<span style="color: #800000;">黑棋胜利<span style="color: #800000;">"<span style="color: #000000;">);
+        }
+        <span style="color: #0000ff;">if<span style="color: #000000;">(textflag){
+        String text = IsWhitewin?<span style="color: #800000;">"<span style="color: #800000;">白棋胜利<span style="color: #800000;">":<span style="color: #800000;">"<span style="color: #800000;">黑棋胜利<span style="color: #800000;">"<span style="color: #000000;">;
+        Toast.makeText(getContext(), text, Toast.LENGTH_SHORT).show();
+        }
+    }</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></pre>
+</div>
+<p>&nbsp;<span style="font-size: 16px;">虽然上面所说可以判断一个游戏的输赢，但是没有提示玩家怎么知道谁输谁赢，所以我们就得<span style="color: #ff0000;">弄一个Toast提示</span>，个人觉得加了一个Toast体验还不够好，于是就是再多加了一个对话框提示，在游戏结束的时候弹出。</span></p>
+<p><span style="font-size: 16px;">在这里就先说Toast，首先声明了一个textflag的boolean变量，用来判断状态，由最后一个if语句判断，由textflag的数值我们可以知道，最后一个的if语句中的代码一定会执行</span></p>
+<p><span style="font-size: 16px;">解释一下 </span></p>
+<p>&nbsp;</p>
+<pre><span style="color: #0000ff; font-size: 16px;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #000000;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;">String text = IsWhitewin?<span style="color: #800000;">"<span style="color: #800000;">白棋胜利<span style="color: #800000;">":<span style="color: #800000;">"<span style="color: #800000;">黑棋胜利<span style="color: #800000;">"<span style="color: #000000;">;</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></pre>
+<p>&nbsp;</p>
+<p><span style="color: #0000ff;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #000000;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #000000;"><span style="font-size: 16px;">上面的代码相当于下面</span><br /></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></p>
+<div class="cnblogs_code">
+<pre><span style="font-size: 15px;"><span style="color: #0000ff;">if</span>(IsWhitewin==<span style="color: #0000ff;">true</span>){</span><br /><span style="font-size: 15px;">　　String text = "白棋胜利";</span><br /><span style="font-size: 15px;">}else{</span><br /><span style="font-size: 15px;">　　String text = "黑棋胜利";</span><br /><span style="font-size: 15px;">}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><span style="color: #0000ff;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #000000;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #000000;">　<span style="font-size: 16px;">之后<span style="color: #ff0000;">调用Toast的makeTex()t的show()方法弹出Toast</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></p>
+<p><span style="color: #0000ff;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #000000;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #000000;"><span style="font-size: 16px;"><span style="color: #3366ff;">getContext()是View提供的一个获取View显示的当前的activity方法</span></span><br /></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></p>
+<p><span style="color: #0000ff; font-size: 16px;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #000000;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #000000;">我自己写了一个对话框，那个showDlog就是我自己定义的用来实现弹出对话框的方法<br /></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></p>
+<p><span style="color: #0000ff;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #000000;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #000000;"><span style="font-size: 16px;">showDlog()方法如下</span><br /></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="font-size: 15px;"><span style="color: #008000;">//</span><span style="color: #008000;">弹出对话框</span>
+    <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> showDlog(String winner) {
+        AlertDialog.Builder builder </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> AlertDialog.Builder(getContext());
+        builder.setTitle(</span>"对战结果"<span style="color: #000000;">);
+        builder.setMessage(winner);
+
+        builder.setPositiveButton(</span>"确定", <span style="color: #0000ff;">new</span><span style="color: #000000;"> DialogInterface.OnClickListener() {
+            @Override
+            </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span> onClick(DialogInterface dialog, <span style="color: #0000ff;">int</span><span style="color: #000000;"> which) {
+                dialog.cancel();
+            }
+        }).setNegativeButton(</span>"再来一局", <span style="color: #0000ff;">new</span><span style="color: #000000;"> DialogInterface.OnClickListener() {
+            @Override
+            </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span> onClick(DialogInterface dialog, <span style="color: #0000ff;">int</span><span style="color: #000000;"> which) {
+                dialog.cancel();
+                restart();
+            }
+        });
+        builder.create().show();
+
+    }</span></span></pre>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><span style="color: #0000ff;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #000000;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #000000;">&nbsp;<span style="font-size: 16px;">在游戏结束的时候弹出对话框，提示胜利的一方，之后下面有着两个按钮，一个是确定，另外一个是再来一局，我为这两个按钮设置了监听器，当用户点击确定按钮的时候，就会取消对话框，当用户点击再来一局按钮的时候，就会取消对话框，同时再来一局，可以看到，<span style="color: #ff0000;">再来一局按钮的onClick()方法中有一个定义的方法restart()方法，这个方法就是用来实现再来一局的功能</span></span><br /></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></p>
+<p><span style="color: #0000ff;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #000000;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #000000;"><span style="font-size: 16px;">代码如下</span><br /></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></p>
+<p><span style="color: #0000ff;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #000000;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #000000;">&nbsp;</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="font-size: 15px;"><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span> restart(){<span style="color: #008000;">//</span><span style="color: #008000;">重新开始</span>
+<span style="color: #000000;">        Whitearray.clear();
+        Blackarray.clear();
+        IsGameOver </span>= <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        IsWhitewin </span>= <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        invalidate();
+        
+    }</span></span></pre>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><span style="color: #ff0000; font-size: 16px;">清除数组里的坐标，改变两个boolean变量的数值，之后用invalidate()方法刷新界面</span></p>
+<p><span style="color: #ff0000; font-size: 16px;">&nbsp;</span></p>
+<p>&nbsp;</p>
+<p><span style="color: #0000ff; font-size: 18px;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #000000;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #000000;">到这里，一个能玩的五子棋安卓项目就是弄好了，<span style="color: #0000ff;">详解正式完结了~撒花~~撒花~~</span><br /></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></p>
+<p><span style="color: #0000ff; font-size: 18px;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #000000;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #000000;"><span style="color: #0000ff;">&nbsp;</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></p>
+<p>&nbsp;</p>
+<p><span style="color: #0000ff; font-size: 18px;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #000000;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #000000;">众人：<span style="color: #ff0000;">喂，你更换背景的功能还没有讲呢？</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></p>
+<p><span style="color: #0000ff; font-size: 18px;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #000000;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #000000;"><span style="color: #ff0000;">&nbsp;</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></p>
+<p><span style="color: #0000ff; font-size: 18px;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #000000;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #000000;"><span style="color: #800080;">(⊙o⊙)哦，差点忘了，还有我自定义的个性功能啊，嗯，那就多加一期，下一期见了！！</span><br /></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><span style="color: #0000ff;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #000000;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #000000;"><span style="color: #0000ff;"><span style="color: #000000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #800000;"><span style="color: #000000;">&nbsp;</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></p>
+<p>&nbsp;</p>

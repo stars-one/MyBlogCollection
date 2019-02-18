@@ -1,0 +1,116 @@
+原文链接：http://www.cnblogs.com/kexing/archive/2017/12/14/7760936.html
+<p><span style="font-size: 16px;"><img src="http://images2017.cnblogs.com/blog/1210268/201710/1210268-20171027193045101-1607083694.png" alt="" width="841" height="482" /></span></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px;">可以看到QQ上的ToolBar其实就是一个自定义的view，可以看到不同的界面就是简单地修改了文字而已，在第二张与第三张尤其的明显，我们就仿QQ的这个Toolbar设置一个自定义控件</span></p>
+<p><span style="font-size: 16px;">&nbsp;</span></p>
+<p><span style="font-size: 16px;">在开始之前，首先了解一下官方是如何实现一个控件的，比如说一个Linearlayout</span></p>
+<p><span style="font-size: 16px;"><img src="http://images2017.cnblogs.com/blog/1210268/201710/1210268-20171028133142273-539172593.png" alt="" /></span></p>
+<p><span style="font-size: 16px;">它不是有layout_width和layout_height这两个属性吗？其实，这两个属性就是官方定义的</span></p>
+<p>&nbsp;</p>
+<p>&nbsp;<img src="http://images2017.cnblogs.com/blog/1210268/201710/1210268-20171028134405117-1539857418.png" alt="" /></p>
+<p><span style="font-size: 16px;">官方的操作其实就是继承了一个ViewGroup,Linearlayout相当于一个自定义View，其中的方法我们也不用深究，我们打开Path的那个路径，可以找到一个atts.xml文件，打开我们可以在里面看到定义了Linearlayout关于layout的属性，有layout_width和layout_height这几个属性，看到这里我们也就明白了我们在布局文件中引用要使用的属性</span></p>
+<p><span style="font-size: 16px;">&nbsp;</span></p>
+<p><span style="font-size: 16px;">正文开始，我们讲解一个自定义控件的步骤：</span></p>
+<h3><span style="font-size: 16px;">1.设计需要使用的属性<br /></span></h3>
+<p>　　<span style="font-size: 16px;">先将模式切换为project模式</span></p>
+<p><img src="http://images2017.cnblogs.com/blog/1210268/201712/1210268-20171213162712191-1225706778.png" alt="" /></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px;">新建一个moudle</span></p>
+<p><img src="http://images2017.cnblogs.com/blog/1210268/201712/1210268-20171213162738551-723487402.png" alt="" /></p>
+<p><span style="font-size: 16px;">&nbsp;</span></p>
+<p><span style="font-size: 16px;"><img src="http://images2017.cnblogs.com/blog/1210268/201712/1210268-20171213162939254-2065001603.png" alt="" width="1049" height="703" /></span></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px;">修改相关包名，库名</span></p>
+<p><span style="font-size: 16px;"><img src="http://images2017.cnblogs.com/blog/1210268/201712/1210268-20171213163056004-1395335380.png" alt="" width="1112" height="745" /></span></p>
+<p>&nbsp;</p>
+<p><img src="http://images2017.cnblogs.com/blog/1210268/201712/1210268-20171213163229738-1856927597.png" alt="" width="1087" height="728" /></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px;">这里选择第一个，也就是不创建activity界面，之后点击finish就完成了</span></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px;">&nbsp;依次展开Topbar-&gt;res-&gt;values，在values创建一个atts.xml文件</span></p>
+<p><img src="http://images2017.cnblogs.com/blog/1210268/201712/1210268-20171213163542769-1654198933.png" alt="" /></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px;">&nbsp;xml文件代码如下：</span></p>
+<div class="cnblogs_code">
+<pre><span style="font-size: 16px;"><span style="color: #0000ff;">&lt;?</span><span style="color: #ff00ff;">xml version="1.0" encoding="utf-8"</span><span style="color: #0000ff;">?&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">resources</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">declare-styleable </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="Topbar"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">attr </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="title"</span><span style="color: #ff0000;"> format</span><span style="color: #0000ff;">="string"</span><span style="color: #0000ff;">/&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">attr </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="titleTextSize"</span><span style="color: #ff0000;"> format</span><span style="color: #0000ff;">="dimension"</span><span style="color: #0000ff;">/&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">attr </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="titleTextColor"</span><span style="color: #ff0000;"> format</span><span style="color: #0000ff;">="color"</span><span style="color: #0000ff;">/&gt;</span>
+
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">attr </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="leftTextColor"</span><span style="color: #ff0000;"> format</span><span style="color: #0000ff;">="color"</span><span style="color: #0000ff;">/&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">attr </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="leftBackgroud"</span><span style="color: #ff0000;"> format</span><span style="color: #0000ff;">="reference|color"</span><span style="color: #0000ff;">/&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">attr </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="leftText"</span><span style="color: #ff0000;"> format</span><span style="color: #0000ff;">="string"</span><span style="color: #0000ff;">/&gt;</span>
+
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">attr </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="rightTextColor"</span><span style="color: #ff0000;"> format</span><span style="color: #0000ff;">="color"</span><span style="color: #0000ff;">/&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">attr </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="rightBackgroud"</span><span style="color: #ff0000;"> format</span><span style="color: #0000ff;">="reference|color"</span><span style="color: #0000ff;">/&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">attr </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="rightText"</span><span style="color: #ff0000;"> format</span><span style="color: #0000ff;">="string"</span><span style="color: #0000ff;">/&gt;</span>
+
+
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">declare-styleable</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">resources</span><span style="color: #0000ff;">&gt;</span></span></pre>
+</div>
+<p>&nbsp;</p>
+<p>深入理解可以看看这一篇 http://blog.csdn.net/zjh_1110120/article/details/50976027</p>
+<p>&nbsp;</p>
+<h2><span style="font-size: 16px;">2.实现一个我们需要的控件<br /></span></h2>
+<p><span style="font-size: 16px;">&nbsp;</span></p>
+<p><span style="font-size: 16px;">在topbar的java文件夹，新建一个Topbar类，使其继承RelativeLayout</span></p>
+<p><span style="font-size: 16px;"><img src="http://images2017.cnblogs.com/blog/1210268/201712/1210268-20171213173219769-2085905731.png" alt="" /></span></p>
+<p><span style="font-size: 16px;">之后，重写其中带有两个参数的构造方法，Attributeset这个类是用来存放之前定义在xml文件中的各种属性</span></p>
+<p>&nbsp;<img src="http://images2017.cnblogs.com/blog/1210268/201712/1210268-20171213173611004-849930094.png" alt="" /></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px;">之后，创建一个TypedArray类的对象ta，调用context的obtainStyleAttribute方法，获取刚才我们创建的atts.xml中的各类属性，第二个参数Topbar就是上文atts.xml中定义<span style="font-size: 16px;"><span style="color: #0000ff;">&lt;<span style="color: #800000;">declare-styleable <span style="color: #ff0000;">name<span style="color: #0000ff;">="Topbar"<span style="color: #0000ff;">&gt;</span></span></span></span></span></span></span></p>
+<p><img src="http://images2017.cnblogs.com/blog/1210268/201712/1210268-20171213173828676-1921626582.png" alt="" /></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px;">之后，便是可以使用TypedArray类中的getxx方法来取得xml中定义的相关属性，Topbar与atts.xml中定义的属性使用下划线连接</span></p>
+<p><span style="font-size: 16px;">&nbsp;可以看到有些第二个参数为0，意思就是如果在布局文件没有给控件的属性没有设置属性值，就默认为0</span></p>
+<p><span style="font-size: 16px;"><img src="http://images2017.cnblogs.com/blog/1210268/201712/1210268-20171213184207488-118829384.png" alt="" /></span></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px;">还要记得最后需要回收</span></p>
+<p>&nbsp;<span style="font-size: 16px;">深入理解TypedArray及<span style="font-size: 16px;">Attributeset</span>相关方法，请看这篇<a href="http://blog.csdn.net/lmj623565791/article/details/45022631" target="_blank">http://blog.csdn.net/lmj623565791/article/details/45022631</a></span></p>
+<p><span style="font-size: 16px;">之后获得之前的属性值，以此设置相关属性<br /></span></p>
+<p><span style="font-size: 16px;"><img src="http://images2017.cnblogs.com/blog/1210268/201712/1210268-20171213184448832-1915545063.png" alt="" /></span></p>
+<p><span style="font-size: 16px;">这里呢，当我们在布局文件中使用了这个自定义控件的属性时候，这个类就会<span style="font-size: 16px;">获得我们所输入的属性值，之后</span>调用上述方法进行设置</span></p>
+<p><span style="font-size: 16px;">到这一步之后，我们还需要将左右button与标题textview放在一个View中，使用LayoutPram的addview方法添加到VIew中<br /></span></p>
+<p><span style="font-size: 16px;">&nbsp;</span></p>
+<p>&nbsp;首先声明三个LayoutPram</p>
+<p><img src="http://images2017.cnblogs.com/blog/1210268/201712/1210268-20171213184925957-1658835176.png" alt="" /></p>
+<p>进行宽高设置之后，使用addView添加到View当中</p>
+<p><img src="http://images2017.cnblogs.com/blog/1210268/201712/1210268-20171213185021394-356072147.png" alt="" /></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px;">&nbsp;到这一步，布局就是完成了，但是还要实现左右button的点击事件，直接设置一个点击的监听器就是完成了</span></p>
+<p><span style="font-size: 16px;"><img src="http://images2017.cnblogs.com/blog/1210268/201712/1210268-20171214124505654-429629973.png" alt="" /></span></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px;">但是，这不是我们想要的模板，模板的话，是<span style="color: #ff0000;">应该直接在activity中设置监听器不是更为快捷，而不应该是在控件这里写相关的事件处理</span>，所以，我们得使用接口回调机制<br /></span></p>
+<p><span style="font-size: 16px;">&nbsp;仿照button设置监听器的方法，我们可以定义一个接口类topbarClickListener，在其中声明两个方法，对应左按钮的点击与右按钮的点击事件，之后，声明一个接口类对象listener，创建一个setOnTopbarClickListener方法，在其中将参数传给之前声明的listener</span></p>
+<p><span style="font-size: 16px;"><img src="http://images2017.cnblogs.com/blog/1210268/201712/1210268-20171214124812498-1944083298.png" alt="" /></span></p>
+<p><span style="font-size: 16px;">之后，修改左右button的点击事件，使其调用接口里的方法，这样就是完成了</span></p>
+<p><span style="font-size: 16px;"><img src="http://images2017.cnblogs.com/blog/1210268/201712/1210268-20171214124355763-95611926.png" alt="" /></span></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h2><span style="font-size: 16px;">三、引用我们的控件<br /></span></h2>
+<p><span style="font-size: 16px;">这里使用的话需要加入一个依赖，</span></p>
+<p><span style="font-size: 16px;"><span style="font-size: 16px;"><span style="color: #0000ff;"><span style="font-size: 16px;"><span style="color: #0000ff;"><img src="https://images2018.cnblogs.com/blog/1210268/201808/1210268-20180821145711656-1368862626.png" alt="" /></span></span></span></span></span></p>
+<p><img src="https://images2018.cnblogs.com/blog/1210268/201808/1210268-20180821145742974-275034823.png" alt="" width="864" height="275" /></p>
+<p>选择app,点击+号，选择module,之后选择之前建立的module，确定即可</p>
+<p>PS：上图不是本篇的那个自定义控件</p>
+<p><span style="font-size: 16px;">不过我发现添加依赖的时候失败了，出现unspecified on project app resolves to an APK archive which is not supported的错误</span></p>
+<p><span style="font-size: 16px;">查了资料，找到了解决方法，<span style="font-size: 16px;">需要将库中的build.gradle改一下</span></span></p>
+<p><span style="font-size: 16px;">原来的库的开头是<span style="color: #0000ff;">apply&nbsp;plugin:&nbsp;'com.android.application'&nbsp;</span> </span></p>
+<p><span style="font-size: 16px;"><span style="color: #0000ff;"><span style="color: #000000;">将这个改为</span>apply&nbsp;plugin:&nbsp;'com.android.library' ，<span style="color: #000000;">如果sync之后还有错误的话</span>，<span style="color: #000000;">将<span style="color: #ff0000;">闭包</span><code><span style="color: #ff0000;">defaultconfig的含有applicationId的</span>那一行删除就可以</code>。</span></span></span></p>
+<p>&nbsp;</p>
+<p>&nbsp;　<span style="font-size: 16px;">引用就是像使用button那样引用，进行属性的相关赋值，就如同我们使用button，textview等控件的属性一样<br /></span></p>
+<p><span style="font-size: 16px;"><img src="http://images2017.cnblogs.com/blog/1210268/201712/1210268-20171214183054873-1768738673.png" alt="" width="1101" height="602" /></span></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px;">&nbsp;这里可以看到，有个cus，类似我们使用的android，像系统定义的button等控件，我们设置它的属性都是需要写上android，之前有一句xmlns:<span style="color: #0099ff;">android=<span style="color: #ff3333;">"http://schemas.android.com/apk/res/android"</span></span></span></p>
+<p><span style="font-size: 16px;">&nbsp;这就是说明使用的android本身的控件属性，<span style="color: #ff0000;">android这个相当于一个名字，我们可以随便写，之后将后面的改为res-auto,</span>之后使用我们的自定义属性就是以我们之前写的名字为前缀，就如我图中那样</span></p>
+<p>&nbsp;<code>其中cus可以任意指定，但不能与系统的命名空间相同，在android studio中如上 用res-auto，在eclipse中res后需要完整的包名</code></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px;">右边的预览图大家也可以看到实际的效果</span></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px;">&nbsp;</span></p>
+<p>&nbsp;</p>

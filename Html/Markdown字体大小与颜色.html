@@ -1,0 +1,1039 @@
+原文链接：http://www.cnblogs.com/kexing/archive/2018/08/19/9502576.html
+<p><strong>Markdown</strong>是一种可以使用普通文本编辑器编写的标记语言，通过类似HTML的标记语法，它可以使普通文本内容具有一定的格式。但是它本身是不支持修改字体、字号与颜色等功能的！</p>
+<p>&emsp;&emsp;<strong>CSDN-markdown</strong>编辑器是其衍生版本，扩展了Markdown的功能（如表格、脚注、<strong>内嵌HTML</strong>等等）！对，就是<strong>内嵌HTML</strong>，接下来要讲的功能就需要使用<strong>内嵌HTML</strong>的方法来实现。</p>
+<h1 id="字体字号与颜色"><a name="t0"></a>字体、字号与颜色</h1>
+<pre name="code" class="prettyprint"><code class="hljs xml has-numbering"><span class="hljs-tag">&lt;<span class="hljs-title">font <span class="hljs-attribute">face=<span class="hljs-value">"黑体"&gt;我是黑体字<span class="hljs-tag">&lt;/<span class="hljs-title">font&gt;
+<span class="hljs-tag">&lt;<span class="hljs-title">font <span class="hljs-attribute">face=<span class="hljs-value">"微软雅黑"&gt;我是微软雅黑<span class="hljs-tag">&lt;/<span class="hljs-title">font&gt;
+<span class="hljs-tag">&lt;<span class="hljs-title">font <span class="hljs-attribute">face=<span class="hljs-value">"STCAIYUN"&gt;我是华文彩云<span class="hljs-tag">&lt;/<span class="hljs-title">font&gt;
+<span class="hljs-tag">&lt;<span class="hljs-title">font <span class="hljs-attribute">color=<span class="hljs-value">#0099ff <span class="hljs-attribute">size=<span class="hljs-value">7 <span class="hljs-attribute">face=<span class="hljs-value">"黑体"&gt;color=#0099ff size=72 face="黑体"<span class="hljs-tag">&lt;/<span class="hljs-title">font&gt;
+<span class="hljs-tag">&lt;<span class="hljs-title">font <span class="hljs-attribute">color=<span class="hljs-value">#00ffff <span class="hljs-attribute">size=<span class="hljs-value">72&gt;color=#00ffff<span class="hljs-tag">&lt;/<span class="hljs-title">font&gt;
+<span class="hljs-tag">&lt;<span class="hljs-title">font <span class="hljs-attribute">color=<span class="hljs-value">gray <span class="hljs-attribute">size=<span class="hljs-value">72&gt;color=gray<span class="hljs-tag">&lt;/<span class="hljs-title">font&gt;</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></code></pre>
+<ul class="pre-numbering">
+<li style="color: #999999;">1</li>
+<li style="color: #999999;">2</li>
+<li style="color: #999999;">3</li>
+<li style="color: #999999;">4</li>
+<li style="color: #999999;">5</li>
+<li style="color: #999999;">6</li>
+</ul>
+<p>Size：规定文本的尺寸大小。可能的值：从 1 到 7 的数字。浏览器默认值是 3。</p>
+<h1 id="呈现效果"><a name="t1"></a>呈现效果</h1>
+<hr />
+<p><span style="font-family: 黑体;">我是黑体字</span> <br />
+<span style="font-family: 微软雅黑;">我是微软雅黑</span> <br />
+<span style="font-family: STCAIYUN;">我是华文彩云</span> <br />
+<span style="color: #0099ff; font-family: 黑体; font-size: 300%;">color=#0099ff size=72 face=&rdquo;黑体&rdquo;</span> <br />
+<span style="color: #00ffff;">color=#00ffff 可以用十六位颜色值</span> <br />
+<span style="color: gray;">color=gray 也可以用已知颜色名</span></p>
+<h1 id="颜色名列表"><a name="t2"></a>颜色名列表</h1>
+<hr />
+<p>&nbsp;</p>
+<table>
+<tbody>
+<tr><th>颜色名</th><th>十六进制颜色值</th><th>颜色</th></tr>
+<tr>
+<td><span style="color: aliceblue;">AliceBlue</span></td>
+<td><span style="color: #f0f8ff;">#F0F8FF</span></td>
+<td bgcolor="#F0F8FF">rgb(240, 248, 255)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: antiquewhite;">AntiqueWhite</span></td>
+<td><span style="color: #faebd7;">#FAEBD7</span></td>
+<td bgcolor="#FAEBD7">rgb(250, 235, 215)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: aqua;">Aqua</span></td>
+<td><span style="color: #00ffff;">#00FFFF</span></td>
+<td bgcolor="#00FFFF">rgb(0, 255, 255)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: aquamarine;">Aquamarine</span></td>
+<td><span style="color: #7fffd4;">#7FFFD4</span></td>
+<td bgcolor="#7FFFD4">rgb(127, 255, 212)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: azure;">Azure</span></td>
+<td><span style="color: #f0ffff;">#F0FFFF</span></td>
+<td bgcolor="#F0FFFF">rgb(240, 255, 255)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: beige;">Beige</span></td>
+<td><span style="color: #f5f5dc;">#F5F5DC</span></td>
+<td bgcolor="#F5F5DC">rgb(245, 245, 220)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: bisque;">Bisque</span></td>
+<td><span style="color: #ffe4c4;">#FFE4C4</span></td>
+<td bgcolor="#FFE4C4">rgb(255, 228, 196)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: black;">Black</span></td>
+<td><span style="color: #000000;">#000000</span></td>
+<td bgcolor="#000000">rgb(0, 0, 0)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: blanchedalmond;">BlanchedAlmond</span></td>
+<td><span style="color: #ffebcd;">#FFEBCD</span></td>
+<td bgcolor="#FFEBCD">rgb(255, 235, 205)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: blue;">Blue</span></td>
+<td><span style="color: #0000ff;">#0000FF</span></td>
+<td bgcolor="#0000FF">rgb(0, 0, 255)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: blueviolet;">BlueViolet</span></td>
+<td><span style="color: #8a2be2;">#8A2BE2</span></td>
+<td bgcolor="#8A2BE2">rgb(138, 43, 226)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: brown;">Brown</span></td>
+<td><span style="color: #a52a2a;">#A52A2A</span></td>
+<td bgcolor="#A52A2A">rgb(165, 42, 42)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: burlywood;">BurlyWood</span></td>
+<td><span style="color: #deb887;">#DEB887</span></td>
+<td bgcolor="#DEB887">rgb(222, 184, 135)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: cadetblue;">CadetBlue</span></td>
+<td><span style="color: #5f9ea0;">#5F9EA0</span></td>
+<td bgcolor="#5F9EA0">rgb(95, 158, 160)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: chartreuse;">Chartreuse</span></td>
+<td><span style="color: #7fff00;">#7FFF00</span></td>
+<td bgcolor="#7FFF00">rgb(127, 255, 0)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: chocolate;">Chocolate</span></td>
+<td><span style="color: #d2691e;">#D2691E</span></td>
+<td bgcolor="#D2691E">rgb(210, 105, 30)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: coral;">Coral</span></td>
+<td><span style="color: #ff7f50;">#FF7F50</span></td>
+<td bgcolor="#FF7F50">rgb(255, 127, 80)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: cornflowerblue;">CornflowerBlue</span></td>
+<td><span style="color: #6495ed;">#6495ED</span></td>
+<td bgcolor="#6495ED">rgb(100, 149, 237)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: cornsilk;">Cornsilk</span></td>
+<td><span style="color: #fff8dc;">#FFF8DC</span></td>
+<td bgcolor="#FFF8DC">rgb(255, 248, 220)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: crimson;">Crimson</span></td>
+<td><span style="color: #dc143c;">#DC143C</span></td>
+<td bgcolor="#DC143C">rgb(220, 20, 60)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: cyan;">Cyan</span></td>
+<td><span style="color: #00ffff;">#00FFFF</span></td>
+<td bgcolor="#00FFFF">rgb(0, 255, 255)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: darkblue;">DarkBlue</span></td>
+<td><span style="color: #00008b;">#00008B</span></td>
+<td bgcolor="#00008B">rgb(0, 0, 139)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: darkcyan;">DarkCyan</span></td>
+<td><span style="color: #008b8b;">#008B8B</span></td>
+<td bgcolor="#008B8B">rgb(0, 139, 139)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: darkgoldenrod;">DarkGoldenRod</span></td>
+<td><span style="color: #b8860b;">#B8860B</span></td>
+<td bgcolor="#B8860B">rgb(184, 134, 11)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: darkgray;">DarkGray</span></td>
+<td><span style="color: #a9a9a9;">#A9A9A9</span></td>
+<td bgcolor="#A9A9A9">rgb(169, 169, 169)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: darkgreen;">DarkGreen</span></td>
+<td><span style="color: #006400;">#006400</span></td>
+<td bgcolor="#006400">rgb(0, 100, 0)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: darkkhaki;">DarkKhaki</span></td>
+<td><span style="color: #bdb76b;">#BDB76B</span></td>
+<td bgcolor="#BDB76B">rgb(189, 183, 107)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: darkmagenta;">DarkMagenta</span></td>
+<td><span style="color: #8b008b;">#8B008B</span></td>
+<td bgcolor="#8B008B">rgb(139, 0, 139)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: darkolivegreen;">DarkOliveGreen</span></td>
+<td><span style="color: #556b2f;">#556B2F</span></td>
+<td bgcolor="#556B2F">rgb(85, 107, 47)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: darkorange;">Darkorange</span></td>
+<td><span style="color: #ff8c00;">#FF8C00</span></td>
+<td bgcolor="#FF8C00">rgb(255, 140, 0)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: darkorchid;">DarkOrchid</span></td>
+<td><span style="color: #9932cc;">#9932CC</span></td>
+<td bgcolor="#9932CC">rgb(153, 50, 204)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: darkred;">DarkRed</span></td>
+<td><span style="color: #8b0000;">#8B0000</span></td>
+<td bgcolor="#8B0000">rgb(139, 0, 0)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: darksalmon;">DarkSalmon</span></td>
+<td><span style="color: #e9967a;">#E9967A</span></td>
+<td bgcolor="#E9967A">rgb(233, 150, 122)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: darkseagreen;">DarkSeaGreen</span></td>
+<td><span style="color: #8fbc8f;">#8FBC8F</span></td>
+<td bgcolor="#8FBC8F">rgb(143, 188, 143)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: darkslateblue;">DarkSlateBlue</span></td>
+<td><span style="color: #483d8b;">#483D8B</span></td>
+<td bgcolor="#483D8B">rgb(72, 61, 139)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: darkslategray;">DarkSlateGray</span></td>
+<td><span style="color: #2f4f4f;">#2F4F4F</span></td>
+<td bgcolor="#2F4F4F">rgb(47, 79, 79)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: darkturquoise;">DarkTurquoise</span></td>
+<td><span style="color: #00ced1;">#00CED1</span></td>
+<td bgcolor="#00CED1">rgb(0, 206, 209)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: darkviolet;">DarkViolet</span></td>
+<td><span style="color: #9400d3;">#9400D3</span></td>
+<td bgcolor="#9400D3">rgb(148, 0, 211)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: deeppink;">DeepPink</span></td>
+<td><span style="color: #ff1493;">#FF1493</span></td>
+<td bgcolor="#FF1493">rgb(255, 20, 147)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: deepskyblue;">DeepSkyBlue</span></td>
+<td><span style="color: #00bfff;">#00BFFF</span></td>
+<td bgcolor="#00BFFF">rgb(0, 191, 255)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: dimgray;">DimGray</span></td>
+<td><span style="color: #696969;">#696969</span></td>
+<td bgcolor="#696969">rgb(105, 105, 105)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: dodgerblue;">DodgerBlue</span></td>
+<td><span style="color: #1e90ff;">#1E90FF</span></td>
+<td bgcolor="#1E90FF">rgb(30, 144, 255)</td>
+
+
+</tr>
+<tr>
+<td><span>Feldspar</span></td>
+<td><span style="color: #d19275;">#D19275</span></td>
+<td bgcolor="#D19275">rgb(209, 146, 117)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: firebrick;">FireBrick</span></td>
+<td><span style="color: #b22222;">#B22222</span></td>
+<td bgcolor="#B22222">rgb(178, 34, 34)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: floralwhite;">FloralWhite</span></td>
+<td><span style="color: #fffaf0;">#FFFAF0</span></td>
+<td bgcolor="#FFFAF0">rgb(255, 250, 240)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: forestgreen;">ForestGreen</span></td>
+<td><span style="color: #228b22;">#228B22</span></td>
+<td bgcolor="#228B22">rgb(34, 139, 34)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: fuchsia;">Fuchsia</span></td>
+<td><span style="color: #ff00ff;">#FF00FF</span></td>
+<td bgcolor="#FF00FF">rgb(255, 0, 255)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: gainsboro;">Gainsboro</span></td>
+<td><span style="color: #dcdcdc;">#DCDCDC</span></td>
+<td bgcolor="#DCDCDC">rgb(220, 220, 220)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: ghostwhite;">GhostWhite</span></td>
+<td><span style="color: #f8f8ff;">#F8F8FF</span></td>
+<td bgcolor="#F8F8FF">rgb(248, 248, 255)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: gold;">Gold</span></td>
+<td><span style="color: #ffd700;">#FFD700</span></td>
+<td bgcolor="#FFD700">rgb(255, 215, 0)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: goldenrod;">GoldenRod</span></td>
+<td><span style="color: #daa520;">#DAA520</span></td>
+<td bgcolor="#DAA520">rgb(218, 165, 32)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: gray;">Gray</span></td>
+<td><span style="color: #808080;">#808080</span></td>
+<td bgcolor="#808080">rgb(128, 128, 128)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: green;">Green</span></td>
+<td><span style="color: #008000;">#008000</span></td>
+<td bgcolor="#008000">rgb(0, 128, 0)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: greenyellow;">GreenYellow</span></td>
+<td><span style="color: #adff2f;">#ADFF2F</span></td>
+<td bgcolor="#ADFF2F">rgb(173, 255, 47)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: honeydew;">HoneyDew</span></td>
+<td><span style="color: #f0fff0;">#F0FFF0</span></td>
+<td bgcolor="#F0FFF0">rgb(240, 255, 240)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: hotpink;">HotPink</span></td>
+<td><span style="color: #ff69b4;">#FF69B4</span></td>
+<td bgcolor="#FF69B4">rgb(255, 105, 180)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: indianred;">IndianRed</span></td>
+<td><span style="color: #cd5c5c;">#CD5C5C</span></td>
+<td bgcolor="#CD5C5C">rgb(205, 92, 92)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: indigo;">Indigo</span></td>
+<td><span style="color: #4b0082;">#4B0082</span></td>
+<td bgcolor="#4B0082">rgb(75, 0, 130)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: ivory;">Ivory</span></td>
+<td><span style="color: #fffff0;">#FFFFF0</span></td>
+<td bgcolor="#FFFFF0">rgb(255, 255, 240)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: khaki;">Khaki</span></td>
+<td><span style="color: #f0e68c;">#F0E68C</span></td>
+<td bgcolor="#F0E68C">rgb(240, 230, 140)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: lavender;">Lavender</span></td>
+<td><span style="color: #e6e6fa;">#E6E6FA</span></td>
+<td bgcolor="#E6E6FA">rgb(230, 230, 250)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: lavenderblush;">LavenderBlush</span></td>
+<td><span style="color: #fff0f5;">#FFF0F5</span></td>
+<td bgcolor="#FFF0F5">rgb(255, 240, 245)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: lawngreen;">LawnGreen</span></td>
+<td><span style="color: #7cfc00;">#7CFC00</span></td>
+<td bgcolor="#7CFC00">rgb(124, 252, 0)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: lemonchiffon;">LemonChiffon</span></td>
+<td><span style="color: #fffacd;">#FFFACD</span></td>
+<td bgcolor="#FFFACD">rgb(255, 250, 205)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: lightblue;">LightBlue</span></td>
+<td><span style="color: #add8e6;">#ADD8E6</span></td>
+<td bgcolor="#ADD8E6">rgb(173, 216, 230)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: lightcoral;">LightCoral</span></td>
+<td><span style="color: #f08080;">#F08080</span></td>
+<td bgcolor="#F08080">rgb(240, 128, 128)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: lightcyan;">LightCyan</span></td>
+<td><span style="color: #e0ffff;">#E0FFFF</span></td>
+<td bgcolor="#E0FFFF">rgb(224, 255, 255)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: lightgoldenrodyellow;">LightGoldenRodYellow</span></td>
+<td><span style="color: #fafad2;">#FAFAD2</span></td>
+<td bgcolor="#FAFAD2">rgb(250, 250, 210)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: lightgrey;">LightGrey</span></td>
+<td><span style="color: #d3d3d3;">#D3D3D3</span></td>
+<td bgcolor="#D3D3D3">rgb(211, 211, 211)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: lightgreen;">LightGreen</span></td>
+<td><span style="color: #90ee90;">#90EE90</span></td>
+<td bgcolor="#90EE90">rgb(144, 238, 144)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: lightpink;">LightPink</span></td>
+<td><span style="color: #ffb6c1;">#FFB6C1</span></td>
+<td bgcolor="#FFB6C1">rgb(255, 182, 193)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: lightsalmon;">LightSalmon</span></td>
+<td><span style="color: #ffa07a;">#FFA07A</span></td>
+<td bgcolor="#FFA07A">rgb(255, 160, 122)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: lightseagreen;">LightSeaGreen</span></td>
+<td><span style="color: #20b2aa;">#20B2AA</span></td>
+<td bgcolor="#20B2AA">rgb(32, 178, 170)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: lightskyblue;">LightSkyBlue</span></td>
+<td><span style="color: #87cefa;">#87CEFA</span></td>
+<td bgcolor="#87CEFA">rgb(135, 206, 250)</td>
+
+
+</tr>
+<tr>
+<td><span>LightSlateBlue</span></td>
+<td><span style="color: #8470ff;">#8470FF</span></td>
+<td bgcolor="#8470FF">rgb(132, 112, 255)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: lightslategray;">LightSlateGray</span></td>
+<td><span style="color: #778899;">#778899</span></td>
+<td bgcolor="#778899">rgb(119, 136, 153)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: lightsteelblue;">LightSteelBlue</span></td>
+<td><span style="color: #b0c4de;">#B0C4DE</span></td>
+<td bgcolor="#B0C4DE">rgb(176, 196, 222)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: lightyellow;">LightYellow</span></td>
+<td><span style="color: #ffffe0;">#FFFFE0</span></td>
+<td bgcolor="#FFFFE0">rgb(255, 255, 224)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: lime;">Lime</span></td>
+<td><span style="color: #00ff00;">#00FF00</span></td>
+<td bgcolor="#00FF00">rgb(0, 255, 0)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: limegreen;">LimeGreen</span></td>
+<td><span style="color: #32cd32;">#32CD32</span></td>
+<td bgcolor="#32CD32">rgb(50, 205, 50)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: linen;">Linen</span></td>
+<td><span style="color: #faf0e6;">#FAF0E6</span></td>
+<td bgcolor="#FAF0E6">rgb(250, 240, 230)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: magenta;">Magenta</span></td>
+<td><span style="color: #ff00ff;">#FF00FF</span></td>
+<td bgcolor="#FF00FF">rgb(255, 0, 255)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: maroon;">Maroon</span></td>
+<td><span style="color: #800000;">#800000</span></td>
+<td bgcolor="#800000">rgb(128, 0, 0)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: mediumaquamarine;">MediumAquaMarine</span></td>
+<td><span style="color: #66cdaa;">#66CDAA</span></td>
+<td bgcolor="#66CDAA">rgb(102, 205, 170)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: mediumblue;">MediumBlue</span></td>
+<td><span style="color: #0000cd;">#0000CD</span></td>
+<td bgcolor="#0000CD">rgb(0, 0, 205)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: mediumorchid;">MediumOrchid</span></td>
+<td><span style="color: #ba55d3;">#BA55D3</span></td>
+<td bgcolor="#BA55D3">rgb(186, 85, 211)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: mediumpurple;">MediumPurple</span></td>
+<td><span style="color: #9370d8;">#9370D8</span></td>
+<td bgcolor="#9370D8">rgb(147, 112, 216)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: mediumseagreen;">MediumSeaGreen</span></td>
+<td><span style="color: #3cb371;">#3CB371</span></td>
+<td bgcolor="#3CB371">rgb(60, 179, 113)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: mediumslateblue;">MediumSlateBlue</span></td>
+<td><span style="color: #7b68ee;">#7B68EE</span></td>
+<td bgcolor="#7B68EE">rgb(123, 104, 238)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: mediumspringgreen;">MediumSpringGreen</span></td>
+<td><span style="color: #00fa9a;">#00FA9A</span></td>
+<td bgcolor="#00FA9A">rgb(0, 250, 154)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: mediumturquoise;">MediumTurquoise</span></td>
+<td><span style="color: #48d1cc;">#48D1CC</span></td>
+<td bgcolor="#48D1CC">rgb(72, 209, 204)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: mediumvioletred;">MediumVioletRed</span></td>
+<td><span style="color: #c71585;">#C71585</span></td>
+<td bgcolor="#C71585">rgb(199, 21, 133)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: midnightblue;">MidnightBlue</span></td>
+<td><span style="color: #191970;">#191970</span></td>
+<td bgcolor="#191970">rgb(25, 25, 112)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: mintcream;">MintCream</span></td>
+<td><span style="color: #f5fffa;">#F5FFFA</span></td>
+<td bgcolor="#F5FFFA">rgb(245, 255, 250)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: mistyrose;">MistyRose</span></td>
+<td><span style="color: #ffe4e1;">#FFE4E1</span></td>
+<td bgcolor="#FFE4E1">rgb(255, 228, 225)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: moccasin;">Moccasin</span></td>
+<td><span style="color: #ffe4b5;">#FFE4B5</span></td>
+<td bgcolor="#FFE4B5">rgb(255, 228, 181)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: navajowhite;">NavajoWhite</span></td>
+<td><span style="color: #ffdead;">#FFDEAD</span></td>
+<td bgcolor="#FFDEAD">rgb(255, 222, 173)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: navy;">Navy</span></td>
+<td><span style="color: #000080;">#000080</span></td>
+<td bgcolor="#000080">rgb(0, 0, 128)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: oldlace;">OldLace</span></td>
+<td><span style="color: #fdf5e6;">#FDF5E6</span></td>
+<td bgcolor="#FDF5E6">rgb(253, 245, 230)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: olive;">Olive</span></td>
+<td><span style="color: #808000;">#808000</span></td>
+<td bgcolor="#808000">rgb(128, 128, 0)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: olivedrab;">OliveDrab</span></td>
+<td><span style="color: #6b8e23;">#6B8E23</span></td>
+<td bgcolor="#6B8E23">rgb(107, 142, 35)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: orange;">Orange</span></td>
+<td><span style="color: #ffa500;">#FFA500</span></td>
+<td bgcolor="#FFA500">rgb(255, 165, 0)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: orangered;">OrangeRed</span></td>
+<td><span style="color: #ff4500;">#FF4500</span></td>
+<td bgcolor="#FF4500">rgb(255, 69, 0)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: orchid;">Orchid</span></td>
+<td><span style="color: #da70d6;">#DA70D6</span></td>
+<td bgcolor="#DA70D6">rgb(218, 112, 214)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: palegoldenrod;">PaleGoldenRod</span></td>
+<td><span style="color: #eee8aa;">#EEE8AA</span></td>
+<td bgcolor="#EEE8AA">rgb(238, 232, 170)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: palegreen;">PaleGreen</span></td>
+<td><span style="color: #98fb98;">#98FB98</span></td>
+<td bgcolor="#98FB98">rgb(152, 251, 152)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: paleturquoise;">PaleTurquoise</span></td>
+<td><span style="color: #afeeee;">#AFEEEE</span></td>
+<td bgcolor="#AFEEEE">rgb(175, 238, 238)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: palevioletred;">PaleVioletRed</span></td>
+<td><span style="color: #d87093;">#D87093</span></td>
+<td bgcolor="#D87093">rgb(216, 112, 147)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: papayawhip;">PapayaWhip</span></td>
+<td><span style="color: #ffefd5;">#FFEFD5</span></td>
+<td bgcolor="#FFEFD5">rgb(255, 239, 213)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: peachpuff;">PeachPuff</span></td>
+<td><span style="color: #ffdab9;">#FFDAB9</span></td>
+<td bgcolor="#FFDAB9">rgb(255, 218, 185)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: peru;">Peru</span></td>
+<td><span style="color: #cd853f;">#CD853F</span></td>
+<td bgcolor="#CD853F">rgb(205, 133, 63)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: pink;">Pink</span></td>
+<td><span style="color: #ffc0cb;">#FFC0CB</span></td>
+<td bgcolor="#FFC0CB">rgb(255, 192, 203)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: plum;">Plum</span></td>
+<td><span style="color: #dda0dd;">#DDA0DD</span></td>
+<td bgcolor="#DDA0DD">rgb(221, 160, 221)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: powderblue;">PowderBlue</span></td>
+<td><span style="color: #b0e0e6;">#B0E0E6</span></td>
+<td bgcolor="#B0E0E6">rgb(176, 224, 230)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: purple;">Purple</span></td>
+<td><span style="color: #800080;">#800080</span></td>
+<td bgcolor="#800080">rgb(128, 0, 128)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: red;">Red</span></td>
+<td><span style="color: #ff0000;">#FF0000</span></td>
+<td bgcolor="#FF0000">rgb(255, 0, 0)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: rosybrown;">RosyBrown</span></td>
+<td><span style="color: #bc8f8f;">#BC8F8F</span></td>
+<td bgcolor="#BC8F8F">rgb(188, 143, 143)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: royalblue;">RoyalBlue</span></td>
+<td><span style="color: #4169e1;">#4169E1</span></td>
+<td bgcolor="#4169E1">rgb(65, 105, 225)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: saddlebrown;">SaddleBrown</span></td>
+<td><span style="color: #8b4513;">#8B4513</span></td>
+<td bgcolor="#8B4513">rgb(139, 69, 19)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: salmon;">Salmon</span></td>
+<td><span style="color: #fa8072;">#FA8072</span></td>
+<td bgcolor="#FA8072">rgb(250, 128, 114)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: sandybrown;">SandyBrown</span></td>
+<td><span style="color: #f4a460;">#F4A460</span></td>
+<td bgcolor="#F4A460">rgb(244, 164, 96)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: seagreen;">SeaGreen</span></td>
+<td><span style="color: #2e8b57;">#2E8B57</span></td>
+<td bgcolor="#2E8B57">rgb(46, 139, 87)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: seashell;">SeaShell</span></td>
+<td><span style="color: #fff5ee;">#FFF5EE</span></td>
+<td bgcolor="#FFF5EE">rgb(255, 245, 238)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: sienna;">Sienna</span></td>
+<td><span style="color: #a0522d;">#A0522D</span></td>
+<td bgcolor="#A0522D">rgb(160, 82, 45)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: silver;">Silver</span></td>
+<td><span style="color: #c0c0c0;">#C0C0C0</span></td>
+<td bgcolor="#C0C0C0">rgb(192, 192, 192)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: skyblue;">SkyBlue</span></td>
+<td><span style="color: #87ceeb;">#87CEEB</span></td>
+<td bgcolor="#87CEEB">rgb(135, 206, 235)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: slateblue;">SlateBlue</span></td>
+<td><span style="color: #6a5acd;">#6A5ACD</span></td>
+<td bgcolor="#6A5ACD">rgb(106, 90, 205)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: slategray;">SlateGray</span></td>
+<td><span style="color: #708090;">#708090</span></td>
+<td bgcolor="#708090">rgb(112, 128, 144)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: snow;">Snow</span></td>
+<td><span style="color: #fffafa;">#FFFAFA</span></td>
+<td bgcolor="#FFFAFA">rgb(255, 250, 250)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: springgreen;">SpringGreen</span></td>
+<td><span style="color: #00ff7f;">#00FF7F</span></td>
+<td bgcolor="#00FF7F">rgb(0, 255, 127)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: steelblue;">SteelBlue</span></td>
+<td><span style="color: #4682b4;">#4682B4</span></td>
+<td bgcolor="#4682B4">rgb(70, 130, 180)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: tan;">Tan</span></td>
+<td><span style="color: #d2b48c;">#D2B48C</span></td>
+<td bgcolor="#D2B48C">rgb(210, 180, 140)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: teal;">Teal</span></td>
+<td><span style="color: #008080;">#008080</span></td>
+<td bgcolor="#008080">rgb(0, 128, 128)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: thistle;">Thistle</span></td>
+<td><span style="color: #d8bfd8;">#D8BFD8</span></td>
+<td bgcolor="#D8BFD8">rgb(216, 191, 216)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: tomato;">Tomato</span></td>
+<td><span style="color: #ff6347;">#FF6347</span></td>
+<td bgcolor="#FF6347">rgb(255, 99, 71)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: turquoise;">Turquoise</span></td>
+<td><span style="color: #40e0d0;">#40E0D0</span></td>
+<td bgcolor="#40E0D0">rgb(64, 224, 208)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: violet;">Violet</span></td>
+<td><span style="color: #ee82ee;">#EE82EE</span></td>
+<td bgcolor="#EE82EE">rgb(238, 130, 238)</td>
+
+
+</tr>
+<tr>
+<td><span>VioletRed</span></td>
+<td><span style="color: #d02090;">#D02090</span></td>
+<td bgcolor="#D02090">rgb(208, 32, 144)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: wheat;">Wheat</span></td>
+<td><span style="color: #f5deb3;">#F5DEB3</span></td>
+<td bgcolor="#F5DEB3">rgb(245, 222, 179)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: white;">White</span></td>
+<td><span style="color: #ffffff;">#FFFFFF</span></td>
+<td bgcolor="#FFFFFF">rgb(255, 255, 255)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: whitesmoke;">WhiteSmoke</span></td>
+<td><span style="color: #f5f5f5;">#F5F5F5</span></td>
+<td bgcolor="#F5F5F5">rgb(245, 245, 245)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: yellow;">Yellow</span></td>
+<td><span style="color: #ffff00;">#FFFF00</span></td>
+<td bgcolor="#FFFF00">rgb(255, 255, 0)</td>
+
+
+</tr>
+<tr>
+<td><span style="color: yellowgreen;">YellowGreen</span></td>
+<td><span style="color: #9acd32;">#9ACD32</span></td>
+<td bgcolor="#9ACD32">rgb(154, 205, 50)</td>
+
+
+</tr>
+
+
+</tbody>
+
+</table>

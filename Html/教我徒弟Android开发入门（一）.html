@@ -1,0 +1,215 @@
+原文链接：http://www.cnblogs.com/kexing/archive/2017/12/07/8000783.html
+<h2><span style="font-size: 16px;">前言：</span></h2>
+<p><span style="font-size: 16px;">这个系列的教程是为我徒弟准备的，也适合还不懂java但是想学android开发的小白们~</span></p>
+<p><span style="font-size: 16px;">本系列是在Android Studio的环境下运行，默认大家的开发环境都是配置好了的<br /></span></p>
+<p><span style="font-size: 16px; color: #ff0000;">没有配置好的同学请前去百度下载Android Studio<br /></span></p>
+<p><span style="font-size: 16px; color: #ff0000;">之后，参照我的下面这个教程将Android Studio配置好<br /></span></p>
+<p><span style="font-size: 16px; color: #ff0000;">http://www.cnblogs.com/kexing/p/7455786.html</span></p>
+<p>&nbsp;</p>
+<h2><span style="font-size: 16px;">主要目标：</span></h2>
+<p><span style="font-size: 16px;">第一篇就简单从界面开始吧，今天我们的目标就是做一个仿QQ登录界面的登录界面，输入相应的账号与密码，点击登录按钮，提示登录成功，若输入不对的账号与密码，则提示登录失败<br /></span></p>
+<p>&nbsp;<img src="http://images2017.cnblogs.com/blog/1210268/201711/1210268-20171114143026499-109623785.png" alt="" /><img src="http://images2017.cnblogs.com/blog/1210268/201711/1210268-20171114152209765-67533942.png" alt="" width="365" height="571" /><img src="http://images2017.cnblogs.com/blog/1210268/201711/1210268-20171114152245109-260070012.png" alt="" width="314" height="565" /></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h2><span style="font-size: 16px;">正文：</span></h2>
+<p><span style="font-size: 16px;">新建一个项目<br /></span></p>
+<p><span style="font-size: 16px;">&nbsp;file-&gt;New project<br /></span></p>
+<p><span style="font-size: 16px;"><img src="http://images2017.cnblogs.com/blog/1210268/201711/1210268-20171113221931968-2100591211.png" alt="" /></span></p>
+<p><span style="font-size: 16px;">接下来就会出现新建项目的相关设置</span></p>
+<p><img src="http://images2017.cnblogs.com/blog/1210268/201711/1210268-20171113222121077-272617584.png" alt="" width="983" height="602" /></p>
+<p>下一步</p>
+<p><img src="http://images2017.cnblogs.com/blog/1210268/201711/1210268-20171113222245202-1964423188.png" alt="" width="1045" height="640" /></p>
+<p>&nbsp;</p>
+<p>&nbsp;下一步</p>
+<p><img src="http://images2017.cnblogs.com/blog/1210268/201711/1210268-20171113222427749-16284565.png" alt="" width="1108" height="678" /></p>
+<p>&nbsp;</p>
+<p>&nbsp;下一步</p>
+<p>&nbsp;</p>
+<p><img src="http://images2017.cnblogs.com/blog/1210268/201711/1210268-20171113222752406-327511745.png" alt="" width="1023" height="626" /></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px;">&nbsp;点击finish就成功创建一个APP了</span></p>
+<p><span style="font-size: 16px;">&nbsp;</span></p>
+<p><span style="font-size: 16px;">之后在左侧的目录依次展开，找到activity_mian的这个文件，打开</span></p>
+<p>&nbsp;<img src="http://images2017.cnblogs.com/blog/1210268/201711/1210268-20171113224309843-1299549856.png" alt="" width="1074" height="577" /></p>
+<p><span style="font-size: 16px;">可能你的界面没有出现如我图中右侧的预览图，请查看右侧，有个priview，点击它就能显示预览图了</span></p>
+<p><span style="font-size: 16px;">&nbsp;</span></p>
+<p><span style="font-size: 16px;">这个预览图也就是我们打开APP显示的界面预览图</span></p>
+<p><span style="font-size: 16px;">我们要仿QQ界面登录的界面，也就是要修改这个界面所要显示的东西，这里需要Android的View基础部分，我在这里不多说，建议大家先去了解一番再往下看</span></p>
+<p><span style="font-size: 16px;">&nbsp;</span></p>
+<p><span style="font-size: 16px;">我们切换到Design的模式，在这个模式中，把所需要的控件拖到相应位置，之后再设置相关属性大小即可</span></p>
+<p><img src="http://images2017.cnblogs.com/blog/1210268/201711/1210268-20171114140639577-2129545077.png" alt="" width="1103" height="629" /></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px;">&nbsp;虽然在Design模式的右边，有设置属性的相关选项，不过我还是喜欢直接回到之前的界面，也就是Text模式中进行代码修改</span></p>
+<p><img src="http://images2017.cnblogs.com/blog/1210268/201711/1210268-20171114141400140-1021716677.png" alt="" width="1025" height="551" /></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px;">&nbsp;贴上代码</span></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px;">activity_main</span></p>
+<div class="cnblogs_code">
+<pre><span style="font-size: 16px;"><span style="color: #0000ff;">&lt;?<span style="color: #ff00ff;">xml version="1.0" encoding="utf-8"<span style="color: #0000ff;">?&gt;
+<span style="color: #0000ff;">&lt;<span style="color: #800000;">RelativeLayout
+    <span style="color: #ff0000;">xmlns:android<span style="color: #0000ff;">="http://schemas.android.com/apk/res/android"<span style="color: #ff0000;">
+    xmlns:tools<span style="color: #0000ff;">="http://schemas.android.com/tools"<span style="color: #ff0000;">
+    android:layout_width<span style="color: #0000ff;">="match_parent"<span style="color: #ff0000;">
+    android:layout_height<span style="color: #0000ff;">="match_parent"<span style="color: #ff0000;">
+    tools:context<span style="color: #0000ff;">="com.wan.login.MainActivity"<span style="color: #0000ff;">&gt;
+
+
+    <span style="color: #0000ff;">&lt;<span style="color: #800000;">TextView
+        <span style="color: #ff0000;">android:id<span style="color: #0000ff;">="@+id/textView"<span style="color: #ff0000;">
+
+        android:layout_width<span style="color: #0000ff;">="wrap_content"<span style="color: #ff0000;">
+        android:layout_height<span style="color: #0000ff;">="30dp"<span style="color: #ff0000;">
+        android:gravity<span style="color: #0000ff;">="center"<span style="color: #ff0000;">
+        android:text<span style="color: #0000ff;">="用户名"<span style="color: #ff0000;">
+        android:textSize<span style="color: #0000ff;">="15dp"<span style="color: #ff0000;">
+
+        android:layout_marginLeft<span style="color: #0000ff;">="62dp"<span style="color: #ff0000;">
+        android:layout_marginStart<span style="color: #0000ff;">="62dp"<span style="color: #ff0000;">
+        android:layout_marginTop<span style="color: #0000ff;">="114dp"<span style="color: #ff0000;">
+        android:layout_alignParentTop<span style="color: #0000ff;">="true"<span style="color: #ff0000;">
+        android:layout_alignParentLeft<span style="color: #0000ff;">="true"<span style="color: #ff0000;">
+        android:layout_alignParentStart<span style="color: #0000ff;">="true"<span style="color: #0000ff;">/&gt;
+
+    <span style="color: #0000ff;">&lt;<span style="color: #800000;">TextView
+        <span style="color: #ff0000;">android:id<span style="color: #0000ff;">="@+id/textView1"<span style="color: #ff0000;">
+
+        android:layout_width<span style="color: #0000ff;">="wrap_content"<span style="color: #ff0000;">
+        android:layout_height<span style="color: #0000ff;">="30dp"<span style="color: #ff0000;">
+        android:gravity<span style="color: #0000ff;">="center"<span style="color: #ff0000;">
+        android:text<span style="color: #0000ff;">="密码"<span style="color: #ff0000;">
+
+        android:layout_alignEnd<span style="color: #0000ff;">="@+id/textView"<span style="color: #ff0000;">
+        android:layout_alignRight<span style="color: #0000ff;">="@+id/textView"<span style="color: #ff0000;">
+        android:layout_below<span style="color: #0000ff;">="@+id/textView"<span style="color: #ff0000;">
+        android:layout_marginTop<span style="color: #0000ff;">="40dp"<span style="color: #ff0000;">
+        android:layout_alignLeft<span style="color: #0000ff;">="@+id/textView"<span style="color: #ff0000;">
+        android:layout_alignStart<span style="color: #0000ff;">="@+id/textView"<span style="color: #0000ff;">/&gt;
+
+    <span style="color: #0000ff;">&lt;<span style="color: #800000;">EditText
+        <span style="color: #ff0000;">android:id<span style="color: #0000ff;">="@+id/editText3"<span style="color: #ff0000;">
+        android:layout_width<span style="color: #0000ff;">="200dp"<span style="color: #ff0000;">
+        android:layout_height<span style="color: #0000ff;">="wrap_content"<span style="color: #ff0000;">
+        android:ems<span style="color: #0000ff;">="10"<span style="color: #ff0000;">
+        android:gravity<span style="color: #0000ff;">="center"<span style="color: #ff0000;">
+        android:textSize<span style="color: #0000ff;">="15dp"<span style="color: #ff0000;">
+        android:inputType<span style="color: #0000ff;">="textPersonName"<span style="color: #ff0000;">
+
+        android:layout_alignTop<span style="color: #0000ff;">="@+id/textView"<span style="color: #ff0000;">
+        android:layout_toRightOf<span style="color: #0000ff;">="@+id/textView"<span style="color: #ff0000;">
+        android:layout_toEndOf<span style="color: #0000ff;">="@+id/textView"<span style="color: #ff0000;">
+        android:layout_marginLeft<span style="color: #0000ff;">="30dp"<span style="color: #ff0000;">
+        android:layout_marginStart<span style="color: #0000ff;">="30dp"<span style="color: #0000ff;">/&gt;
+
+    <span style="color: #0000ff;">&lt;<span style="color: #800000;">EditText
+        <span style="color: #ff0000;">android:id<span style="color: #0000ff;">="@+id/editText5"<span style="color: #ff0000;">
+        android:layout_width<span style="color: #0000ff;">="wrap_content"<span style="color: #ff0000;">
+        android:layout_height<span style="color: #0000ff;">="wrap_content"<span style="color: #ff0000;">
+        android:layout_alignLeft<span style="color: #0000ff;">="@+id/editText3"<span style="color: #ff0000;">
+        android:layout_alignStart<span style="color: #0000ff;">="@+id/editText3"<span style="color: #ff0000;">
+
+        android:ems<span style="color: #0000ff;">="10"<span style="color: #ff0000;">
+        android:inputType<span style="color: #0000ff;">="textPassword"<span style="color: #ff0000;">
+        android:layout_alignBottom<span style="color: #0000ff;">="@+id/textView1"<span style="color: #0000ff;">/&gt;
+
+    <span style="color: #0000ff;">&lt;<span style="color: #800000;">Button
+        <span style="color: #ff0000;">android:id<span style="color: #0000ff;">="@+id/button"<span style="color: #ff0000;">
+
+        android:layout_width<span style="color: #0000ff;">="150dp"<span style="color: #ff0000;">
+        android:layout_height<span style="color: #0000ff;">="wrap_content"<span style="color: #ff0000;">
+        android:text<span style="color: #0000ff;">="登录"<span style="color: #ff0000;">
+        android:textColor<span style="color: #0000ff;">="#FCFCFC"<span style="color: #ff0000;">
+        android:background<span style="color: #0000ff;">="#1C86EE"<span style="color: #ff0000;">
+
+        android:layout_marginTop<span style="color: #0000ff;">="28dp"<span style="color: #ff0000;">
+        android:layout_below<span style="color: #0000ff;">="@+id/textView1"<span style="color: #ff0000;">
+        android:layout_alignLeft<span style="color: #0000ff;">="@+id/textView1"<span style="color: #ff0000;">
+        android:layout_alignStart<span style="color: #0000ff;">="@+id/textView1"<span style="color: #ff0000;">
+        android:layout_alignRight<span style="color: #0000ff;">="@+id/editText5"<span style="color: #ff0000;">
+        android:layout_alignEnd<span style="color: #0000ff;">="@+id/editText5"<span style="color: #0000ff;">/&gt;
+<span style="color: #0000ff;">&lt;/<span style="color: #800000;">RelativeLayout<span style="color: #0000ff;">&gt;</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></pre>
+</div>
+<p><span style="font-size: 16px;">不要全部都复制哦，肯定会错误的</span></p>
+<p><span style="font-size: 16px;">还有MainActivity</span></p>
+<div class="cnblogs_code">
+<pre><span style="font-size: 16px;"><span style="color: #0000ff;">package<span style="color: #000000;"> com.wan.login;
+
+<span style="color: #0000ff;">import<span style="color: #000000;"> android.content.DialogInterface;
+<span style="color: #0000ff;">import<span style="color: #000000;"> android.os.Bundle;
+<span style="color: #0000ff;">import<span style="color: #000000;"> android.support.v7.app.AlertDialog;
+<span style="color: #0000ff;">import<span style="color: #000000;"> android.support.v7.app.AppCompatActivity;
+<span style="color: #0000ff;">import<span style="color: #000000;"> android.view.View;
+<span style="color: #0000ff;">import<span style="color: #000000;"> android.widget.Button;
+<span style="color: #0000ff;">import<span style="color: #000000;"> android.widget.EditText;
+
+<span style="color: #0000ff;">public <span style="color: #0000ff;">class MainActivity <span style="color: #0000ff;">extends AppCompatActivity <span style="color: #0000ff;">implements<span style="color: #000000;"> View.OnClickListener {
+
+
+    <span style="color: #008000;">/**<span style="color: #008000;">
+     * 登录
+     <span style="color: #008000;">*/
+    <span style="color: #0000ff;">private<span style="color: #000000;"> Button mButton;
+    <span style="color: #0000ff;">private<span style="color: #000000;"> EditText mname,mpassword;
+    @Override
+    <span style="color: #0000ff;">protected <span style="color: #0000ff;">void<span style="color: #000000;"> onCreate(Bundle savedInstanceState) {
+        <span style="color: #0000ff;">super<span style="color: #000000;">.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        initView();
+
+    }
+
+    <span style="color: #0000ff;">private <span style="color: #0000ff;">void<span style="color: #000000;"> initView() {
+        mname =<span style="color: #000000;"> (EditText) findViewById(R.id.editText3);
+        mpassword =<span style="color: #000000;"> (EditText) findViewById(R.id.editText5);
+        mButton =<span style="color: #000000;"> (Button) findViewById(R.id.button);
+        mButton.setOnClickListener(<span style="color: #0000ff;">this<span style="color: #000000;">);
+    }
+
+    @Override
+    <span style="color: #0000ff;">public <span style="color: #0000ff;">void<span style="color: #000000;"> onClick(View v) {
+        <span style="color: #0000ff;">switch<span style="color: #000000;"> (v.getId()) {
+            <span style="color: #0000ff;">case<span style="color: #000000;"> R.id.button:
+                String name,passwoed;
+                String user = "User"<span style="color: #000000;">;
+                String userpassword = "123456"<span style="color: #000000;">;
+
+                name =<span style="color: #000000;"> mname.getText().toString();
+                passwoed =<span style="color: #000000;"> mpassword.getText().toString();
+
+                <span style="color: #0000ff;">final AlertDialog.Builder builder = <span style="color: #0000ff;">new AlertDialog.Builder(MainActivity.<span style="color: #0000ff;">this<span style="color: #000000;">);
+                <span style="color: #0000ff;">if(name.equals(user)&amp;&amp;<span style="color: #000000;">passwoed.equals(userpassword)){
+                    builder.setMessage("登录成功"<span style="color: #000000;">);
+                    builder.setNegativeButton("确定", <span style="color: #0000ff;">new<span style="color: #000000;"> DialogInterface.OnClickListener() {
+                        @Override
+                        <span style="color: #0000ff;">public <span style="color: #0000ff;">void onClick(DialogInterface dialog, <span style="color: #0000ff;">int<span style="color: #000000;"> which) {
+                            dialog.dismiss();
+                        }
+                    });
+                }<span style="color: #0000ff;">else<span style="color: #000000;">{
+                    builder.setMessage("登录失败"<span style="color: #000000;">);
+                    builder.setNegativeButton("确定", <span style="color: #0000ff;">new<span style="color: #000000;"> DialogInterface.OnClickListener() {
+                        @Override
+                        <span style="color: #0000ff;">public <span style="color: #0000ff;">void onClick(DialogInterface dialog, <span style="color: #0000ff;">int<span style="color: #000000;"> which) {
+                            dialog.dismiss();
+                        }
+                    });
+                }
+                builder.show();
+                <span style="color: #0000ff;">break<span style="color: #000000;">;
+            <span style="color: #0000ff;">default<span style="color: #000000;">:
+                <span style="color: #0000ff;">break<span style="color: #000000;">;
+        }
+    }
+}</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px;">之后使用模拟器就是可以看到结果了</span></p>
+<p><span style="font-size: 16px;"><img src="http://images2017.cnblogs.com/blog/1210268/201712/1210268-20171207203127644-353725067.png" alt="" /></span></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px;">如果想要安装到手机的话，请看下面<br /></span></p>
+<p>&nbsp;<img src="http://images2017.cnblogs.com/blog/1210268/201712/1210268-20171207203150269-1781307184.png" alt="" /></p>
+<p><span style="font-size: 16px;">成功生成apk之后，在右下角会有个提示框，点击show，就是进入到资源管理器</span></p>
+<p><span style="font-size: 16px;">&nbsp;</span></p>
+<p><a href="http://www.cnblogs.com/kexing/p/8475519.html" target="_blank">教我徒弟Android开发入门（二）</a></p>

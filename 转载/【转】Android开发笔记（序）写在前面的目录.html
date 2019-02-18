@@ -1,0 +1,1872 @@
+原文链接：http://www.cnblogs.com/kexing/archive/2018/01/28/8371068.html
+<p><a href="http://blog.csdn.net/aqi00/article/details/50012511" target="_blank">原文：http://blog.csdn.net/aqi00/article/details/50012511</a></p>
+<p>&nbsp;</p>
+<h1>知识点分类</h1>
+<p>一方面写写自己走过的弯路掉进去的坑，避免以后再犯；另一方面希望通过分享自己的经验教训，与网友互相切磋，从而去芜存菁进一步提升自己的水平。因此博主就想，入门的东西咱就不写了，人不能老停留在入门上；其次是想拾缺补漏，写写虽然小众却又用得着的东西；另外就是想以实用为主，不求大而全，但求小而精；还有就是有的知识点是java的，只是Android开发也会经常遇上，所以蛮记下来。个人的经验总结，难免有遗漏谬误之处，希望网友们不吝指教。</p>
+<p>为了找起来方便，暂且分为七大类：显示、存储、通信、发布与调优、进阶用法、与时俱进、继续精进。</p>
+<p>显示又分为八块：屏幕、文本、图形、简单控件、自定义视图、动画、窗口、复杂控件；</p>
+<p>存储分为六块：资源、内存、键值对、数据库、文件、网络存储；</p>
+<p>通信分作六块：组件通信、事件通信、多线程通信、跨进程通信、设备通信、网络通信；</p>
+<p>发布与调优分为五块：打包、安全、性能、健壮、兼容；</p>
+<p>进阶用法分为六块：java细节、设计模式、图像处理、高级控件、第三方sdk、开发者工具；</p>
+<p>与时俱进分为六块：新版控件、多媒体开发、高级动画、行为协调、页面切换、花样输入；</p>
+<p>继续精进分为六块：人工智能、H5交互、三维动画、全景照片、视频加工、网络直播；</p>
+<p>本系列的开发笔记已有部分文章整理成书出版，有兴趣的读者可移步前往<a href="http://blog.csdn.net/aqi00/article/details/72907534" target="_blank">《Android Studio开发实战 从零基础到App上线》</a>。</p>
+<p>&nbsp;</p>
+<h1><a name="t2"></a>目录（&nbsp;共7卷40章155节）</h1>
+<p>第一卷 显示<span style="white-space: pre;"><span style="white-space: pre;"> 共8章32节<br /><span style="white-space: pre;"><span style="white-space: pre;"><span style="white-space: pre;">	第一章 屏幕<br /><span style="white-space: pre;">		<span style="white-space: pre;"><a href="http://blog.csdn.net/aqi00/article/details/50038385" target="_blank">Android开发笔记（一）像素的单位</a><br /><span style="white-space: pre;">		<span style="white-space: pre;"><a href="http://blog.csdn.net/aqi00/article/details/50115733" target="_blank">Android开发笔记（二）颜色的使用</a><br /><span style="white-space: pre;">		<span style="white-space: pre;"><a href="http://blog.csdn.net/aqi00/article/details/50035541" target="_blank">Android开发笔记（三）屏幕分辨率</a><br /><span style="white-space: pre;"><span style="white-space: pre;">	第二章 文本<br /><span style="white-space: pre;">		<span style="white-space: pre;"><a href="http://blog.csdn.net/aqi00/article/details/49997843" target="_blank">Android开发笔记（四）字符串格式化</a><br /><span style="white-space: pre;">		<span style="white-space: pre;"><a href="http://blog.csdn.net/aqi00/article/details/50011929" target="_blank">Android开发笔记（五）日期的处理</a><br /><span style="white-space: pre;">		<span style="white-space: pre;"><a href="http://blog.csdn.net/aqi00/article/details/50015613" target="_blank">Android开发笔记（六）可变字符串</a><br /><span style="white-space: pre;"><span style="white-space: pre;">	第三章 图形<br /><span style="white-space: pre;">		<a href="http://blog.csdn.net/aqi00/article/details/50132481" target="_blank">Android开发笔记（七）初识Drawable<br /></a><span style="white-space: pre;">		<a href="http://blog.csdn.net/aqi00/article/details/50151111" target="_blank">Android开发笔记（八）神奇的shape</a><br /><span style="white-space: pre;">		<a href="http://blog.csdn.net/aqi00/article/details/50163137" target="_blank">Android开发笔记（九）特别的.9图片</a><br /><span style="white-space: pre;">		<a href="http://blog.csdn.net/aqi00/article/details/50171069" target="_blank">Android开发笔记（十）常用的图片加工操作</a><br /><span style="white-space: pre;"><span style="white-space: pre;"><span style="white-space: pre;">	第十二章 简单控件<br /><span style="white-space: pre;">		<span style="white-space: pre;"><a href="http://blog.csdn.net/aqi00/article/details/50439592" target="_blank">Android开发笔记（三十五）页面布局视图</a><br /><span style="white-space: pre;">		<span style="white-space: pre;"><a href="http://blog.csdn.net/aqi00/article/details/50441114" target="_blank">Android开发笔记（三十六）展示类控件</a><br /><span style="white-space: pre;">		<span style="white-space: pre;"><a href="http://blog.csdn.net/aqi00/article/details/50453898" target="_blank">Android开发笔记（三十七）按钮类控件</a><br /><span style="white-space: pre;">		<span style="white-space: pre;"><a href="http://blog.csdn.net/aqi00/article/details/50456811" target="_blank">Android开发笔记（三十八）列表类视图</a><br /><span style="white-space: pre;"><span style="white-space: pre;">	第四章 自定义视图<br /><span style="white-space: pre;">		<span style="white-space: pre;"><a href="http://blog.csdn.net/aqi00/article/details/50180837" target="_blank">Android开发笔记（十一）自定义视图的构造方法</a><br /><span style="white-space: pre;">		<span style="white-space: pre;"><a href="http://blog.csdn.net/aqi00/article/details/50219993" target="_blank">Android开发笔记（十二）测量尺寸与下拉刷新</a><br /><span style="white-space: pre;">		<span style="white-space: pre;"><a href="http://blog.csdn.net/aqi00/article/details/50221679" target="_blank">Android开发笔记（十三）视图绘制的几个方法</a><br /><span style="white-space: pre;"><span style="white-space: pre;">	第五章 动画效果<br /><span style="white-space: pre;">		<span style="white-space: pre;"><a href="http://blog.csdn.net/aqi00/article/details/50250247" target="_blank">Android开发笔记（十四）圆弧进度动画</a><br /><span style="white-space: pre;">		<span style="white-space: pre;"><a href="http://blog.csdn.net/aqi00/article/details/50251541" target="_blank">Android开发笔记（十五）淡入淡出动画</a><br /><span style="white-space: pre;">		<span style="white-space: pre;"><a href="http://blog.csdn.net/aqi00/article/details/50262381" target="_blank">Android开发笔记（十六）秋千摇摆动画</a><br /><span style="white-space: pre;">		<span style="white-space: pre;"><a href="http://blog.csdn.net/aqi00/article/details/50266279" target="_blank">Android开发笔记（十七）GIF动画的实现</a><br /><span style="white-space: pre;">		<span style="white-space: pre;"><a href="http://blog.csdn.net/aqi00/article/details/50298405" target="_blank">Android开发笔记（十八）书籍翻页动画</a><br /><span style="white-space: pre;"><span style="white-space: pre;">	第十九章 窗口<br /><span style="white-space: pre;">		<span style="white-space: pre;"><a href="http://blog.csdn.net/aqi00/article/details/50680691" target="_blank">Android开发笔记（六十五）多样的菜单</a><br /><span style="white-space: pre;">		<span style="white-space: pre;"><a href="http://blog.csdn.net/aqi00/article/details/50686829" target="_blank">Android开发笔记（六十六）自定义对话框</a><br /><span style="white-space: pre;">		<a href="http://blog.csdn.net/aqi00/article/details/52173979" target="_blank">Android开发笔记（一百一十八）自定义悬浮窗</a><br /><span style="white-space: pre;">		<a href="http://blog.csdn.net/aqi00/article/details/52352745" target="_blank">Android开发笔记（一百二十一）列表弹窗PopupMenu和ListPopupWindow</a><br /><span style="white-space: pre;">		<a href="http://blog.csdn.net/aqi00/article/details/54342019" target="_blank">Android开发笔记（一百二十七）活用提示窗Toast和Snackbar</a><br /><span style="white-space: pre;">	第六章 复杂控件<br /><span style="white-space: pre;">		<span style="white-space: pre;"><a href="http://blog.csdn.net/aqi00/article/details/50317065" target="_blank">Android开发笔记（十九）底部标签栏</a><br /><span style="white-space: pre;">		<span style="white-space: pre;"><a href="http://blog.csdn.net/aqi00/article/details/50330453" target="_blank">Android开发笔记（二十）顶部导航栏</a><br /><span style="white-space: pre;">		<span style="white-space: pre;"><a href="http://blog.csdn.net/aqi00/article/details/50344325" target="_blank">Android开发笔记（二十一）横幅轮播页</a><br /><span style="white-space: pre;">		<span style="white-space: pre;"><a href="http://blog.csdn.net/aqi00/article/details/50371847" target="_blank">Android开发笔记（二十二）瀑布流网格</a><br /><span style="white-space: pre;">		<span style="white-space: pre;"><a href="http://blog.csdn.net/aqi00/article/details/50380066" target="_blank">Android开发笔记（二十三）文件对话框</a><br /><br />第二卷 存储<span style="white-space: pre;"><span style="white-space: pre;">	共6章18节<br /><span style="white-space: pre;"><span style="white-space: pre;">	第七章 资源<br /><span style="white-space: pre;">		<span style="white-space: pre;"><a href="http://blog.csdn.net/aqi00/article/details/50384319" target="_blank">Android开发笔记（二十四）res目录的结构与配置</a><br /><span style="white-space: pre;">		<span style="white-space: pre;"><a href="http://blog.csdn.net/aqi00/article/details/50388551" target="_blank">Android开发笔记（二十五）assets目录的文件读取</a><br /><span style="white-space: pre;"><span style="white-space: pre;">	第八章 内存<br /><span style="white-space: pre;">		<span style="white-space: pre;"><a href="http://blog.csdn.net/aqi00/article/details/50394407" target="_blank">Android开发笔记（二十六）Java的容器类</a><br /><span style="white-space: pre;">		<span style="white-space: pre;"><a href="http://blog.csdn.net/aqi00/article/details/50402154" target="_blank">Android开发笔记（二十七）对象序列化</a><br /><span style="white-space: pre;">		<span style="white-space: pre;"><a href="http://blog.csdn.net/aqi00/article/details/50404123" target="_blank">Android开发笔记（二十八）利用Application实现内存读写</a><br /><span style="white-space: pre;"><span style="white-space: pre;">	第九章 键值对<br /><span style="white-space: pre;">		<span style="white-space: pre;"><a href="http://blog.csdn.net/aqi00/article/details/50417116" target="_blank">Android开发笔记（二十九）使用SharedPreferences存取数据</a><br /><span style="white-space: pre;">		<span style="white-space: pre;"><span style="white-space: pre;"><a href="http://blog.csdn.net/aqi00/article/details/50846832" target="_blank">Android开发笔记（八十四）使用Properties读写属性值</a><br /><span style="white-space: pre;"><span style="white-space: pre;">	第十章 数据库<br /><span style="white-space: pre;">		<span style="white-space: pre;"><a href="http://blog.csdn.net/aqi00/article/details/50419268" target="_blank">Android开发笔记（三十）SQLite数据库基础操作</a><br /><span style="white-space: pre;">		<span style="white-space: pre;"><a href="http://blog.csdn.net/aqi00/article/details/50423770" target="_blank">Android开发笔记（三十一）SQLite游标及其数据结构<br /></a><span style="white-space: pre;">		<a href="http://blog.csdn.net/aqi00/article/details/51145001" target="_blank">Android开发笔记（八十五）手机数据库Realm</a><br /><span style="white-space: pre;"><span style="white-space: pre;">	第十一章 文件<br /><span style="white-space: pre;">		<span style="white-space: pre;"><a href="http://blog.csdn.net/aqi00/article/details/50426155" target="_blank">Android开发笔记（三十二）文件基础操作</a><br /><span style="white-space: pre;">		<span style="white-space: pre;"><a href="http://blog.csdn.net/aqi00/article/details/50432298" target="_blank">Android开发笔记（三十三）文本文件和图片文件的读写</a><br /><span style="white-space: pre;">		<span style="white-space: pre;"><a href="http://blog.csdn.net/aqi00/article/details/50434111" target="_blank">Android开发笔记（三十四）Excel文件的读写</a><br /><span style="white-space: pre;"><span style="white-space: pre;">		<a href="http://blog.csdn.net/aqi00/article/details/69942521" target="_blank">Android开发笔记（一百四十）Word文件的读取与显示</a><br /><span style="white-space: pre;"><span style="white-space: pre;">		<a href="http://blog.csdn.net/aqi00/article/details/70207532" target="_blank">Android开发笔记（一百四十一）读取PPT和PDF文件</a><br /><span style="white-space: pre;">	第三十章 网络存储<br /><span style="white-space: pre;">		<a href="http://blog.csdn.net/aqi00/article/details/50650416" target="_blank">Android开发笔记（六十一）文件下载管理DownloadManager</a><br /><span style="white-space: pre;">		<a href="http://blog.csdn.net/aqi00/article/details/51798617" target="_blank">Android开发笔记（一百零九）利用网盘实现云存储</a><br /><span style="white-space: pre;">		<a href="http://blog.csdn.net/aqi00/article/details/51859280" target="_blank">Android开发笔记（一百一十）使用http框架上传文件</a><br /><br />第三卷 通信<span style="white-space: pre;"><span style="white-space: pre;">	共6章28节<br /><span style="white-space: pre;"><span style="white-space: pre;">	第十三章 组件通信<br /><span style="white-space: pre;">		<span style="white-space: pre;"><a href="http://blog.csdn.net/aqi00/article/details/50460224" target="_blank">Android开发笔记（三十九）Activity的生命周期</a><br /><span style="white-space: pre;">		<span style="white-space: pre;"><a href="http://blog.csdn.net/aqi00/article/details/50467551" target="_blank">Android开发笔记（四十）组件通讯工具Intent</a><br /><span style="white-space: pre;">		<span style="white-space: pre;"><a href="http://blog.csdn.net/aqi00/article/details/50475530" target="_blank">Android开发笔记（四十一）Service的生命周期</a><br /><span style="white-space: pre;">		<span style="white-space: pre;"><a href="http://blog.csdn.net/aqi00/article/details/50481603" target="_blank">Android开发笔记（四十二）Broadcast的生命周期</a><br /><span style="white-space: pre;">		<span style="white-space: pre;"><a href="http://blog.csdn.net/aqi00/article/details/50715699" target="_blank">Android开发笔记（六十七）嵌入页面的碎片</a><br /><span style="white-space: pre;">	第十四章 事件通信<br /><span style="white-space: pre;">		<span style="white-space: pre;"><a href="http://blog.csdn.net/aqi00/article/details/50484278" target="_blank">Android开发笔记（四十三）点击事件</a><br /><span style="white-space: pre;">		<span style="white-space: pre;"><a href="http://blog.csdn.net/aqi00/article/details/50497294" target="_blank">Android开发笔记（四十四）动态UI事件</a><br /><span style="white-space: pre;">		<span style="white-space: pre;"><a href="http://blog.csdn.net/aqi00/article/details/50504794" target="_blank">Android开发笔记（四十五）手势事件</a><br /><span style="white-space: pre;">		<span style="white-space: pre;"><a href="http://blog.csdn.net/aqi00/article/details/50511517" target="_blank">Android开发笔记（四十六）手机相关事件</a><br /><span style="white-space: pre;"><span style="white-space: pre;">	第十五章 多线程通信<br /><span style="white-space: pre;">		<span style="white-space: pre;"><a href="http://blog.csdn.net/aqi00/article/details/50515561" target="_blank">Android开发笔记（四十七）Runnable接口实现多线程</a><br /><span style="white-space: pre;">		<span style="white-space: pre;"><a href="http://blog.csdn.net/aqi00/article/details/50517829" target="_blank">Android开发笔记（四十八）Thread类实现多线程</a><br /><span style="white-space: pre;">		<span style="white-space: pre;"><a href="http://blog.csdn.net/aqi00/article/details/50522472" target="_blank">Android开发笔记（四十九）异步任务处理AsyncTask</a><br /><span style="white-space: pre;">		<span style="white-space: pre;"><a href="http://blog.csdn.net/aqi00/article/details/50525067" target="_blank">Android开发笔记（五十）定时器AlarmManager</a><br /><span style="white-space: pre;"><span style="white-space: pre;"><span style="white-space: pre;">		<a href="http://blog.csdn.net/aqi00/article/details/71638721" target="_blank">Android开发笔记（一百四十三）任务调度JobScheduler</a><br /><span style="white-space: pre;">	第十六章 跨进程通信<br /><span style="white-space: pre;">		<span style="white-space: pre;"><a href="http://blog.csdn.net/aqi00/article/details/50536649" target="_blank">Android开发笔记（五十一）通过Messenger实现进程间通信</a><br /><span style="white-space: pre;">		<span style="white-space: pre;"><a href="http://blog.csdn.net/aqi00/article/details/50540837" target="_blank">Android开发笔记（五十二）通知推送Notification</a><br /><span style="white-space: pre;">		<span style="white-space: pre;"><a href="http://blog.csdn.net/aqi00/article/details/50543360" target="_blank">Android开发笔记（五十三）远程接口调用AIDL</a><br /><span style="white-space: pre;">		<span style="white-space: pre;"><a href="http://blog.csdn.net/aqi00/article/details/50549820" target="_blank">Android开发笔记（五十四）数据共享接口ContentProvider</a><br /><span style="white-space: pre;"><span style="white-space: pre;">	第十七章 设备通信<br /><span style="white-space: pre;">		<span style="white-space: pre;"><a href="http://blog.csdn.net/aqi00/article/details/50629950" target="_blank">Android开发笔记（五十五）手机设备基本操作</a><br /><span style="white-space: pre;">		<span style="white-space: pre;"><a href="http://blog.csdn.net/aqi00/article/details/50637855" target="_blank">Android开发笔记（五十六）摄像头拍照</a><br /><span style="white-space: pre;">		<span style="white-space: pre;"><a href="http://blog.csdn.net/aqi00/article/details/50638081" target="_blank">Android开发笔记（五十七）录像录音与播放<br /></a><span style="white-space: pre;">		<a href="http://blog.csdn.net/aqi00/article/details/50645191" target="_blank">Android开发笔记（五十八）铃声与震动</a><br /><span style="white-space: pre;">		<span style="white-space: pre;"><a href="http://blog.csdn.net/aqi00/article/details/50639780" target="_blank">Android开发笔记（五十九）巧用传感器</a><br /><span style="white-space: pre;"><span style="white-space: pre;">	第十八章 网络通信<br /><span style="white-space: pre;">		<span style="white-space: pre;"><a href="http://blog.csdn.net/aqi00/article/details/50646880" target="_blank">Android开发笔记（六十）网络的检测与连接</a><br /><span style="white-space: pre;">		<span style="white-space: pre;"><a href="http://blog.csdn.net/aqi00/article/details/50655502" target="_blank">Android开发笔记（六十二）HTTP数据格式的解析</a><br /><span style="white-space: pre;">		<span style="white-space: pre;"><a href="http://blog.csdn.net/aqi00/article/details/50662849" target="_blank">Android开发笔记（六十三）HTTP访问的通信方式</a><br /><span style="white-space: pre;">		<span style="white-space: pre;"><a href="http://blog.csdn.net/aqi00/article/details/50668258" target="_blank">Android开发笔记（六十四）网页加载与JS调用</a><br /><span style="white-space: pre;">		<a href="http://blog.csdn.net/aqi00/article/details/51908673" target="_blank">Android开发笔记（一百一十一）聊天室中的Socket通信</a><br /><br />第四卷 发布与调优<span style="white-space: pre;"><span style="white-space: pre;">	共5章18节<br /><span style="white-space: pre;"><span style="white-space: pre;">	第二十章 打包<br /><span style="white-space: pre;">		<span style="white-space: pre;"><a href="http://blog.csdn.net/aqi00/article/details/50720717" target="_blank">Android开发笔记（六十八）工程库打包</a><br /><span style="white-space: pre;">		<span style="white-space: pre;"><a href="http://blog.csdn.net/aqi00/article/details/50730793" target="_blank">Android开发笔记（六十九）JNI实战</a><br /><span style="white-space: pre;">		<span style="white-space: pre;">Android开发笔记（七十）反编译初步<span style="white-space: pre;">	第二十一章 安全		Android开发笔记（七十一）区分开发模式和上线模式		Android开发笔记（七十二）数据加密算法		Android开发笔记（七十三）代码混淆与反破解	第二十二章 性能		Android开发笔记（七十四）布局文件优化		Android开发笔记（七十五）内存泄漏的处理		Android开发笔记（七十六）线程池管理		Android开发笔记（七十七）图片缓存算法		Android开发笔记（一百一十七）app省电方略	第二十三章 健壮		Android开发笔记（七十八）异常容错处理		Android开发笔记（七十九）资源与权限校验		Android开发笔记（八十）运行状态检查	第二十四章 兼容		Android开发笔记（八十一）屏幕规格适配		Android开发笔记（八十二）SDK版本兼容		Android开发笔记（八十三）多语言支持		Android开发笔记（一百二十八）手机制式适配第五卷 进阶用法	共6章28节	第二十五章 java细节		Android开发笔记（八十六）几个特殊的类		Android开发笔记（八十七）几个修饰关键字		Android开发笔记（八十八）同步与加锁	第二十六章 设计模式		Android开发笔记（八十九）单例模式		Android开发笔记（九十）建造者模式		Android开发笔记（九十一）工厂模式		Android开发笔记（九十二）策略模式		Android开发笔记（九十三）装饰模式	第二十七章 图像处理		Android开发笔记（九十四）图片的基本加工		Android开发笔记（九十五）自定义Drawable		Android开发笔记（九十七）图片的特效处理		Android开发笔记（九十八）往图片添加部件		Android开发笔记（一百二十九）使用变换图形	第二十八章 高级控件		Android开发笔记（九十九）圆形转盘		Android开发笔记（一百）折叠式列表		Android开发笔记（一百零一）滑出式菜单		Android开发笔记（一百零二）统计图表		Android开发笔记（一百零八）智能语音	第二十九章 第三方sdk		Android开发笔记（一百零三）地图与定位SDK		Android开发笔记（一百零四）消息推送SDK		Android开发笔记（一百零五）社会化分享SDK		Android开发笔记（一百零六）支付缴费SDK		Android开发笔记（一百零七）统计分析SDK	第三十一章 开发者工具		Android开发笔记（一百一十二）开发工具		Android开发笔记（一百一十三）测试工具		Android开发笔记（一百一十四）发布工具		Android开发笔记（一百一十五）设计工具		Android开发笔记（一百一十六）网络学习资源第六卷 与时俱进	共6章25节	第三十二章 新版控件		Android开发笔记（一百一十九）工具栏Toolbar		Android开发笔记（一百二十）两种侧滑布局		Android开发笔记（一百二十二）循环器视图RecyclerView		Android开发笔记（一百二十三）下拉刷新布局SwipeRefreshLayout		Android开发笔记（一百三十三）导航视图NavigationView	第三十三章 多媒体开发		Android开发笔记（一百二十四）自定义相册		Android开发笔记（一百二十五）自定义视频播放器		Android开发笔记（一百二十六）自定义音乐播放器		Android开发笔记（一百三十）截图和录屏	第三十四章 高级动画		Android开发笔记（九十六）集合动画与属性动画		Android开发笔记（一百三十一）水波图形与水波动画		Android开发笔记（一百三十二）矢量图形与矢量动画		Android开发笔记（一百四十五）仿应用宝的垃圾清理动画	第三十五章 行为协调		Android开发笔记（一百三十四）协调布局CoordinatorLayout		Android开发笔记（一百三十五）应用栏布局AppBarLayout		Android开发笔记（一百三十六）可折叠工具栏布局CollapsingToolbarLayout		Android开发笔记（一百三十七）自定义行为Behavior		Android开发笔记（一百四十四）高仿支付宝的头部伸缩动画	第三十六章 页面切换		Android开发笔记（一百三十九）可定制可滑动的标签栏		Android开发笔记（一百四十二）平滑翻页的书籍浏览		Android开发笔记（一百四十七）标签布局TabLayout	第三十七章 花样输入		Android开发笔记（一百三十八）文本输入布局TextInputLayout		Android开发笔记（一百四十六）仿支付宝的支付密码输入框		Android开发笔记（一百四十八）自定义输入法软键盘		Android开发笔记（一百四十九）约束布局ConstraintLayout第七卷 继续精进	共3章6节	第三十八章 人工智能		Android开发笔记（一百五十）自动识别验证码图片	第三十九章 H5交互		Android开发笔记（一百五十一）WebView与JavaScript交互的四种形式		Android开发笔记（一百五十二）H5通过WebView上传图片	第四十章 三维动画		Android开发笔记（一百五十三）OpenGL绘制三维图形的流程		Android开发笔记（一百五十四）OpenGL的画笔工具GL10		Android开发笔记（一百五十五）利用GL10描绘点、线、面待续</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></p>
+<h1><a name="t3"></a>索引</h1>
+<p>
+下面是本系列笔记用到的知识点，分门别类整理一下，方便日后查阅。<br /><br /><br /></p>
+<h2><a name="t4"></a>java类</h2>
+<table style="width: 812px;" border="0" cellspacing="0" cellpadding="0"> <colgroup><col width="137" /> <col width="321" /> <col width="354" /> </colgroup>
+<tbody>
+<tr>
+<td>名称</td>
+<td>类名</td>
+<td>出处</td>
+
+ </tr>
+<tr>
+<td>基本数据类型</td>
+<td>String、Integer、Double、BigDecimal</td>
+<td>Android开发笔记（四）字符串格式化</td>
+
+ </tr>
+<tr>
+<td>格式化工具</td>
+<td>Formatter、DecimalFormat、NumberFormat</td>
+<td>Android开发笔记（四）字符串格式化</td>
+
+ </tr>
+<tr>
+<td>样式、匹配器</td>
+<td>Pattern、Matcher</td>
+<td>Android开发笔记（四）字符串格式化</td>
+
+ </tr>
+<tr>
+<td>日期、日历</td>
+<td>Date、SimpleDateFormat、Calendar</td>
+<td>Android开发笔记（五）日期的处理</td>
+
+ </tr>
+<tr>
+<td>向量、队列、链表</td>
+<td>Set/HashSet、ArrayList、LinkedList</td>
+<td>Android开发笔记（二十六）Java的容器类</td>
+
+ </tr>
+<tr>
+<td>矢量、栈</td>
+<td>Vector、Stack</td>
+<td>Android开发笔记（二十六）Java的容器类</td>
+
+ </tr>
+<tr>
+<td>映射、哈希表</td>
+<td>Map/HashMap、Hashtable</td>
+<td>Android开发笔记（二十六）Java的容器类</td>
+
+ </tr>
+<tr>
+<td>迭代器</td>
+<td>Iterator</td>
+<td>Android开发笔记（二十六）Java的容器类</td>
+
+ </tr>
+<tr>
+<td>序列化结构</td>
+<td>Serializable</td>
+<td>Android开发笔记（二十七）对象序列化</td>
+
+ </tr>
+<tr>
+<td>文件</td>
+<td>File</td>
+<td>Android开发笔记（三十二）文件基础操作</td>
+
+ </tr>
+<tr>
+<td>文件流</td>
+<td>FileOutputStream、FileInputStream</td>
+<td>Android开发笔记（三十三）文本文件和图片文件的读写</td>
+
+ </tr>
+<tr>
+<td>缓存流</td>
+<td>BufferedOutputStream、BufferedInputStream</td>
+<td>Android开发笔记（三十三）文本文件和图片文件的读写</td>
+
+ </tr>
+<tr>
+<td>任务</td>
+<td>Runnable</td>
+<td>Android开发笔记（四十七）Runnable接口实现多线程</td>
+
+ </tr>
+<tr>
+<td>线程</td>
+<td>Thread</td>
+<td>Android开发笔记（四十八）Thread类实现多线程</td>
+
+ </tr>
+<tr>
+<td>定时器</td>
+<td>Timer、TimerTask</td>
+<td>Android开发笔记（五十）定时器AlarmManager</td>
+
+ </tr>
+<tr>
+<td>反射</td>
+<td>reflect</td>
+<td>Android开发笔记（六十）网络的检测与连接</td>
+
+ </tr>
+<tr>
+<td>xml解析</td>
+<td>XmlPullParser、dom、sax、SAXParser</td>
+<td>Android开发笔记（六十二）HTTP数据格式的解析</td>
+
+ </tr>
+<tr>
+<td>输入输出流</td>
+<td>InputStream、OutputStream</td>
+<td>Android开发笔记（六十三）HTTP访问的通信方式</td>
+
+ </tr>
+<tr>
+<td>http连接</td>
+<td>HttpURLConnection、HttpClient</td>
+<td>Android开发笔记（六十三）HTTP访问的通信方式</td>
+
+ </tr>
+<tr>
+<td>URL编码和解码</td>
+<td>URLEncoder、URLDecoder</td>
+<td>Android开发笔记（七十二）数据加密算法</td>
+
+ </tr>
+<tr>
+<td>BASE64编码和解码</td>
+<td>BASE64Encoder、BASE64Decoder</td>
+<td>Android开发笔记（七十二）数据加密算法</td>
+
+ </tr>
+<tr>
+<td>加密算法</td>
+<td>Cipher、KeyGenerator、SecretKey、MessageDigest</td>
+<td>Android开发笔记（七十二）数据加密算法</td>
+
+ </tr>
+<tr>
+<td>线程池</td>
+<td>Executors、ThreadPoolExecutor</td>
+<td>Android开发笔记（七十六）线程池管理</td>
+
+ </tr>
+<tr>
+<td>定时器线程池</td>
+<td>ScheduledExecutorService</td>
+<td>Android开发笔记（七十六）线程池管理</td>
+
+ </tr>
+<tr>
+<td>异常</td>
+<td>Exception</td>
+<td>Android开发笔记（七十八）异常容错处理</td>
+
+ </tr>
+<tr>
+<td>键值对属性</td>
+<td>Properties</td>
+<td>Android开发笔记（八十四）使用Properties读写属性值</td>
+
+ </tr>
+<tr>
+<td>加锁</td>
+<td>ReentrantLock、ReentrantReadWriteLock</td>
+<td>Android开发笔记（八十八）同步与加锁</td>
+
+ </tr>
+<tr>
+<td>字符串建造者</td>
+<td>StringBuilder</td>
+<td>Android开发笔记（九十）建造者模式</td>
+
+ </tr>
+<tr>
+<td>数组、容器组</td>
+<td>Arrays、Collections</td>
+<td>Android开发笔记（九十二）策略模式</td>
+
+ </tr>
+<tr>
+<td>数学函数</td>
+<td>Math</td>
+<td>Android开发笔记（九十九）圆形转盘</td>
+
+ </tr>
+<tr>
+<td>套接字、网络地址</td>
+<td>Socket、SocketServer、InetAddress</td>
+<td>Android开发笔记（一百一十一）聊天室中的Socket通信</td>
+
+ </tr>
+
+</tbody>
+
+</table>
+<p>
+<br /><br /><br /><br /></p>
+<h2><a name="t5"></a>Android控件类</h2>
+<table style="width: 859px;" border="0" cellspacing="0" cellpadding="0"> <colgroup><col width="218" /> <col width="262" /> <col width="379" /> </colgroup>
+<tbody>
+<tr>
+<td>名称</td>
+<td>类名</td>
+<td>出处</td>
+
+ </tr>
+<tr>
+<td>颜色</td>
+<td>Color</td>
+<td>Android开发笔记（二）颜色的使用</td>
+
+ </tr>
+<tr>
+<td>可变字符串</td>
+<td>Spannable、SpannableString</td>
+<td>Android开发笔记（六）可变字符串</td>
+
+ </tr>
+<tr>
+<td>风格区域、URL区域</td>
+<td>StyleSpan、URLSpan</td>
+<td>Android开发笔记（六）可变字符串</td>
+
+ </tr>
+<tr>
+<td>状态图形</td>
+<td>Drawable、StateListDrawable</td>
+<td>Android开发笔记（七）初识Drawable</td>
+
+ </tr>
+<tr>
+<td>形状图形</td>
+<td>ShapeDrawable</td>
+<td>Android开发笔记（八）神奇的shape</td>
+
+ </tr>
+<tr>
+<td>点九图形</td>
+<td>NinePatchDrawable</td>
+<td>Android开发笔记（九）特别的.9图片</td>
+
+ </tr>
+<tr>
+<td>画布、画笔</td>
+<td>Canvas、Paint</td>
+<td>Android开发笔记（十三）视图绘制的几个方法</td>
+
+ </tr>
+<tr>
+<td>透明度动画</td>
+<td>AlphaAnimation</td>
+<td>Android开发笔记（十五）淡入淡出动画</td>
+
+ </tr>
+<tr>
+<td>过渡图形</td>
+<td>TransitionDrawable</td>
+<td>Android开发笔记（十五）淡入淡出动画</td>
+
+ </tr>
+<tr>
+<td>旋转动画</td>
+<td>RotateAnimation</td>
+<td>Android开发笔记（十六）秋千摇摆动画</td>
+
+ </tr>
+<tr>
+<td>帧动画</td>
+<td>AnimationDrawable</td>
+<td>Android开发笔记（十七）GIF动画的实现</td>
+
+ </tr>
+<tr>
+<td>梯度图形</td>
+<td>GradientDrawable</td>
+<td>Android开发笔记（十八）书籍翻页动画</td>
+
+ </tr>
+<tr>
+<td>标签页</td>
+<td>TabHost、TabWidget</td>
+<td>Android开发笔记（十九）底部标签栏TabBar</td>
+
+ </tr>
+<tr>
+<td>标题栏</td>
+<td>ActionBar</td>
+<td>Android开发笔记（二十）顶部导航栏ActionBar</td>
+
+ </tr>
+<tr>
+<td>溢出菜单</td>
+<td>OverflowMenu</td>
+<td>Android开发笔记（二十）顶部导航栏ActionBar</td>
+
+ </tr>
+<tr>
+<td>导航栏</td>
+<td>Navigation</td>
+<td>Android开发笔记（二十）顶部导航栏ActionBar</td>
+
+ </tr>
+<tr>
+<td>定制视图</td>
+<td>CustomView</td>
+<td>Android开发笔记（二十）顶部导航栏ActionBar</td>
+
+ </tr>
+<tr>
+<td>搜索视图</td>
+<td>SearchView</td>
+<td>Android开发笔记（二十）顶部导航栏ActionBar</td>
+
+ </tr>
+<tr>
+<td>翻页视图</td>
+<td>ViewPager</td>
+<td>Android开发笔记（二十一）横幅轮播页Banner</td>
+
+ </tr>
+<tr>
+<td>翻页标题</td>
+<td>PagerTabStrip、PagerTitleStrip</td>
+<td>Android开发笔记（二十一）横幅轮播页Banner</td>
+
+ </tr>
+<tr>
+<td>飞掠视图</td>
+<td>ViewFlipper</td>
+<td>Android开发笔记（二十一）横幅轮播页Banner</td>
+
+ </tr>
+<tr>
+<td>翻页适配器</td>
+<td>PagerAdapter、FragmentStatePagerAdapter</td>
+<td>Android开发笔记（二十一）横幅轮播页Banner</td>
+
+ </tr>
+<tr>
+<td>日期和时间控件</td>
+<td>DatePicker、TimePicker</td>
+<td>Android开发笔记（二十三）文件对话框FileDialog</td>
+
+ </tr>
+<tr>
+<td>对话框碎片</td>
+<td>DialogFragment</td>
+<td>Android开发笔记（二十三）文件对话框FileDialog</td>
+
+ </tr>
+<tr>
+<td>布局视图</td>
+<td>LinearLayout、RelativeLayout、FrameLayout</td>
+<td>Android开发笔记（三十五）页面布局视图</td>
+
+ </tr>
+<tr>
+<td>滚动视图</td>
+<td>ScrollView、HorizontalScrollView</td>
+<td>Android开发笔记（三十五）页面布局视图</td>
+
+ </tr>
+<tr>
+<td>基本视图</td>
+<td>View、ViewGroup</td>
+<td>Android开发笔记（三十六）展示类控件</td>
+
+ </tr>
+<tr>
+<td>文本框、图像视图</td>
+<td>TextView、EditText、ImageView</td>
+<td>Android开发笔记（三十六）展示类控件</td>
+
+ </tr>
+<tr>
+<td>按钮、图像按钮</td>
+<td>Button、ImageButton</td>
+<td>Android开发笔记（三十七）按钮类控件</td>
+
+ </tr>
+<tr>
+<td>复合按钮</td>
+<td>CompoundButton</td>
+<td>Android开发笔记（三十七）按钮类控件</td>
+
+ </tr>
+<tr>
+<td>复选框、开关、单选框</td>
+<td>CheckBox、Switch、RadioGroup、RadioButton</td>
+<td>Android开发笔记（三十七）按钮类控件</td>
+
+ </tr>
+<tr>
+<td>下拉框、列表视图、网格视图</td>
+<td>Spinner、ListView、GridView</td>
+<td>Android开发笔记（三十八）列表类视图</td>
+
+ </tr>
+<tr>
+<td>适配器视图</td>
+<td>AdapterView、Adapter</td>
+<td>Android开发笔记（三十八）列表类视图</td>
+
+ </tr>
+<tr>
+<td>基本适配器</td>
+<td>BaseAdapter、ArrayAdapter、SimpleAdapter</td>
+<td>Android开发笔记（三十八）列表类视图</td>
+
+ </tr>
+<tr>
+<td>自动完成编辑框</td>
+<td>AutoCompleteTextView</td>
+<td>Android开发笔记（四十四）动态UI事件</td>
+
+ </tr>
+<tr>
+<td>进度条、进度对话框</td>
+<td>ProgressBar、ProgressDialog</td>
+<td>Android开发笔记（四十九）异步任务处理AsyncTask</td>
+
+ </tr>
+<tr>
+<td>远程视图</td>
+<td>RemoteViews</td>
+<td>Android开发笔记（五十二）通知推送Notification</td>
+
+ </tr>
+<tr>
+<td>表面视图</td>
+<td>SurfaceView、SurfaceHolder</td>
+<td>Android开发笔记（五十六）摄像头拍照</td>
+
+ </tr>
+<tr>
+<td>媒体录制器、媒体播放器</td>
+<td>MediaRecorder、MediaPlayer</td>
+<td>Android开发笔记（五十七）录像录音与播放</td>
+
+ </tr>
+<tr>
+<td>拖动条</td>
+<td>SeekBar</td>
+<td>Android开发笔记（五十八）铃声与震动</td>
+
+ </tr>
+<tr>
+<td>网页视图</td>
+<td>WebView、WebSettings</td>
+<td>Android开发笔记（六十四）网页加载与JS调用</td>
+
+ </tr>
+<tr>
+<td>网页视图客户端</td>
+<td>WebViewClient、WebChromeClient</td>
+<td>Android开发笔记（六十四）网页加载与JS调用</td>
+
+ </tr>
+<tr>
+<td>菜单、选项菜单、上下文菜单</td>
+<td>Menu、OptionsMenu、ContextMenu</td>
+<td>Android开发笔记（六十五）多样的菜单</td>
+
+ </tr>
+<tr>
+<td>弹窗</td>
+<td>PopupWindow</td>
+<td>Android开发笔记（六十五）多样的菜单</td>
+
+ </tr>
+<tr>
+<td>对话框</td>
+<td>AlertDialog、Dialog</td>
+<td>Android开发笔记（六十六）自定义对话框</td>
+
+ </tr>
+<tr>
+<td>碎片</td>
+<td>Fragment</td>
+<td>Android开发笔记（六十七）嵌入页面的碎片</td>
+
+ </tr>
+<tr>
+<td>占位视图</td>
+<td>ViewStub</td>
+<td>Android开发笔记（七十四）布局文件优化</td>
+
+ </tr>
+<tr>
+<td>风格、主题</td>
+<td>Style、Theme</td>
+<td>Android开发笔记（七十四）布局文件优化</td>
+
+ </tr>
+<tr>
+<td>汉字转拼音</td>
+<td>HanziToPinyin</td>
+<td>Android开发笔记（八十三）多语言支持</td>
+
+ </tr>
+<tr>
+<td>位图</td>
+<td>Bitmap、BitmapDrawable</td>
+<td>Android开发笔记（九十四）图片的基本加工</td>
+
+ </tr>
+<tr>
+<td>集合动画</td>
+<td>AnimationSet</td>
+<td>Android开发笔记（九十六）集合动画与属性动画</td>
+
+ </tr>
+<tr>
+<td>属性动画</td>
+<td>ObjectAnimator、AnimatorSet</td>
+<td>Android开发笔记（九十六）集合动画与属性动画</td>
+
+ </tr>
+<tr>
+<td>路径、矩阵</td>
+<td>Path、Matrix</td>
+<td>Android开发笔记（九十九）圆形转盘</td>
+
+ </tr>
+<tr>
+<td>折叠列表视图</td>
+<td>ExpandableListView、ExpandableListAdapter</td>
+<td>Android开发笔记（一百）折叠式列表</td>
+
+ </tr>
+<tr>
+<td>列表碎片</td>
+<td>ListFragment</td>
+<td>Android开发笔记（一百零一）滑出式菜单</td>
+
+ </tr>
+<tr>
+<td>文字转语音</td>
+<td>TextToSpeech</td>
+<td>Android开发笔记（一百零八）语音识别与合成</td>
+
+ </tr>
+<tr>
+<td>参数设置碎片</td>
+<td>PreferenceFragment</td>
+<td>Android开发笔记（一百零八）语音识别与合成</td>
+
+ </tr>
+<tr>
+<td>工具栏、搜索框</td>
+<td>Toolbar、SearchView</td>
+<td>Android开发笔记（一百一十九）工具栏Toolbar</td>
+
+ </tr>
+<tr>
+<td>侧滑布局</td>
+<td>DrawerLayout、SlidingPaneLayout</td>
+<td>Android开发笔记（一百二十）两种侧滑布局</td>
+
+ </tr>
+<tr>
+<td>弹出菜单、列表弹窗</td>
+<td>PopupMenu、ListPopupWindow</td>
+<td>Android开发笔记（一百二十一）列表弹窗</td>
+
+ </tr>
+<tr>
+<td>循环器视图</td>
+<td>RecyclerView</td>
+<td>Android开发笔记（一百二十二）循环器视图</td>
+
+ </tr>
+<tr>
+<td>下拉刷新布局</td>
+<td>SwipeRefreshLayout</td>
+<td>Android开发笔记（一百二十三）下拉刷新布局</td>
+
+ </tr>
+<tr>
+<td>画廊</td>
+<td>Gallery</td>
+<td>Android开发笔记（一百二十四）自定义相册</td>
+
+ </tr>
+<tr>
+<td>图像切换器</td>
+<td>ImageSwitcher</td>
+<td>Android开发笔记（一百二十四）自定义相册</td>
+
+ </tr>
+<tr>
+<td>调色板</td>
+<td>Palette</td>
+<td>Android开发笔记（一百二十四）自定义相册</td>
+
+ </tr>
+<tr>
+<td>卡片视图</td>
+<td>CardView</td>
+<td>Android开发笔记（一百二十四）自定义相册</td>
+
+ </tr>
+<tr>
+<td>视频视图</td>
+<td>VideoView</td>
+<td>Android开发笔记（一百二十五）自定义视频播放器</td>
+
+ </tr>
+<tr>
+<td>媒体控制条</td>
+<td>MediaController</td>
+<td>Android开发笔记（一百二十五）自定义视频播放器</td>
+
+ </tr>
+<tr>
+<td>音频录制</td>
+<td>AudioRecord</td>
+<td>Android开发笔记（一百二十六）自定义音乐播放器</td>
+
+ </tr>
+<tr>
+<td>音轨播放</td>
+<td>AudioTrack</td>
+<td>Android开发笔记（一百二十六）自定义音乐播放器</td>
+
+ </tr>
+<tr>
+<td>声音池</td>
+<td>SoundPool</td>
+<td>Android开发笔记（一百二十六）自定义音乐播放器</td>
+
+ </tr>
+<tr>
+<td>提示窗</td>
+<td>Toast、Snackbar</td>
+<td>Android开发笔记（一百二十七）活用提示窗Toast和Snackbar</td>
+
+ </tr>
+<tr>
+<td>裁剪图形</td>
+<td>ClipDrawable</td>
+<td>Android开发笔记（一百二十九）使用变换图形</td>
+
+ </tr>
+<tr>
+<td>缩放图形</td>
+<td>ScaleDrawable</td>
+<td>Android开发笔记（一百二十九）使用变换图形</td>
+
+ </tr>
+<tr>
+<td>旋转图形</td>
+<td>RotateDrawable</td>
+<td>Android开发笔记（一百二十九）使用变换图形</td>
+
+ </tr>
+<tr>
+<td>水波图形</td>
+<td>RippleDrawable</td>
+<td>Android开发笔记（一百三十一）水波图形与水波动画</td>
+
+ </tr>
+<tr>
+<td>矢量图形</td>
+<td>VectorDrawable</td>
+<td>Android开发笔记（一百三十二）矢量图形与矢量动画</td>
+
+ </tr>
+<tr>
+<td>矢量动画</td>
+<td>AnimatedVectorDrawable</td>
+<td>Android开发笔记（一百三十二）矢量图形与矢量动画</td>
+
+ </tr>
+<tr>
+<td>导航视图</td>
+<td>NavigationView</td>
+<td>Android开发笔记（一百三十三）导航视图NavigationView</td>
+
+ </tr>
+<tr>
+<td>协调布局</td>
+<td>CoordinatorLayout</td>
+<td>Android开发笔记（一百三十四）协调布局CoordinatorLayout</td>
+
+ </tr>
+<tr>
+<td>悬浮按钮</td>
+<td>FloatingActionButton</td>
+<td>Android开发笔记（一百三十四）协调布局CoordinatorLayout</td>
+
+ </tr>
+<tr>
+<td>底部弹窗</td>
+<td>BottomSheetBehavior</td>
+<td>Android开发笔记（一百三十四）协调布局CoordinatorLayout</td>
+
+ </tr>
+<tr>
+<td>应用栏布局</td>
+<td>AppBarLayout</td>
+<td>Android开发笔记（一百三十五）应用栏布局AppBarLayout</td>
+
+ </tr>
+<tr>
+<td>嵌套滚动视图</td>
+<td>NestedScrollView</td>
+<td>Android开发笔记（一百三十五）应用栏布局AppBarLayout</td>
+
+ </tr>
+<tr>
+<td>可折叠工具栏布局</td>
+<td>CollapsingToolbarLayout</td>
+<td>Android开发笔记（一百三十六）可折叠工具栏布局CollapsingToolbarLayout</td>
+
+ </tr>
+<tr>
+<td>文本输入布局</td>
+<td>TextInputLayout</td>
+<td>Android开发笔记（一百三十八）文本输入布局TextInputLayout</td>
+
+ </tr>
+<tr>
+<td>文本输入编辑框</td>
+<td>TextInputEditText</td>
+<td>Android开发笔记（一百三十八）文本输入布局TextInputLayout</td>
+
+ </tr>
+<tr>
+<td>碎片标签组</td>
+<td>FragmentTabHost</td>
+<td>Android开发笔记（一百三十九）可定制可滑动的标签栏</td>
+
+ </tr>
+<tr>
+<td>栈视图</td>
+<td>StackView</td>
+<td>Android开发笔记（一百四十二）平滑翻页的书籍浏览</td>
+
+ </tr>
+<tr>
+<td>标签布局</td>
+<td>TabLayout</td>
+<td>Android开发笔记（一百四十七）标签布局TabLayout</td>
+
+ </tr>
+<tr>
+<td>约束布局</td>
+<td>ConstraintLayout</td>
+<td>Android开发笔记（一百四十九）约束布局ConstraintLayout</td>
+
+ </tr>
+
+</tbody>
+
+</table>
+<p>
+<br /><br /></p>
+<h2><a name="t6"></a>Android管理类</h2>
+<table style="width: 828px;" border="0" cellspacing="0" cellpadding="0"> <colgroup><col width="158" /> <col width="271" /> <col width="399" /> </colgroup>
+<tbody>
+<tr>
+<td>名称</td>
+<td>类名</td>
+<td>出处</td>
+
+ </tr>
+<tr>
+<td>窗口管理</td>
+<td>WindowManager</td>
+<td>Android开发笔记（三）屏幕分辨率</td>
+
+ </tr>
+<tr>
+<td>显示信息</td>
+<td>Display、DisplayMetrics</td>
+<td>Android开发笔记（三）屏幕分辨率</td>
+
+ </tr>
+<tr>
+<td>标签页面</td>
+<td>TabActivity</td>
+<td>Android开发笔记（十九）底部标签栏TabBar</td>
+
+ </tr>
+<tr>
+<td>页面组</td>
+<td>ActivityGroup</td>
+<td>Android开发笔记（十九）底部标签栏TabBar</td>
+
+ </tr>
+<tr>
+<td>碎片页面</td>
+<td>FragmentActivity</td>
+<td>Android开发笔记（十九）底部标签栏TabBar</td>
+
+ </tr>
+<tr>
+<td>资源管理</td>
+<td>Resources</td>
+<td>Android开发笔记（二十四）res目录的结构与配置</td>
+
+ </tr>
+<tr>
+<td>资产管理</td>
+<td>AssetManager</td>
+<td>Android开发笔记（二十五）assets目录下的文件读取</td>
+
+ </tr>
+<tr>
+<td>打包结构</td>
+<td>Parcelable</td>
+<td>Android开发笔记（二十七）对象序列化</td>
+
+ </tr>
+<tr>
+<td>应用</td>
+<td>Application</td>
+<td>Android开发笔记（二十八）利用Application实现内存读写</td>
+
+ </tr>
+<tr>
+<td>共享参数</td>
+<td>SharedPreferences</td>
+<td>Android开发笔记（二十九）使用SharedPreferences存取数据</td>
+
+ </tr>
+<tr>
+<td>SQLite数据库</td>
+<td>SQLiteDatabase、SQLiteOpenHelper</td>
+<td>Android开发笔记（三十）SQLite数据库基础操作</td>
+
+ </tr>
+<tr>
+<td>游标</td>
+<td>ContentValues、Cursor</td>
+<td>Android开发笔记（三十一）SQLite游标及其数据结构</td>
+
+ </tr>
+<tr>
+<td>环境管理</td>
+<td>Environment</td>
+<td>Android开发笔记（三十二）文件基础操作</td>
+
+ </tr>
+<tr>
+<td>输入法管理</td>
+<td>InputMethodManager</td>
+<td>Android开发笔记（三十六）展示类控件</td>
+
+ </tr>
+<tr>
+<td>列表页面</td>
+<td>ListActivity</td>
+<td>Android开发笔记（三十八）列表类视图</td>
+
+ </tr>
+<tr>
+<td>页面</td>
+<td>Activity</td>
+<td>Android开发笔记（三十九）Activity的生命周期</td>
+
+ </tr>
+<tr>
+<td>意图、意图过滤器</td>
+<td>Intent、IntentFilter</td>
+<td>Android开发笔记（四十）组件通讯工具Intent</td>
+
+ </tr>
+<tr>
+<td>包裹</td>
+<td>Bundle</td>
+<td>Android开发笔记（四十）组件通讯工具Intent</td>
+
+ </tr>
+<tr>
+<td>服务、异步服务</td>
+<td>Service、IntentService</td>
+<td>Android开发笔记（四十一）Service的生命周期</td>
+
+ </tr>
+<tr>
+<td>广播、广播接收器</td>
+<td>Broadcast、BroadcastReceiver</td>
+<td>Android开发笔记（四十二）Broadcast的生命周期</td>
+
+ </tr>
+<tr>
+<td>手势事件</td>
+<td>MotionEvent</td>
+<td>Android开发笔记（四十五）手势事件</td>
+
+ </tr>
+<tr>
+<td>手势检测器</td>
+<td>GestureDetector</td>
+<td>Android开发笔记（四十五）手势事件</td>
+
+ </tr>
+<tr>
+<td>滚动器</td>
+<td>Scroller</td>
+<td>Android开发笔记（四十五）手势事件</td>
+
+ </tr>
+<tr>
+<td>定位管理</td>
+<td>LocationManager、Criteria</td>
+<td>Android开发笔记（四十六）手机相关事件</td>
+
+ </tr>
+<tr>
+<td>通话管理</td>
+<td>TelephonyManager</td>
+<td>Android开发笔记（四十六）手机相关事件</td>
+
+ </tr>
+<tr>
+<td>基站信息</td>
+<td>CellLocation、CellInfo</td>
+<td>Android开发笔记（四十六）手机相关事件</td>
+
+ </tr>
+<tr>
+<td>处理器</td>
+<td>Handler、Looper、Message</td>
+<td>Android开发笔记（四十八）Thread类实现多线程</td>
+
+ </tr>
+<tr>
+<td>异步任务</td>
+<td>AsyncTask</td>
+<td>Android开发笔记（四十九）异步任务处理AsyncTask</td>
+
+ </tr>
+<tr>
+<td>倒计时器</td>
+<td>CountDownTimer</td>
+<td>Android开发笔记（五十）定时器AlarmManager</td>
+
+ </tr>
+<tr>
+<td>定时器管理</td>
+<td>AlarmManager</td>
+<td>Android开发笔记（五十）定时器AlarmManager</td>
+
+ </tr>
+<tr>
+<td>延迟的意图</td>
+<td>PendingIntent</td>
+<td>Android开发笔记（五十）定时器AlarmManager</td>
+
+ </tr>
+<tr>
+<td>信使</td>
+<td>Messenger、IBinder</td>
+<td>Android开发笔记（五十一）通过Messenger实现进程间通信</td>
+
+ </tr>
+<tr>
+<td>通知管理</td>
+<td>Notification、NotificationManager</td>
+<td>Android开发笔记（五十二）通知推送Notification</td>
+
+ </tr>
+<tr>
+<td>远程接口</td>
+<td>AIDL</td>
+<td>Android开发笔记（五十三）远程接口调用AIDL</td>
+
+ </tr>
+<tr>
+<td>内容提供者</td>
+<td>ContentProvider</td>
+<td>Android开发笔记（五十四）数据共享接口ContentProvider</td>
+
+ </tr>
+<tr>
+<td>内容解决者</td>
+<td>ContentResolver</td>
+<td>Android开发笔记（五十四）数据共享接口ContentProvider</td>
+
+ </tr>
+<tr>
+<td>内容观察者</td>
+<td>ContentObserver</td>
+<td>Android开发笔记（五十四）数据共享接口ContentProvider</td>
+
+ </tr>
+<tr>
+<td>版本信息</td>
+<td>Build</td>
+<td>Android开发笔记（五十五）手机设备基本操作</td>
+
+ </tr>
+<tr>
+<td>短信管理</td>
+<td>SmsManager</td>
+<td>Android开发笔记（五十五）手机设备基本操作</td>
+
+ </tr>
+<tr>
+<td>摄像头</td>
+<td>Camera</td>
+<td>Android开发笔记（五十六）摄像头拍照</td>
+
+ </tr>
+<tr>
+<td>音频管理</td>
+<td>AudioManager</td>
+<td>Android开发笔记（五十八）铃声与震动</td>
+
+ </tr>
+<tr>
+<td>震动器</td>
+<td>Vibrator</td>
+<td>Android开发笔记（五十八）铃声与震动</td>
+
+ </tr>
+<tr>
+<td>传感器</td>
+<td>Sensor、SensorManager</td>
+<td>Android开发笔记（五十九）巧用传感器</td>
+
+ </tr>
+<tr>
+<td>连接管理</td>
+<td>ConnectivityManager</td>
+<td>Android开发笔记（六十）网络的检测与连接</td>
+
+ </tr>
+<tr>
+<td>热点管理</td>
+<td>WifiManager</td>
+<td>Android开发笔记（六十）网络的检测与连接</td>
+
+ </tr>
+<tr>
+<td>下载管理</td>
+<td>DownloadManager</td>
+<td>Android开发笔记（六十一）文件下载与上传</td>
+
+ </tr>
+<tr>
+<td>json数据</td>
+<td>JSONObject、JSONArray</td>
+<td>Android开发笔记（六十二）HTTP数据格式的解析</td>
+
+ </tr>
+<tr>
+<td>窗口</td>
+<td>Window</td>
+<td>Android开发笔记（六十六）自定义对话框</td>
+
+ </tr>
+<tr>
+<td>java原生接口</td>
+<td>JNI</td>
+<td>Android开发笔记（六十九）JNI实战</td>
+
+ </tr>
+<tr>
+<td>日志</td>
+<td>Log</td>
+<td>Android开发笔记（七十一）区分开发模式和上线模式</td>
+
+ </tr>
+<tr>
+<td>提示</td>
+<td>Toast</td>
+<td>Android开发笔记（七十一）区分开发模式和上线模式</td>
+
+ </tr>
+<tr>
+<td>代码混淆</td>
+<td>Proguard</td>
+<td>Android开发笔记（七十三）代码混淆与反破解</td>
+
+ </tr>
+<tr>
+<td>存储管理</td>
+<td>StorageManager</td>
+<td>Android开发笔记（七十九）资源与权限校验</td>
+
+ </tr>
+<tr>
+<td>流量统计</td>
+<td>TrafficStats</td>
+<td>Android开发笔记（七十九）资源与权限校验</td>
+
+ </tr>
+<tr>
+<td>打包管理</td>
+<td>PackageManager、PackageInfo</td>
+<td>Android开发笔记（八十）运行状态检查</td>
+
+ </tr>
+<tr>
+<td>活动管理</td>
+<td>ActivityManager</td>
+<td>Android开发笔记（八十）运行状态检查</td>
+
+ </tr>
+<tr>
+<td>屏幕配置</td>
+<td>Configuration</td>
+<td>Android开发笔记（八十一）屏幕规格适配</td>
+
+ </tr>
+<tr>
+<td>剪贴板管理</td>
+<td>ClipboardManager</td>
+<td>Android开发笔记（一百零五）社会化分享SDK</td>
+
+ </tr>
+<tr>
+<td>参数设置页面</td>
+<td>PreferenceActivity</td>
+<td>Android开发笔记（一百零八）语音识别与合成</td>
+
+ </tr>
+<tr>
+<td>仪器测试用例</td>
+<td>InstrumentationTestCase</td>
+<td>Android开发笔记（一百一十三）测试工具</td>
+
+ </tr>
+<tr>
+<td>页面测试用例</td>
+<td>ActivityTestCase</td>
+<td>Android开发笔记（一百一十三）测试工具</td>
+
+ </tr>
+<tr>
+<td>电源管理</td>
+<td>PowerManager</td>
+<td>Android开发笔记（一百一十七）app省电方略</td>
+
+ </tr>
+<tr>
+<td>电池管理</td>
+<td>BatteryManager</td>
+<td>Android开发笔记（一百一十七）app省电方略</td>
+
+ </tr>
+<tr>
+<td>窗口管理</td>
+<td>WindowManager</td>
+<td>Android开发笔记（一百一十八）自定义悬浮窗</td>
+
+ </tr>
+<tr>
+<td>电话管理</td>
+<td>TelephonyManager</td>
+<td>Android开发笔记（一百二十八）手机制式适配</td>
+
+ </tr>
+<tr>
+<td>媒体投影管理</td>
+<td>MediaProjectionManager</td>
+<td>Android开发笔记（一百三十）截图和录屏</td>
+
+ </tr>
+<tr>
+<td>图像读取</td>
+<td>ImageReader</td>
+<td>Android开发笔记（一百三十）截图和录屏</td>
+
+ </tr>
+<tr>
+<td>媒体编码与转换</td>
+<td>MediaCodec、MediaMuxer</td>
+<td>Android开发笔记（一百三十）截图和录屏</td>
+
+ </tr>
+<tr>
+<td>可缩放矢量图形</td>
+<td>SVG</td>
+<td>Android开发笔记（一百三十二）矢量图形与矢量动画</td>
+
+ </tr>
+<tr>
+<td>PDF文件渲染</td>
+<td>PdfRenderer</td>
+<td>Android开发笔记（一百四十二）平滑翻页的书籍浏览</td>
+
+ </tr>
+<tr>
+<td>任务调度</td>
+<td>JobInfo、JobScheduler、JobService</td>
+<td>Android开发笔记（一百四十三）任务调度JobScheduler</td>
+
+ </tr>
+
+</tbody>
+
+</table>
+<p>
+<br /><br /><br /></p>
+<h2><a name="t7"></a>自定义控件</h2>
+<p>
+红字标注的是来自于网络的开源代码</p>
+<table style="width: 785px;" border="0" cellspacing="0" cellpadding="0"> <colgroup><col width="228" /> <col width="183" /> <col width="374" /> </colgroup>
+<tbody>
+<tr>
+<td>名称</td>
+<td>类名</td>
+<td>出处</td>
+
+ </tr>
+<tr>
+<td>简单的下拉刷新</td>
+<td>PullToRefreshLinearLayout</td>
+<td>Android开发笔记（十二）测量尺寸与下拉刷新</td>
+
+ </tr>
+<tr>
+<td>圆弧进度动画</td>
+<td>CircleAnimation</td>
+<td>Android开发笔记（十四）圆弧进度动画</td>
+
+ </tr>
+<tr>
+<td>秋千摇摆动画</td>
+<td>SwingAnimation</td>
+<td>Android开发笔记（十六）秋千摇摆动画</td>
+
+ </tr>
+<tr>
+<td>Gif动画</td>
+<td>GifAnimation</td>
+<td>Android开发笔记（十七）GIF动画的实现</td>
+
+ </tr>
+<tr>
+<td>书籍翻页动画</td>
+<td>PageWidget</td>
+<td>Android开发笔记（十八）书籍翻页动画</td>
+
+ </tr>
+<tr>
+<td>底部标签页（三种）</td>
+<td>TabBar</td>
+<td>Android开发笔记（十九）底部标签栏TabBar</td>
+
+ </tr>
+<tr>
+<td>横幅轮播页1</td>
+<td>BannerFlipper</td>
+<td>Android开发笔记（二十一）横幅轮播页Banner</td>
+
+ </tr>
+<tr>
+<td>横幅轮播页2</td>
+<td>BannerPager</td>
+<td>Android开发笔记（二十一）横幅轮播页Banner</td>
+
+ </tr>
+<tr>
+<td>瀑布流网格</td>
+<td>WaterfallGridView</td>
+<td>Android开发笔记（二十二）瀑布流网格WaterfallGridView</td>
+
+ </tr>
+<tr>
+<td>日期对话框</td>
+<td>CalendarDialog</td>
+<td>Android开发笔记（二十三）文件对话框FileDialog</td>
+
+ </tr>
+<tr>
+<td>信息确认对话框</td>
+<td>ConfirmDialogFragment</td>
+<td>Android开发笔记（二十三）文件对话框FileDialog</td>
+
+ </tr>
+<tr>
+<td>文件打开对话框</td>
+<td>FileSelectFragment</td>
+<td>Android开发笔记（二十三）文件对话框FileDialog</td>
+
+ </tr>
+<tr>
+<td>文件保存对话框</td>
+<td>FileSaveFragment</td>
+<td>Android开发笔记（二十三）文件对话框FileDialog</td>
+
+ </tr>
+<tr>
+<td>基于AutoCompleteTextView的搜索框</td>
+<td>AutoSearchView</td>
+<td>Android开发笔记（四十四）动态UI事件</td>
+
+ </tr>
+<tr>
+<td>基于EditText+ListView的搜索框</td>
+<td>CustomSearchView</td>
+<td>Android开发笔记（四十四）动态UI事件</td>
+
+ </tr>
+<tr>
+<td>不拦截水平滑动的滚动视图</td>
+<td>CustomScrollView</td>
+<td>Android开发笔记（四十五）手势事件</td>
+
+ </tr>
+<tr>
+<td>拍照视图</td>
+<td>CameraView</td>
+<td>Android开发笔记（五十六）摄像头拍照</td>
+
+ </tr>
+<tr>
+<td>二维码/条形码扫描</td>
+<td>MipcaActivityCapture</td>
+<td>Android开发笔记（五十六）摄像头拍照</td>
+
+ </tr>
+<tr>
+<td>带数字进度的进度条</td>
+<td>CustomProgressBar</td>
+<td>Android开发笔记（六十一）文件下载与上传</td>
+
+ </tr>
+<tr>
+<td>滚轮对话框</td>
+<td>WheelDialog</td>
+<td>Android开发笔记（六十六）自定义对话框</td>
+
+ </tr>
+<tr>
+<td>简单的图片缓存</td>
+<td>ImageCache</td>
+<td>Android开发笔记（七十七）图片缓存算法</td>
+
+ </tr>
+<tr>
+<td>程序崩溃信息采集</td>
+<td>CrashHandler</td>
+<td>Android开发笔记（七十八）异常容错处理</td>
+
+ </tr>
+<tr>
+<td>水波动画1</td>
+<td>RevealLayout</td>
+<td>Android开发笔记（八十二）系统软件兼容</td>
+
+ </tr>
+<tr>
+<td>水波动画2</td>
+<td>RippleView</td>
+<td>Android开发笔记（八十二）系统软件兼容</td>
+
+ </tr>
+<tr>
+<td>水波动画3</td>
+<td>MaterialRippleLayout</td>
+<td>Android开发笔记（八十二）系统软件兼容</td>
+
+ </tr>
+<tr>
+<td>圆形图像</td>
+<td>CircleDrawable</td>
+<td>Android开发笔记（九十五）自定义Drawable</td>
+
+ </tr>
+<tr>
+<td>椭圆形图像</td>
+<td>OvalDrawable</td>
+<td>Android开发笔记（九十五）自定义Drawable</td>
+
+ </tr>
+<tr>
+<td>圆角矩形图像</td>
+<td>RoundDrawable</td>
+<td>Android开发笔记（九十五）自定义Drawable</td>
+
+ </tr>
+<tr>
+<td>水印图像</td>
+<td>MarkDrawable</td>
+<td>Android开发笔记（九十五）自定义Drawable</td>
+
+ </tr>
+<tr>
+<td>灰度动画图像</td>
+<td>AlphaDrawable</td>
+<td>Android开发笔记（九十五）自定义Drawable</td>
+
+ </tr>
+<tr>
+<td>手写签名</td>
+<td>SignatureView</td>
+<td>Android开发笔记（九十八）往图片添加部件</td>
+
+ </tr>
+<tr>
+<td>可旋转文本</td>
+<td>RotateTextView</td>
+<td>Android开发笔记（九十九）圆形转盘</td>
+
+ </tr>
+<tr>
+<td>可旋转图像</td>
+<td>RotateImageView</td>
+<td>Android开发笔记（九十九）圆形转盘</td>
+
+ </tr>
+<tr>
+<td>抽奖转盘</td>
+<td>LuckyPanView</td>
+<td>Android开发笔记（九十九）圆形转盘</td>
+
+ </tr>
+<tr>
+<td>圆形菜单</td>
+<td>CircleMenuLayout</td>
+<td>Android开发笔记（九十九）圆形转盘</td>
+
+ </tr>
+<tr>
+<td>更多动态视图</td>
+<td>MoreNewsView</td>
+<td>Android开发笔记（一百）折叠式列表</td>
+
+ </tr>
+<tr>
+<td>可折叠布局</td>
+<td>FoldingLayout</td>
+<td>Android开发笔记（一百）折叠式列表</td>
+
+ </tr>
+<tr>
+<td>视频播放器</td>
+<td>CustomVideoView</td>
+<td>Android开发笔记（一百二十五）自定义视频播放器</td>
+
+ </tr>
+<tr>
+<td>视频控制条</td>
+<td>VideoController</td>
+<td>Android开发笔记（一百二十五）自定义视频播放器</td>
+
+ </tr>
+<tr>
+<td>音乐播放器</td>
+<td>MusicPlayer</td>
+<td>Android开发笔记（一百二十六）自定义音乐播放器</td>
+
+ </tr>
+<tr>
+<td>音频控制条</td>
+<td>AudioController</td>
+<td>Android开发笔记（一百二十六）自定义音乐播放器</td>
+
+ </tr>
+<tr>
+<td>水波动画</td>
+<td>RippleView</td>
+<td>Android开发笔记（一百三十一）水波图形与水波动画</td>
+
+ </tr>
+<tr>
+<td>协调的图像视图</td>
+<td>CoordinatorImageView</td>
+<td>Android开发笔记（一百三十七）自定义行为Behavior</td>
+
+ </tr>
+<tr>
+<td>图像视图行为</td>
+<td>ImageViewBehavior</td>
+<td>Android开发笔记（一百三十七）自定义行为Behavior</td>
+
+ </tr>
+<tr>
+<td>层叠翻页视图</td>
+<td>ViewSlider</td>
+<td>Android开发笔记（一百四十二）平滑翻页的书籍浏览</td>
+
+ </tr>
+<tr>
+<td>书页视图</td>
+<td>BookView</td>
+<td>Android开发笔记（一百四十二）平滑翻页的书籍浏览</td>
+
+ </tr>
+<tr>
+<td>支付密码输入框</td>
+<td>PayPasswodInput</td>
+<td>Android开发笔记（一百四十六）仿支付宝的支付密码输入框</td>
+
+ </tr>
+<tr>
+<td>纯数字软键盘</td>
+<td>KeyboardLayout</td>
+<td>Android开发笔记（一百四十八）自定义输入法软键盘</td>
+
+ </tr>
+
+</tbody>
+
+</table>
+<p>
+<br /><br /><br /></p>
+<h2><a name="t8"></a>第三方库</h2>
+<p>
+</p>
+<table style="width: 749px;" border="0" cellspacing="0" cellpadding="0"> <colgroup><col width="148" /> <col width="233" /> <col width="368" /> </colgroup>
+<tbody>
+<tr>
+<td>名称</td>
+<td>包名</td>
+<td>出处</td>
+
+ </tr>
+<tr>
+<td>下拉刷新</td>
+<td>com.handmark.pulltorefresh.library</td>
+<td>Android开发笔记（十二）测量尺寸与下拉刷新</td>
+
+ </tr>
+<tr>
+<td>瀑布流网格SGV</td>
+<td>com.etsy.android.grid</td>
+<td>Android开发笔记（二十二）瀑布流网格WaterfallGridView</td>
+
+ </tr>
+<tr>
+<td>瀑布流网格PLAV</td>
+<td>com.huewu.pla.lib</td>
+<td>Android开发笔记（二十二）瀑布流网格WaterfallGridView</td>
+
+ </tr>
+<tr>
+<td>excel文件解析</td>
+<td>jxl</td>
+<td>Android开发笔记（三十四）Excel文件的读写</td>
+
+ </tr>
+<tr>
+<td>二维码/条形码扫描</td>
+<td>com.google.zxing</td>
+<td>Android开发笔记（五十六）摄像头拍照</td>
+
+ </tr>
+<tr>
+<td>json解析</td>
+<td>com.alibaba.fastjson</td>
+<td>Android开发笔记（六十二）HTTP数据格式的解析</td>
+
+ </tr>
+<tr>
+<td>html解析</td>
+<td>org.jsoup</td>
+<td>Android开发笔记（六十二）HTTP数据格式的解析</td>
+
+ </tr>
+<tr>
+<td>httpclient通信</td>
+<td>org.apache.http.entity.mime</td>
+<td>Android开发笔记（六十三）HTTP访问的通信方式</td>
+
+ </tr>
+<tr>
+<td>httpclient核心</td>
+<td>org.apache.http</td>
+<td>Android开发笔记（六十三）HTTP访问的通信方式</td>
+
+ </tr>
+<tr>
+<td>滚轮视图</td>
+<td>kankan.wheel.widget</td>
+<td>Android开发笔记（六十六）自定义对话框</td>
+
+ </tr>
+<tr>
+<td>数据加密</td>
+<td>org.bouncycastle</td>
+<td>Android开发笔记（七十二）数据加密算法</td>
+
+ </tr>
+<tr>
+<td>数据加密</td>
+<td>org.apache.commons.codec</td>
+<td>Android开发笔记（七十二）数据加密算法</td>
+
+ </tr>
+<tr>
+<td>图片缓存PCS</td>
+<td>com.squareup.picasso</td>
+<td>Android开发笔记（七十七）图片缓存算法</td>
+
+ </tr>
+<tr>
+<td>okhttp网络通信2</td>
+<td>com.squareup.okhttp</td>
+<td>Android开发笔记（七十七）图片缓存算法</td>
+
+ </tr>
+<tr>
+<td>okhttp流处理</td>
+<td>okio</td>
+<td>Android开发笔记（七十七）图片缓存算法</td>
+
+ </tr>
+<tr>
+<td>图片缓存UIL</td>
+<td>com.nostra13.universalimageloader</td>
+<td>Android开发笔记（七十七）图片缓存算法</td>
+
+ </tr>
+<tr>
+<td>汉字转拼音</td>
+<td>net.sourceforge.pinyin4j</td>
+<td>Android开发笔记（八十三）多语言支持</td>
+
+ </tr>
+<tr>
+<td>移动数据库</td>
+<td>io.realm</td>
+<td>Android开发笔记（八十五）手机数据库Realm</td>
+
+ </tr>
+<tr>
+<td>REST网络通信框架</td>
+<td>retrofit</td>
+<td>Android开发笔记（八十五）手机数据库Realm</td>
+
+ </tr>
+<tr>
+<td>滑出式菜单</td>
+<td>com.jeremyfeinstein.slidingmenu.lib</td>
+<td>Android开发笔记（一百零一）滑出式菜单</td>
+
+ </tr>
+<tr>
+<td>统计图表ACE</td>
+<td>org.achartengine</td>
+<td>Android开发笔记（一百零二）统计图表</td>
+
+ </tr>
+<tr>
+<td>统计图表MP</td>
+<td>com.github.mikephil.charting</td>
+<td>Android开发笔记（一百零二）统计图表</td>
+
+ </tr>
+<tr>
+<td>动画兼容旧版本</td>
+<td>com.nineoldandroids</td>
+<td>Android开发笔记（一百零二）统计图表</td>
+
+ </tr>
+<tr>
+<td>统计图表XCL</td>
+<td>com.demo.xclcharts</td>
+<td>Android开发笔记（一百零二）统计图表</td>
+
+ </tr>
+<tr>
+<td>百度地图与定位</td>
+<td>com.baidu.mapapi<br />    com.baidu.location</td>
+<td>Android开发笔记（一百零三）地图与定位SDK</td>
+
+ </tr>
+<tr>
+<td>高德地图与定位</td>
+<td>com.amap.api</td>
+<td>Android开发笔记（一百零三）地图与定位SDK</td>
+
+ </tr>
+<tr>
+<td>极光推送</td>
+<td>cn.jpush</td>
+<td>Android开发笔记（一百零四）消息推送SDK</td>
+
+ </tr>
+<tr>
+<td>个推</td>
+<td>com.igexin</td>
+<td>Android开发笔记（一百零四）消息推送SDK</td>
+
+ </tr>
+<tr>
+<td>友盟社会化分享</td>
+<td>com.umeng.socialize</td>
+<td>Android开发笔记（一百零五）社会化分享SDK</td>
+
+ </tr>
+<tr>
+<td>QQ、QQ空间分享<br />    腾讯微博分享</td>
+<td>com.tencent.open<br />    com.tencent.connect</td>
+<td>Android开发笔记（一百零五）社会化分享SDK</td>
+
+ </tr>
+<tr>
+<td>微信好友分享<br />    朋友圈分享</td>
+<td>com.tencent.mm</td>
+<td>Android开发笔记（一百零五）社会化分享SDK</td>
+
+ </tr>
+<tr>
+<td>新浪微博</td>
+<td>com.sina.weibo.sdk</td>
+<td>Android开发笔记（一百零五）社会化分享SDK</td>
+
+ </tr>
+<tr>
+<td>支付宝</td>
+<td>com.alipay</td>
+<td>Android开发笔记（一百零六）支付缴费SDK</td>
+
+ </tr>
+<tr>
+<td>微信支付</td>
+<td>com.tencent.mm.sdk</td>
+<td>Android开发笔记（一百零六）支付缴费SDK</td>
+
+ </tr>
+<tr>
+<td>银联支付</td>
+<td>com.unionpay</td>
+<td>Android开发笔记（一百零六）支付缴费SDK</td>
+
+ </tr>
+<tr>
+<td>友盟统计分析</td>
+<td>com.umeng.analytics<br />    com.ta.utdid2</td>
+<td>Android开发笔记（一百零七）统计分析SDK</td>
+
+ </tr>
+<tr>
+<td>百度统计分析</td>
+<td>com.baidu.mobstat<br />    com.baidu.bottom</td>
+<td>Android开发笔记（一百零七）统计分析SDK</td>
+
+ </tr>
+<tr>
+<td>腾讯统计分析</td>
+<td>com.tencent.mid<br />    com.tencent.stat</td>
+<td>Android开发笔记（一百零七）统计分析SDK</td>
+
+ </tr>
+<tr>
+<td>科大讯飞语音</td>
+<td>com.iflytek</td>
+<td>Android开发笔记（一百零八）语音识别与合成</td>
+
+ </tr>
+<tr>
+<td>百度语音识别</td>
+<td>com.baidu.speech</td>
+<td>Android开发笔记（一百零八）语音识别与合成</td>
+
+ </tr>
+<tr>
+<td>百度语音合成</td>
+<td>com.baidu.tts</td>
+<td>Android开发笔记（一百零八）语音识别与合成</td>
+
+ </tr>
+<tr>
+<td>百度网盘</td>
+<td>com.baidu.oauth<br />    com.baidu.pcs</td>
+<td>Android开发笔记（一百零九）利用网盘实现云存储</td>
+
+ </tr>
+<tr>
+<td>阿里云</td>
+<td>com.alibaba.sdk.android.oss</td>
+<td>Android开发笔记（一百零九）利用网盘实现云存储</td>
+
+ </tr>
+<tr>
+<td>异步HTTP库</td>
+<td>com.loopj.android.http</td>
+<td>Android开发笔记（一百一十）使用http框架上传文件</td>
+
+ </tr>
+<tr>
+<td>Retrofit</td>
+<td>retrofit2</td>
+<td>Android开发笔记（一百一十）使用http框架上传文件</td>
+
+ </tr>
+<tr>
+<td>okhttp网络通信3</td>
+<td>okhttp3</td>
+<td>Android开发笔记（一百一十）使用http框架上传文件</td>
+
+ </tr>
+<tr>
+<td>okhttp流处理</td>
+<td>okio</td>
+<td>Android开发笔记（一百一十）使用http框架上传文件</td>
+
+ </tr>
+<tr>
+<td>常用网络命令库<br />    (ftp/telnet/smtp)</td>
+<td>org.apache.commons.net</td>
+<td>Android开发笔记（一百一十）使用http框架上传文件</td>
+
+ </tr>
+<tr>
+<td>sftp库</td>
+<td>com.jcraft.jsch</td>
+<td>Android开发笔记（一百一十）使用http框架上传文件</td>
+
+ </tr>
+<tr>
+<td>自动化测试</td>
+<td>com.robotium.solo</td>
+<td>Android开发笔记（一百一十三）测试工具</td>
+
+ </tr>
+<tr>
+<td>word文本解析</td>
+<td>org.textmining.text</td>
+<td>Android开发笔记（一百四十）Word文件的读取与显示</td>
+
+ </tr>
+<tr>
+<td>office解析poi库</td>
+<td>org.apache.poi.hwpf</td>
+<td>Android开发笔记（一百四十）Word文件的读取与显示</td>
+
+ </tr>
+<tr>
+<td>office解析poi库</td>
+<td>org.apache.poi.hslf</td>
+<td>Android开发笔记（一百四十一）读取PPT和PDF文件</td>
+
+ </tr>
+<tr>
+<td>pdf解析Vudroid库</td>
+<td>org.vudroid.pdfdroid</td>
+<td>Android开发笔记（一百四十一）读取PPT和PDF文件</td>
+
+ </tr>
+<tr>
+<td>pdf解析MuPDF库</td>
+<td>com.artifex.mupdf</td>
+<td>Android开发笔记（一百四十一）读取PPT和PDF文件</td>
+
+</tr>
+
+</tbody>
+</table>

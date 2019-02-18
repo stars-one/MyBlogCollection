@@ -1,0 +1,105 @@
+原文链接：http://www.cnblogs.com/kexing/archive/2018/01/24/8331359.html
+<p>&nbsp;&nbsp;</p>
+<p class="title"><span style="font-size: 16px;">想要了解广播定义及相关原理的可以看下这一篇</span><a href="https://www.jianshu.com/p/ca3d87a4cdf3" target="_blank"><span style="font-size: 16px;">BroadcastReceiver史上最全面解析</span></a></p>
+<p class="title"><span style="font-size: 16px;">简单地对广播进行分类吧，<strong>广播有两个角色，一个是广播发送者，另外一个是广播接收者</strong></span></p>
+<p>&nbsp;</p>
+<p><strong><span style="font-size: 16px;">广播按照类型分为两种，一种是全局广播，另外一种是本地广播</span></strong></p>
+<p><span style="font-size: 16px;">全局广播的意思就是发出的广播可以被其他任意的应用程序接收，或者可以接收来自其他任意应用程序的广播。</span></p>
+<p><span style="font-size: 16px;">本地广播则是只能在应用程序的内部进行传递的广播，广播接收器也只能接收内部的广播，不能接受其他应用程序的广播</span></p>
+<p><strong><span style="font-size: 16px;">按照广播机制也可以分为两种，标准广播和有序广播</span></strong></p>
+<p><span style="font-size: 16px;">无序广播：所有的接收者都会接收事件，不可以被拦截，不可以被修改。</span><br /><span style="font-size: 16px;">
+有序广播：按照优先级，一级一级的向下传递，接收者可以修改广播数据，也可以终止广播事件。</span></p>
+<p><span style="font-size: 18px; color: #3366ff;"><strong>下面所说的接收广播和发送广播均是针对全局广播来说的，之后会介绍如何使用本地广播</strong></span></p>
+<h2>&nbsp;使用广播接收器接收广播</h2>
+<h3>1.定义一个广播类</h3>
+<p><span style="color: #000000;"><span style="font-size: 16px;">在开始使用广播之前（也就是接收广播），我们需要定义一个类，使其继承BroadcastReceiver，复写其中的onrecevie方法，onreceieve方法中就是我们想要广播接收器收到广播之后需要处理的操作</span></span></p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="font-size: 16px;"><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> myreceiver <span style="color: #0000ff;">extends</span><span style="color: #000000;"> BroadcastReceiver {
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> onReceive(Context context, Intent intent) {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">在这里写上相关的处理代码，一般来说，不要此添加过多的逻辑或者是进行任何的耗时操作
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">因为广播接收器中是不允许开启多线程的，过久的操作就会出现报错
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">因此广播接收器更多的是扮演一种打开程序其他组件的角色，比如创建一条状态栏通知，或者启动某个服务</span>
+<span style="color: #000000;">    }
+}</span></span></pre>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h3><span style="color: #000000;"><span style="font-size: 16px;">2.对广播进行注册</span></span></h3>
+<p><span style="color: #000000;"><span style="font-size: 16px;">注册的方式有两种，一种是动态注册（使用java代码），另外一种则是静态注册（在AndroidMainFest文件中定义）</span></span></p>
+<p><span style="color: #000000;"><span style="font-size: 16px;">动态注册的步骤：</span></span></p>
+<p>&nbsp;</p>
+<ol>
+<li><strong><span style="color: #000000;"><span style="font-size: 16px;">在相关的activity文件中new一个刚才我们定义的广播类</span></span></strong></li>
+<li><strong><span style="color: #000000;"><span style="font-size: 16px;">new一个intentFilter类，调用其的setAction方法，参数中传入相关值的action</span></span></strong></li>
+<li><strong><span style="color: #000000;"><span style="font-size: 16px;">调用context.registerReceiver方法进行注册，方法的第一个参数为广播类，第二个则是intentFilter类</span></span></strong></li>
+</ol>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre></pre>
+<pre><span style="color: #cc0099; font-size: 16px;">private <span style="color: #0099ff;">myreceiver recevier;<br /><span style="color: #cc0099;">private <span style="color: #0099ff;">IntentFilter intentFilter;<br /><span style="color: #d9e577;">@Override<br /><span style="color: #cc0099;">protected void <span style="color: #0099ff;">onCreate(<span style="color: #0099ff;">Bundle savedInstanceState) {<br />    <span style="color: #cc0099;">super.<span style="color: #0099ff;">onCreate(savedInstanceState);<br />    <span style="color: #0099ff;">setContentView(<span style="color: #0099ff;">R.layout.<span style="color: #660e7a; font-weight: bold; font-style: italic;">activity_main);<br />    <span style="color: #0099ff;">recevier = <span style="color: #cc0099;">new <span style="color: #0099ff;">myreceiver();<br />    <span style="color: #0099ff;">intentFilter = <span style="color: #cc0099;">new <span style="color: #0099ff;">IntentFilter();<br />    <span style="color: #0099ff;">intentFilter.<span style="color: #0099ff;">addAction(<span style="color: #ff3333;">"android.net.conn.CONNECTIVITY_CHANGE");<br />    <span style="color: #33cc33;">//当网络发生变化的时候，系统广播会发出值为android.net.conn.CONNECTIVITY_CHANGE这样的一条广播<br /><span style="color: #33cc33;">    <span style="color: #0099ff;">registerReceiver(<span style="color: #0099ff;">recevier,<span style="color: #0099ff;">intentFilter);<br />}</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></pre>
+<pre><span style="font-size: 16px;"><span style="color: #000000;">&nbsp;</span></span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="color: #000000;"><span style="font-size: 16px;">这里我们将广播类与intentFilter类声明为全局变量，便于之后的注册与注销</span></span></p>
+<p><span style="color: #000000;"><span style="font-size: 16px;">需要注意的是，动态注册的广播接收器一定要注销，在onDestroy方法中调用<span style="color: #0099ff;">unregisterReceiver(<span style="color: #0099ff;">recevier);</span></span></span></span></p>
+<p><span style="color: #000000;"><span style="font-size: 16px;">静态注册的步骤：</span></span></p>
+<ol>
+<li><span style="color: #000000;"><span style="font-size: 16px;">在AndroidMainFest中的application标签下加上receiver的子标签</span></span></li>
+<li>与<span style="color: #000000;"><span style="font-size: 16px;">通过name属性指定注册一个广播类，也就是我们刚才定义的那个广播类，</span></span><span style="color: #000000;"><span style="font-size: 16px;">还有enabled与exported属性，enabled代表是否启用这个广播接收器，exported属性表示是否允许这个广播接收器接受本程序以外的广播（这两步可以通过Android Studio自动完成）</span></span></li>
+<li><span style="color: #000000;"><span style="font-size: 16px;">之后在receiver标签下加上intent-filter标签，设置其的action</span></span></li>
+</ol>
+<div class="cnblogs_code">
+<pre><span style="font-size: 16px;"><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">receiver </span><span style="color: #ff0000;">android:name</span><span style="color: #0000ff;">=".myreceiver"</span><span style="color: #ff0000;">
+            android:exported</span><span style="color: #0000ff;">="true"</span><span style="color: #ff0000;">
+            android:enabled</span><span style="color: #0000ff;">="true"</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">intent-filter</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">action </span><span style="color: #ff0000;">android:name</span><span style="color: #0000ff;">="android.intent.action.BOOT_COMPLETED"&gt;<br />　　　　　　　　　　</span><span style="color: #0000ff;">//开机完成后系统广播发出的一条值为<span style="color: #0000ff;">android.intent.action.BOOT_COMPLETED的广播</span></span>
+            <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">intent-filter</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">receiver</span><span style="color: #0000ff;">&gt;</span></span></pre>
+</div>
+<p><span style="font-size: 16px; color: #3366ff;">PS：使用android studio可以快速实现第二步，操作如下</span></p>
+<p><span style="font-size: 16px;">右键，打开new，选择other，再选择BroadcastReceiver</span></p>
+<p><span style="color: #000000;"><span style="font-size: 16px;"><img src="http://images2017.cnblogs.com/blog/1210268/201801/1210268-20180124180005084-1529258921.png" alt="" /></span></span></p>
+<p>&nbsp;<span style="font-size: 16px;">classname就是填写之前的那个广播类，默认exported和enabled两个属性都是true，不勾选的话就是false</span></p>
+<p><img src="http://images2017.cnblogs.com/blog/1210268/201801/1210268-20180124180302897-734203032.png" alt="" width="960" height="816" /></p>
+<p><span style="font-size: 16px;">&nbsp;这个功能就是生成一个广播类，并且为其实现静态注册，当然，就是实现了创建一个广播类与静态注册的前两步，我们还需要完成第三步，填写intent-filter标签中的action的值</span></p>
+<h3><span style="color: #000000;"><span style="font-size: 16px;">3.在AndroidMainFest声明相关的权限</span></span></h3>
+<p><span style="font-size: 16px;">&nbsp;注册完之后，我们还需要在AndroidMAinFest中声明相关的权限，这个不用多说了，这里贴一张图</span></p>
+<p><img src="http://images2017.cnblogs.com/blog/1210268/201801/1210268-20180124180919819-1096794277.png" alt="" /></p>
+<p><span style="font-size: 16px;">在最后贴张图补充一下关于动态注册与静态注册的区别</span></p>
+<p><img src="http://images2017.cnblogs.com/blog/1210268/201801/1210268-20180124181046272-915743709.png" alt="" /></p>
+<p>&nbsp;</p>
+<h2><span style="color: #000000;"><strong>&nbsp;使用广播发送者发送自定义广播</strong></span></h2>
+<p><span style="color: #000000; font-size: 16px;">前面介绍的是接收广播，这里介绍如何发送自定义广播<br /></span></p>
+<div class="cnblogs_code">
+<pre>　　　　　　　　　　Intent intent = <span style="color: #0000ff;">new</span><span style="color: #000000;"> Intent();
+                intent.setAction(</span>"com.example.mymessage"<span style="color: #000000;">);
+                </span><span style="color: #008000;">//</span><span style="color: #008000;">Intent intent = new Intent("com,example.mymessage");
+                </span><span style="color: #008000;">//</span><span style="color: #008000;">也可以像注释这样写</span>
+                sendBroadcast(intent);<span style="color: #008000;">//</span><span style="color: #008000;">发送标准广播</span>
+                sendOrderedBroadcast(intent,<span style="color: #0000ff;">null</span>);<span style="color: #008000;">//</span><span style="color: #008000;">发送有序广播<br />　　　　　　　　　　<span style="color: #008000;">//<span style="color: #008000;">意思就是发送值为com.example.mymessage的这样一条广播</span></span><br /></span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="color: #000000; font-size: 16px;">之后，我们把intentfilter中的action改为上面的com.example.mymessage可以了，但是，测试的时候我们会发现不能体现出有序广播的定义，我们需要给广播接收器设置一下优先度</span></p>
+<p><span style="color: #000000; font-size: 16px;">如果使用的是动态注册，直接调用<span style="color: #0099ff;">intentFilter.<span style="color: #0099ff;">setPriority();</span></span></span></p>
+<p><span style="color: #000000; font-size: 16px;">如果是静态注册，则是设置intent-fliter的中Priority属性</span></p>
+<p><span style="color: #000000; font-size: 16px;"><img src="http://images2017.cnblogs.com/blog/1210268/201801/1210268-20180124184205615-1984761711.png" alt="" /></span></p>
+<p><span style="font-size: 16px;">优先度的大小设置范围为-1000~1000</span></p>
+<p><span style="font-size: 16px;">&nbsp;<span style="color: #3366ff;">想要截断广播，只需要在onreceive()方法中调用aboryBroadcast()即可是广播不再传递下去</span></span></p>
+<h2>使用本地广播</h2>
+<p><span style="font-size: 16px;">之前所说是属于全局广播，存在有数据安全的问题，使用本地广播，只能在本地应用程序中发送与接收广播，可以起到保护数据安全的作用。</span></p>
+<p><span style="font-size: 16px;">回想一下，之前动态注册广播是通过registerReceiver(receiver，intentFilter)这个方法来注册的，其实，本地广播的使用与其十分类似，之前的步骤均是一样的，就是在后面注册调用的方法不同而已，注册时候调用的是LocalBroadcastManager的registerReceiver方法，之前调用的是context的registerReceiver方法，两者参数就是相同的</span></p>
+<p><span style="font-size: 16px;"><img src="http://images2017.cnblogs.com/blog/1210268/201801/1210268-20180124185932147-1951128323.png" alt="" /></span></p>
+<p><span style="font-size: 16px;">同样的，我们也是需要在onDestory方法中使用localBrocastManager.unregisterReceiver()方法，<span style="color: #3366ff;">注意下，图片中我没有把localBroadcastManager定义为全局变量</span></span></p>
+<p><span style="font-size: 16px; color: #000000;">发送广播也是类似的</span></p>
+<p><span style="font-size: 16px; color: #000000;"><img src="http://images2017.cnblogs.com/blog/1210268/201801/1210268-20180124190658803-1418526134.png" alt="" /></span></p>
+<p>&nbsp;<span style="font-size: 16px;">这里需要说一下，使用本地广播并没有静态注册的方法，因为静态注册主要是为了让程序在未启动的情况下也能收到广播，而发动本地广播的时候，我们的程序已经是启动了，所以，自然是没有静态注册这个方法</span></p>
+<p><span style="font-size: 16px;">常用的action</span></p>
+<div><img src="http://images2017.cnblogs.com/blog/1210268/201801/1210268-20180124193127334-2118311592.png" alt="" />
+<p>&nbsp;</p>
+</div>
+<pre><br /><br /><br /></pre>

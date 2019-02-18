@@ -1,0 +1,140 @@
+原文链接：http://www.cnblogs.com/kexing/archive/2017/12/29/7264753.html
+<p>canvas-nest.js 这个js文件可以用来实现炫酷的线条与鼠标进行交互的功能，具体效果如图所示</p>
+<p>&nbsp;</p>
+<p><img src="http://images2017.cnblogs.com/blog/1210268/201707/1210268-20170731181854552-398136808.png" alt="" width="326" height="261" /></p>
+<p>&nbsp;</p>
+<p>js具体源码如下：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">/*</span><span style="color: #008000;">*
+     * Copyright (c) 2016 hustcc
+     * License: MIT
+     * Version: %%GULP_INJECT_VERSION%%
+     * GitHub: https://github.com/hustcc/canvas-nest.js
+    *</span><span style="color: #008000;">*/</span>
+    ! <span style="color: #0000ff;">function</span><span style="color: #000000;">() {
+      </span><span style="color: #008000;">//</span><span style="color: #008000;">封装方法，压缩之后减少文件大小</span>
+      <span style="color: #0000ff;">function</span><span style="color: #000000;"> get_attribute(node, attr, default_value) {
+        </span><span style="color: #0000ff;">return</span> node.getAttribute(attr) ||<span style="color: #000000;"> default_value;
+      }
+      </span><span style="color: #008000;">//</span><span style="color: #008000;">封装方法，压缩之后减少文件大小</span>
+      <span style="color: #0000ff;">function</span><span style="color: #000000;"> get_by_tagname(name) {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> document.getElementsByTagName(name);
+      }
+      </span><span style="color: #008000;">//</span><span style="color: #008000;">获取配置参数</span>
+      <span style="color: #0000ff;">function</span><span style="color: #000000;"> get_config_option() {
+        </span><span style="color: #0000ff;">var</span> scripts = get_by_tagname("script"<span style="color: #000000;">),
+          script_len </span>=<span style="color: #000000;"> scripts.length,
+          script </span>= scripts[script_len - 1]; <span style="color: #008000;">//</span><span style="color: #008000;">当前加载的script</span>
+        <span style="color: #0000ff;">return</span><span style="color: #000000;"> {
+          l: script_len, </span><span style="color: #008000;">//</span><span style="color: #008000;">长度，用于生成id用</span>
+          z: get_attribute(script, "zIndex", -1), <span style="color: #008000;">//</span><span style="color: #008000;">z-index</span>
+          o: get_attribute(script, "opacity", 0.5), <span style="color: #008000;">//</span><span style="color: #008000;">opacity</span>
+          c: get_attribute(script, "color", "0,0,0"), <span style="color: #008000;">//</span><span style="color: #008000;">color</span>
+          n: get_attribute(script, "count", 99) <span style="color: #008000;">//</span><span style="color: #008000;">count</span>
+<span style="color: #000000;">        };
+      }
+      </span><span style="color: #008000;">//</span><span style="color: #008000;">设置canvas的高宽</span>
+      <span style="color: #0000ff;">function</span><span style="color: #000000;"> set_canvas_size() {
+        canvas_width </span>= the_canvas.width = window.innerWidth || document.documentElement.clientWidth ||<span style="color: #000000;"> document.body.clientWidth,
+        canvas_height </span>= the_canvas.height = window.innerHeight || document.documentElement.clientHeight ||<span style="color: #000000;"> document.body.clientHeight;
+      }
+    
+      </span><span style="color: #008000;">//</span><span style="color: #008000;">绘制过程</span>
+      <span style="color: #0000ff;">function</span><span style="color: #000000;"> draw_canvas() {
+        context.clearRect(</span>0, 0<span style="color: #000000;">, canvas_width, canvas_height);
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">随机的线条和当前位置联合数组</span>
+        <span style="color: #0000ff;">var</span> e, i, d, x_dist, y_dist, dist; <span style="color: #008000;">//</span><span style="color: #008000;">临时节点</span>
+        <span style="color: #008000;">//</span><span style="color: #008000;">遍历处理每一个点</span>
+        random_points.forEach(<span style="color: #0000ff;">function</span><span style="color: #000000;">(r, idx) {
+          r.x </span>+=<span style="color: #000000;"> r.xa,
+          r.y </span>+= r.ya, <span style="color: #008000;">//</span><span style="color: #008000;">移动</span>
+          r.xa *= r.x &gt; canvas_width || r.x &lt; 0 ? -1 : 1<span style="color: #000000;">,
+          r.ya </span>*= r.y &gt; canvas_height || r.y &lt; 0 ? -1 : 1, <span style="color: #008000;">//</span><span style="color: #008000;">碰到边界，反向反弹</span>
+          context.fillRect(r.x - 0.5, r.y - 0.5, 1, 1); <span style="color: #008000;">//</span><span style="color: #008000;">绘制一个宽高为1的点</span>
+          <span style="color: #008000;">//</span><span style="color: #008000;">从下一个点开始</span>
+          <span style="color: #0000ff;">for</span> (i = idx + 1; i &lt; all_array.length; i++<span style="color: #000000;">) {
+            e </span>=<span style="color: #000000;"> all_array[i];
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 当前点存在</span>
+            <span style="color: #0000ff;">if</span> (<span style="color: #0000ff;">null</span> !== e.x &amp;&amp; <span style="color: #0000ff;">null</span> !==<span style="color: #000000;"> e.y) {
+              x_dist </span>= r.x - e.x; <span style="color: #008000;">//</span><span style="color: #008000;">x轴距离 l</span>
+              y_dist = r.y - e.y; <span style="color: #008000;">//</span><span style="color: #008000;">y轴距离 n</span>
+              dist = x_dist * x_dist + y_dist * y_dist; <span style="color: #008000;">//</span><span style="color: #008000;">总距离, m</span>
+<span style="color: #000000;">    
+              dist </span>&lt; e.max &amp;&amp; (e === current_point &amp;&amp; dist &gt;= e.max / 2 &amp;&amp; (r.x -= 0.03 * x_dist, r.y -= 0.03 * y_dist), <span style="color: #008000;">//</span><span style="color: #008000;">靠近的时候加速</span>
+                d = (e.max - dist) /<span style="color: #000000;"> e.max,
+                context.beginPath(),
+                context.lineWidth </span>= d / 2<span style="color: #000000;">,
+                context.strokeStyle </span>= "rgba(" + config.c + "," + (d + 0.2) + ")"<span style="color: #000000;">,
+                context.moveTo(r.x, r.y),
+                context.lineTo(e.x, e.y),
+                context.stroke());
+            }
+          }
+        }), frame_func(draw_canvas);
+      }
+      </span><span style="color: #008000;">//</span><span style="color: #008000;">创建画布，并添加到body中</span>
+      <span style="color: #0000ff;">var</span> the_canvas = document.createElement("canvas"), <span style="color: #008000;">//</span><span style="color: #008000;">画布</span>
+        config = get_config_option(), <span style="color: #008000;">//</span><span style="color: #008000;">配置</span>
+        canvas_id = "c_n" + config.l, <span style="color: #008000;">//</span><span style="color: #008000;">canvas id</span>
+        context = the_canvas.getContext("2d"<span style="color: #000000;">), canvas_width, canvas_height,
+        frame_func </span>= window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame || <span style="color: #0000ff;">function</span><span style="color: #000000;">(func) {
+          window.setTimeout(func, </span>1000 / 45<span style="color: #000000;">);
+        }, random </span>=<span style="color: #000000;"> Math.random,
+        current_point </span>=<span style="color: #000000;"> {
+          x: </span><span style="color: #0000ff;">null</span>, <span style="color: #008000;">//</span><span style="color: #008000;">当前鼠标x</span>
+          y: <span style="color: #0000ff;">null</span>, <span style="color: #008000;">//</span><span style="color: #008000;">当前鼠标y</span>
+          max: 20000 <span style="color: #008000;">//</span><span style="color: #008000;"> 圈半径的平方</span>
+<span style="color: #000000;">        },
+        all_array;
+      the_canvas.id </span>=<span style="color: #000000;"> canvas_id;
+      the_canvas.style.cssText </span>= "position:fixed;top:0;left:0;z-index:" + config.z + ";opacity:" +<span style="color: #000000;"> config.o;
+      get_by_tagname(</span>"body")[0<span style="color: #000000;">].appendChild(the_canvas);
+    
+      </span><span style="color: #008000;">//</span><span style="color: #008000;">初始化画布大小</span>
+<span style="color: #000000;">      set_canvas_size();
+      window.onresize </span>=<span style="color: #000000;"> set_canvas_size;
+      </span><span style="color: #008000;">//</span><span style="color: #008000;">当时鼠标位置存储，离开的时候，释放当前位置信息</span>
+      window.onmousemove = <span style="color: #0000ff;">function</span><span style="color: #000000;">(e) {
+        e </span>= e ||<span style="color: #000000;"> window.event;
+        current_point.x </span>=<span style="color: #000000;"> e.clientX;
+        current_point.y </span>=<span style="color: #000000;"> e.clientY;
+      }, window.onmouseout </span>= <span style="color: #0000ff;">function</span><span style="color: #000000;">() {
+        current_point.x </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        current_point.y </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+      };
+      </span><span style="color: #008000;">//</span><span style="color: #008000;">随机生成config.n条线位置信息</span>
+      <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">var</span> random_points = [], i = 0; config.n &gt; i; i++<span style="color: #000000;">) {
+        </span><span style="color: #0000ff;">var</span> x = random() * canvas_width, <span style="color: #008000;">//</span><span style="color: #008000;">随机位置</span>
+          y = random() *<span style="color: #000000;"> canvas_height,
+          xa </span>= 2 * random() - 1, <span style="color: #008000;">//</span><span style="color: #008000;">随机运动方向</span>
+          ya = 2 * random() - 1<span style="color: #000000;">;
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 随机点</span>
+<span style="color: #000000;">        random_points.push({
+          x: x,
+          y: y,
+          xa: xa,
+          ya: ya,
+          max: </span>6000 <span style="color: #008000;">//</span><span style="color: #008000;">沾附距离</span>
+<span style="color: #000000;">        });
+      }
+      all_array </span>=<span style="color: #000000;"> random_points.concat([current_point]);
+      </span><span style="color: #008000;">//</span><span style="color: #008000;">0.1秒后绘制</span>
+      setTimeout(<span style="color: #0000ff;">function</span><span style="color: #000000;">() {
+        draw_canvas();
+      }, </span>100<span style="color: #000000;">);
+    }();</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>在html网页中body的标签中添加script标签，如下所示</p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:javascript;gutter:false;">&lt;script type="text/javascript" color="208,55,66" opacity="0.5"count="99"src="test.js"&gt;&lt;/script&gt;
+</pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="color: #ff6600;">&nbsp;</span></p>
+<p><span style="color: #3366ff;">color 颜色自定义，opactity 是透明度，一般来说0.5-1就可以了，count的是数量，不要太大，太大可能会使得用户的浏览器卡顿，src后为该js文件的所在路径。</span></p>
+<p><span style="color: #ff0000;">PS：</span></p>
+<p><span style="color: #ff0000;">我直接用test命令了那个js文件</span></p>
+<p>&nbsp;</p>

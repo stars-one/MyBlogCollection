@@ -1,0 +1,17 @@
+原文链接：http://www.cnblogs.com/kexing/archive/2017/09/14/7522228.html
+<div class="cnblogs_code">
+<pre>Toast.makeText(<span style="color: #0000ff;">this</span>, "内容", Toast.LENGTH_SHORT).show();</pre>
+</div>
+<p>&nbsp;</p>
+<pre><span><span style="font-style: italic;"><span style="color: #cc7832;"><span style="color: #6a8759;"><span style="color: #cc7832;"><span><span style="color: #9876aa; font-style: italic;"><span style="color: #cc7832;"><br /><br /><span style="color: #000000; font-size: 16px;">直接显示一个Toast，第三个参数是时间的长短，还有一个Toast.LENGTH_LONG，代表长时间<br /><br />这个Toast还是可以设置位置，但是，要需要一个对象<br /><br /></span></span></span></span></span></span></span></span></span></pre>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> toast(String m){
+        Toast mtos </span>= Toast.makeText(<span style="color: #0000ff;">this</span>, "m"<span style="color: #000000;">, Toast.LENGTH_SHORT);
+        mtos.setGravity(Gravity.CENTER,</span>0,0<span style="color: #000000;">);
+    }</span></pre>
+</div>
+<pre></pre>
+<p>新建一个Toast对象，调用静态方法Toast.makeText()方法，赋值给mtos，之后，通过调用setGravity()方法调用，这个方法的主要参数就是第一个，Gravity.CENTER就是设置在中心显示，还有其他的例如Gravity.VERCITAL_CENTER等等参数，英文名应该很明显了，这里就不多说了，直接通过调用自动提示选择就行！</p>
+<p>&nbsp;</p>
+<p><span style="color: #ff0000;">PS：一般来说，将Toast定义在一个方法中，在该方法中定义一个string类型的参数，之后需要使用的时候，只需调用该方法，将需要显示的字符作为参数传进去即可</span></p>
+<pre><span><span style="font-style: italic;"><span style="color: #cc7832;"><span style="color: #6a8759;"><span style="color: #cc7832;"><span><span style="color: #9876aa; font-style: italic;"><span style="color: #cc7832;">&nbsp;</span></span></span></span></span></span></span></span></pre>

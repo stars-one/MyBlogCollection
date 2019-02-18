@@ -1,0 +1,135 @@
+原文链接：http://www.cnblogs.com/kexing/archive/2018/02/08/8433289.html
+<p><span style="font-size: 16px;">Github网址：<a href="https://link.jianshu.com?t=https%3A%2F%2Fgithub.com%2FStars-One%2FCirclePointMove" rel="nofollow" target="_blank">https://github.com/Stars-One/CirclePointMove</a></span></p>
+<p><span style="font-size: 16px;">这个开源库一个封装好的Viewpager指示器，之前在学习的时候，想要实现一个小圆点跟随Viewpager移动的功能，在github上找了许久，发现大神们的指示器很强大，很逼格，同时，设置也是很复杂，看得我有些懵逼。</span></p>
+<p><span style="font-size: 16px;">之后在耐心地研究了一下实现小圆点能够移动的功能，就是心血来潮想做个开源库，直接就可以实现小圆点的功能，结合之前学了的自定义View，在两天的辛苦研究之下，翻遍了许多资料，终于是成功地做了出来，满满的成就感！</span></p>
+<p><span style="font-size: 16px;">是不是感觉github上的文档比较逼格，我才不会告诉你Github上的那个英文文档是我自己写的</span></p>
+<p><span style="font-size: 16px;">第一次做开源库，我还是有些小紧张外加一些小激动的，之前不少的大神做的开源库，写的说明文档那叫一个多啊，这次也是轮到我写文档了，哈哈</span></p>
+<p><span style="font-size: 16px;">&nbsp;</span></p>
+<h3> <strong>预览图：</strong><br />
+</h3>
+<p>&nbsp;</p>
+<div class="image-package">
+<div class="image-container" style="max-width: 481px; max-height: 1188px;">
+<div class="image-view" data-width="481" data-height="817"><img style="cursor: zoom-in;" src="https://upload-images.jianshu.io/upload_images/10298717-49e594f0d159d53f.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/481" alt="" data-original-src="//upload-images.jianshu.io/upload_images/10298717-49e594f0d159d53f.gif" data-original-width="481" data-original-height="817" data-original-format="image/gif" data-original-filesize="409772" /></div>
+
+
+
+</div>
+
+
+
+
+</div>
+<h3>&nbsp;</h3>
+<hr />
+<h2>使用：</h2>
+<h3><span style="font-size: 16px;">1.添加依赖</span></h3>
+<blockquote>
+<p><span style="font-size: 16px;">maven{url'https://jitpack.io'}</span></p>
+<p><span style="font-size: 16px;"> compile 'com.github.Stars-One:CirclePointMove:v1.1'</span></p>
+
+
+
+</blockquote>
+<div class="image-package">
+<div class="image-container" style="max-width: 700px; max-height: 614px;">
+<div class="image-view" data-width="734" data-height="614"><img style="cursor: zoom-in;" src="https://upload-images.jianshu.io/upload_images/10298717-a938e788696c2baf.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700" alt="" data-original-src="//upload-images.jianshu.io/upload_images/10298717-a938e788696c2baf.png" data-original-width="734" data-original-height="614" data-original-format="image/png" data-original-filesize="28337" /></div>
+
+
+
+</div>
+
+
+
+
+</div>
+<div class="image-package">
+<div class="image-container" style="max-width: 700px; max-height: 377px;">
+<div class="image-view" data-width="778" data-height="377"><img style="cursor: zoom-in;" src="https://upload-images.jianshu.io/upload_images/10298717-a3801fa14093cd3c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700" alt="" data-original-src="//upload-images.jianshu.io/upload_images/10298717-a3801fa14093cd3c.png" data-original-width="778" data-original-height="377" data-original-format="image/png" data-original-filesize="25261" /></div>
+
+
+
+</div>
+
+
+
+
+</div>
+<h3>2.在布局文件中使用CirclePointMove</h3>
+<p>&nbsp;</p>
+<div class="image-package">
+<div class="image-container" style="max-width: 408px; max-height: 222px;">
+<div class="image-view" data-width="408" data-height="222"><img style="cursor: zoom-in;" src="https://upload-images.jianshu.io/upload_images/10298717-fa64f1430d4418de.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/408" alt="" data-original-src="//upload-images.jianshu.io/upload_images/10298717-fa64f1430d4418de.png" data-original-width="408" data-original-height="222" data-original-format="image/png" data-original-filesize="8888" /></div>
+
+
+
+</div>
+
+
+
+
+</div>
+<p><span style="font-size: 16px;">提示：建议宽高按照图中的值就好，之后不满意的话可以更改size的数值从而改变height的高度</span></p>
+<p><span style="font-size: 16px;">使用前记得修改count的值，你的viewpager中有几个item就输入几</span></p>
+<h3>3.设置Viewpager的adapter，之后为Viewpager设置OnPageChangeListener</h3>
+<h3>4.通过findviewbyid找到CirclePointMove</h3>
+<h3>4.在OnPageChangeListener中的onPageScrolled调用CirclePointMove的setonPageScrolled方法</h3>
+<p>&nbsp;</p>
+<div class="image-package">
+<div class="image-container" style="max-width: 700px; max-height: 417px;">
+<div class="image-view" data-width="837" data-height="417"><img style="cursor: zoom-in;" src="https://upload-images.jianshu.io/upload_images/10298717-824b03b9d2caa86e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700" alt="" data-original-src="//upload-images.jianshu.io/upload_images/10298717-824b03b9d2caa86e.png" data-original-width="837" data-original-height="417" data-original-format="image/png" data-original-filesize="24765" /></div>
+
+
+
+</div>
+
+
+
+
+</div>
+<h3>
+<br />其他：</h3>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<div class="image-package">
+<div class="image-container" style="max-width: 700px; max-height: 248px;">
+<div class="image-view" data-width="720" data-height="248"><img style="cursor: zoom-in;" src="https://upload-images.jianshu.io/upload_images/10298717-f1e7353acc8f12ea.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700" alt="" data-original-src="//upload-images.jianshu.io/upload_images/10298717-f1e7353acc8f12ea.png" data-original-width="720" data-original-height="248" data-original-format="image/png" data-original-filesize="14175" /></div>
+
+
+
+</div>
+
+
+
+
+</div>
+<p><span style="font-size: 16px;">小提示：要使用的上述属性的话，记得添加nameplace，如下图</span></p>
+<p>&nbsp;</p>
+<div class="image-package">
+<div class="image-container" style="max-width: 691px; max-height: 552px;">
+<div class="image-view" data-width="691" data-height="552"><img style="cursor: zoom-in;" src="https://upload-images.jianshu.io/upload_images/10298717-54998d65cf49e6d2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/691" alt="" data-original-src="//upload-images.jianshu.io/upload_images/10298717-54998d65cf49e6d2.png" data-original-width="691" data-original-height="552" data-original-format="image/png" data-original-filesize="46401" /></div>
+
+
+
+</div>
+
+
+
+
+</div>
+<p><span style="font-size: 16px;">觉得不错的话，记得随手star哦！！</span></p>
+<p><span style="font-size: 16px;">或者给个赞赏红包也是可以的哈哈，实话说，这个项目是我熬了两天夜写出来的</span></p>
+<p>&nbsp;</p>
+<div class="image-package">
+<div class="image-container" style="max-width: 700px; max-height: 489px;">
+<div class="image-view" data-width="1000" data-height="700"><img style="cursor: zoom-in;" src="https://upload-images.jianshu.io/upload_images/10298717-356d8aa84971ec85.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/700" alt="" data-original-src="//upload-images.jianshu.io/upload_images/10298717-356d8aa84971ec85.jpg" data-original-width="1000" data-original-height="700" data-original-format="image/jpeg" data-original-filesize="107533" /></div>
+
+
+
+</div>
+
+
+
+
+</div>
+<p>&nbsp;</p>

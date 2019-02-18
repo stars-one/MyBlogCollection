@@ -1,0 +1,85 @@
+原文链接：http://www.cnblogs.com/kexing/archive/2018/01/11/8268835.html
+<p><span style="font-size: 16px;">使用之前，先简单介绍一下这个SwipeRecyclerView，这是严大（严振杰）基于RecyclerView的进行修改和封装的高级RecyclerView，其可以实现像QQ聊天界面的侧滑删除菜单，和一些高级的功能，我这里也就不一一列举出来了</span></p>
+<p><span style="font-size: 16px;"><img src="http://images2017.cnblogs.com/blog/1210268/201801/1210268-20180111145610004-565373238.png" alt="" width="713" height="359" /></span></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px;">想要了解更多的同学，请看这一篇，作者写的<a href="http://blog.csdn.net/yanzhenjie1003/article/details/52115566" target="_blank"><span style="font-size: 16px;">http://blog.csdn.net/yanzhenjie1003/article/details/52115566</span></a></span></p>
+<p><span style="font-size: 16px;">swiperecyclerview的Github官网：<a href="https://github.com/yanzhenjie/SwipeRecyclerView" target="_blank">https://github.com/yanzhenjie/SwipeRecyclerView</a></span></p>
+<p>&nbsp;</p>
+<h2><strong>前言：</strong></h2>
+<p><span style="font-size: 16px;">之前开发APP的时候，我就是想使用像QQ聊天那样，有侧滑菜单，可以实现删除啊，置顶啊这些功能，我应该不用截图了，大家使用QQ都是知道的，但是，之前学习的时候才是刚入门，那个时候只懂得listview，我也找到了swiperecyclerview这个高级recyclerview，但是，我连recyclerview都没有学习，做了一个测试都没成功，于是便是放弃了，之后，学习到了recyclerview，懂了之后，再一看swiperecyclerview，简直一下子恍然大悟，于是便是开始使用，虽然说恍然大悟了，但是在实际开发中也是遇到了不少问题，一一解决之后，我便是来这写下一篇博客</span></p>
+<h2>使用步骤：</h2>
+<h3>　　1.添加依赖</h3>
+<p>　　　<span style="font-size: 16px;">　添加依赖 compile <span class="pl-s"><span class="pl-pds">'com.yanzhenjie:recyclerview-swipe:1.1.4<span class="pl-pds">'&nbsp;</span></span></span></span></p>
+<h3>　　2.使用控件</h3>
+<p>　　　　<img src="http://images2017.cnblogs.com/blog/1210268/201801/1210268-20180111145842488-65764160.png" alt="" /></p>
+<h3>　　3.创建适配器类</h3>
+<p>　　　<span style="font-size: 16px;">　这里直接参考我写的recyclerview的使用，<a href="http://www.cnblogs.com/kexing/p/8045007.html" target="_blank">http://www.cnblogs.com/kexing/p/8045007.html，</a>严大写的这个直接兼容，超级方便</span></p>
+<h3>　　4.相关设置</h3>
+<p>　　　<span style="font-size: 16px;">　由于我实现的是侧滑菜单删除功能，这里就只写这个，默认你已经有了数据，我这里使用的litepal数据库与其一起使用，关于litepal的使用请看这一篇<a href="http://www.cnblogs.com/kexing/p/8127146.html" target="_blank">http://www.cnblogs.com/kexing/p/8127146.html</a></span></p>
+<p><span style="font-size: 16px;">　　　　贴出代码</span></p>
+<div class="cnblogs_code">
+<pre>  LinearLayoutManager linearLayoutManager = <span style="color: #0000ff;">new</span> LinearLayoutManager(<span style="color: #0000ff;">this</span><span style="color: #000000;">);
+        mRecyclerview.setLayoutManager(linearLayoutManager);</span><span style="color: #008000;">//</span><span style="color: #008000;">为swiperecyclerview设置布局管理器
+
+
+       </span><span style="color: #008000;">//</span><span style="color: #008000;">设置侧滑菜单</span>
+        mRecyclerview.setSwipeMenuCreator(<span style="color: #0000ff;">new</span><span style="color: #000000;"> SwipeMenuCreator() {
+            @Override
+            </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span> onCreateMenu(SwipeMenu swipeLeftMenu, SwipeMenu swipeRightMenu, <span style="color: #0000ff;">int</span><span style="color: #000000;"> viewType) {
+                SwipeMenuItem deleteItem </span>= <span style="color: #0000ff;">new</span> SwipeMenuItem(MainActivity.<span style="color: #0000ff;">this</span><span style="color: #000000;">)
+                        .setBackground(R.drawable.check_button_bg)
+                        .setImage(R.drawable.vector_drawable_delete)
+                        .setHeight(ViewGroup.LayoutParams.MATCH_PARENT)</span><span style="color: #008000;">//</span><span style="color: #008000;">设置高，这里使用match_parent，就是与item的高相同</span>
+                        .setWidth(70);<span style="color: #008000;">//</span><span style="color: #008000;">设置宽</span>
+                swipeRightMenu.addMenuItem(deleteItem);<span style="color: #008000;">//</span><span style="color: #008000;">设置右边的侧滑</span>
+<span style="color: #000000;">            }
+        });
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">设置侧滑菜单的点击事件</span>
+        mRecyclerview.setSwipeMenuItemClickListener(<span style="color: #0000ff;">new</span><span style="color: #000000;"> SwipeMenuItemClickListener() {
+            @Override
+            </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> onItemClick(SwipeMenuBridge menuBridge) {
+                menuBridge.closeMenu();
+
+                </span><span style="color: #0000ff;">int</span> direction = menuBridge.getDirection(); <span style="color: #008000;">//</span><span style="color: #008000;"> 左侧还是右侧菜单。0是左，右是1，暂时没有用到</span>
+                <span style="color: #0000ff;">int</span> adapterPosition = menuBridge.getAdapterPosition(); <span style="color: #008000;">//</span><span style="color: #008000;"> RecyclerView的Item的position。</span>
+                <span style="color: #0000ff;">int</span> menuPosition = menuBridge.getPosition(); <span style="color: #008000;">//</span><span style="color: #008000;"> 菜单在RecyclerView的Item中的Position。</span>
+                Toast.makeText(MainActivity.<span style="color: #0000ff;">this</span>, "删除"+<span style="color: #000000;">adapterPosition, Toast.LENGTH_SHORT).show();
+            }
+        });
+        mRecyclerview.setSwipeItemClickListener(</span><span style="color: #0000ff;">new</span><span style="color: #000000;"> SwipeItemClickListener() {
+            @Override
+            </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span> onItemClick(View itemView, <span style="color: #0000ff;">int</span><span style="color: #000000;"> position) {
+                Toast.makeText(MainActivity.</span><span style="color: #0000ff;">this</span>, "点击了"+<span style="color: #000000;">position, Toast.LENGTH_SHORT).show();
+            }
+        });
+        mRecyclerview.setAdapter(</span><span style="color: #0000ff;">new</span> RecyclerViewAdapter(books));<span style="color: #008000;">//</span><span style="color: #008000;">设置adapter</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>我们慢慢分析，首先呢，就是与普通的recyclerview一样，设置线性的布局，这里我就不多说了</p>
+<p>之后需要设置一个菜单管理器，<span style="font-size: 16px;">setSwipeMenuCreator</span>（）这个方法，里面的参数是一个SwipeMenuCreator，没有的话我们就new一个，类似onClicklistener那样，直接在括号里面new就是匿名内部类使用，之后，我们就可以直接在里面使用代码生成我们的侧滑菜单，来看一下图片</p>
+<p><img src="http://images2017.cnblogs.com/blog/1210268/201801/1210268-20180111152326457-3665896.png" alt="" width="375" height="653" /></p>
+<p><span style="font-size: 16px;">当然，如果你不想用图标，使用setText方法就是单独的文字，具体大家可以自己尝试</span></p>
+<p><span style="font-size: 16px;">&nbsp;接下来，我们需要设置删除的点击事件，直接调用setSwipeMenuItemClickListener，参数里也是new一个新的SwipeMenuItemClickListener类</span></p>
+<p><span style="font-size: 16px;">这里，我们需要注意，<span style="color: #ff0000;">先调用menuBridge的closeMenu()，这样可以防止监听状态的错误发生</span></span></p>
+<p><span style="font-size: 16px;"><span style="color: #000000;">可以看到，我在里面写了三个整型数据，这三个数据都是通过<span style="font-size: 16px;"><span style="color: #000000;">menuBridge</span></span>的相关方法获取的，那这三个数据有什么用呢？</span></span></p>
+<p><span style="font-size: 16px;"><span style="color: #000000;"><span style="color: #3366ff;">int direction = menuBridge.getDirection();</span> </span></span></p>
+<p><span style="font-size: 16px; color: #ff0000;">左侧还是右侧菜单。0是左，右是1，今天的使用暂时没有用到</span></p>
+<p>&nbsp;</p>
+<p><span style="color: #cc0099;"><span style="font-size: 16px; color: #3366ff;">int adapterPosition = menuBridge.</span><span style="color: #0099ff;"><span style="font-size: 16px; color: #000000;"><span style="color: #3366ff;">getAdapterPosition();</span> </span></span></span></p>
+<p><span style="color: #ff0000;"><span style="font-size: 16px;">RecyclerView的Item的position，删除功能的时候，就是需要你将该item删除，这个时候就会用到这个数据，从而判断出用户点击了删除后对应的那一个item</span></span><span style="color: #cc0099;"><span style="color: #0099ff;"><span style="color: #33cc33;"><br /><span style="color: #cc0099;"><span style="font-size: 16px; color: #3366ff;">int menuPosition = menuBridge.</span><span style="color: #0099ff;"><span style="font-size: 16px; color: #000000;"><span style="color: #3366ff;">getPosition();</span> </span></span></span></span></span></span></p>
+<p><span style="color: #cc0099;"><span style="color: #0099ff;"><span style="color: #33cc33;"><span style="color: #cc0099;"><span style="color: #0099ff;"><span style="color: #33cc33;"><span style="font-size: 16px; color: #ff0000;">菜单在RecyclerView的Item中的Position，当侧滑菜单中不止一个item，还有其他的什么置顶啊，这个时候就需要这个数据</span></span></span></span></span></span></span></p>
+<p><span style="color: #cc0099;"><span style="color: #0099ff;"><span style="color: #33cc33;"><span style="color: #cc0099;"><span style="color: #0099ff;"><span style="color: #33cc33;"><span style="font-size: 16px; color: #ff0000;">你就可以判断用户点击的是哪一个菜单，从而实现相应的功能，从你滑出的那个侧滑菜单从左到右算起，最左边为0</span><br /></span></span></span></span></span></span></p>
+<p>&nbsp;</p>
+<p>&nbsp;<span style="color: #000000;"><span style="font-size: 16px;">最后，setSwipeItemClickListener，就是设置item的点击监听器，如果看过我之前写的那一篇recyclerview的使用，应该知道，我是在adapter里面实现的item的点击事件</span></span></p>
+<p><span style="color: #000000;"><span style="font-size: 16px;">这里，swiperecyclerview就直接设置了，就不用到adapter里面中去设置了</span></span></p>
+<p>&nbsp;</p>
+<p><span style="color: #000000;"><span style="font-size: 16px;">好了，到这里就行了吗？其实还不行，我在测试的时候就发现了，删除了一个item，swiperecyclerview并没有实时更新，经过一番摸索终于死找到了解决问题的办法</span></span></p>
+<p><span style="color: #000000;"><span style="font-size: 16px;">我们需要在我们定现删除的方法中添加下面代码</span></span></p>
+<div class="cnblogs_code">
+<pre> 　　　　　<span style="color: #000000;">　<span style="font-size: 16px;">temp = equipmentResults.get(position);//由position找到list集合中的对象</span></span><br /><span style="font-size: 16px;">　　　　　DataSupport.deleteAll(EquipmentResult.<span style="color: #0000ff;">class</span>,"name = ? and type = ?"<span style="color: #000000;">,temp.getName(),temp.getType());//执行删除，litepal数据库的删除方法
+        equipmentResults.remove(temp);//从list中移出需要删除的那个对象
+        mMrecyclerview.setAdapter(</span><span style="color: #0000ff;">new</span> mRecyclerViewAdatper(equipmentResults));//重新设置adapter</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;<span style="font-size: 16px;">我的代码供大家参考，有个思路就行了</span></p>
+<p><span style="font-size: 16px; color: #ff0000;">PS：删除建议加个对话框，以免用户不小心操作</span></p>
